@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vsix xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="1.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2010">
+  <Identifier Id="GitDiffMargin..5ef9f816-d9ce-45cd-a8fa-cd67a807df0e">
+    <Name>GitDiffMargin</Name>
+    <Author>Laurent Kempé</Author>
+    <Version>1.0</Version>
+    <Description xml:space="preserve">A margin extension to the Visual Studio Editor which displays the git diff.</Description>
+    <Locale>1033</Locale>
+    <Icon>Git-Icon-1788C.ico</Icon>
+    <SupportedProducts>
+      <VisualStudio Version="10.0">
+        <Edition>Pro</Edition>
+      </VisualStudio>
+    </SupportedProducts>
+    <SupportedFrameworkRuntimeEdition MinVersion="4.0" MaxVersion="4.0" />
+  </Identifier>
+  <References />
+  <Content>
+    <MefComponent>|%CurrentProject%|</MefComponent>
+  </Content>
+</Vsix>
