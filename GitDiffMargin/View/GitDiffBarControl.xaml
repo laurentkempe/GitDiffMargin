@@ -3,44 +3,50 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             d:DesignHeight="300"
+             xmlns:ViewModel="clr-namespace:GitDiffMargin.ViewModel" d:DesignHeight="300"
              d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance ViewModel:DiffMarginViewModel}"
              mc:Ignorable="d">
-	<UserControl.Resources>
-	
-	</UserControl.Resources>
-  <Rectangle Width="6"
-             Height="200"
-             Margin="-22,0,0,0"
-             Fill="GreenYellow"
-             Stroke="Green"
-             StrokeThickness="1">
-    <Rectangle.ContextMenu>
-      <ContextMenu>
-        <ContextMenu.ItemsPanel>
-          <ItemsPanelTemplate>
-            <ToolBarPanel Orientation="Horizontal" />
-          </ItemsPanelTemplate>
-        </ContextMenu.ItemsPanel>
-        <MenuItem>
-          <MenuItem.HeaderTemplate>
-            <DataTemplate>
-              <Image Width="16"
-                     Height="16"
-                     Source="..\Resources\PreviousArrow.png" />
-            </DataTemplate>
-          </MenuItem.HeaderTemplate>
-        </MenuItem>
-        <MenuItem>
-          <MenuItem.HeaderTemplate>
-            <DataTemplate>
-              <Image Width="16"
-                     Height="16"
-                     Source="..\Resources\NextArrow.png" />
-            </DataTemplate>
-          </MenuItem.HeaderTemplate>
-        </MenuItem>
-      </ContextMenu>
-    </Rectangle.ContextMenu>
-  </Rectangle>
+  <ItemsControl ItemsSource="{Binding DiffViewModels}">
+    <ItemsControl.ItemTemplate>
+      <DataTemplate>
+        <Rectangle Width="6"
+                   Height="{Binding Height}"
+                   Margin="-22,0,0,0"
+                   Fill="GreenYellow"
+                   Stroke="Green"
+                   StrokeThickness="1">
+          <Rectangle.ContextMenu>
+            <ContextMenu>
+              <ContextMenu.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <ToolBarPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+              </ContextMenu.ItemsPanel>
+              <MenuItem>
+                <MenuItem.HeaderTemplate>
+                  <DataTemplate>
+                    <Image Width="16"
+                           Height="16"
+                           Source="..\Resources\PreviousArrow.png" />
+                  </DataTemplate>
+                </MenuItem.HeaderTemplate>
+              </MenuItem>
+              <MenuItem>
+                <MenuItem.HeaderTemplate>
+                  <DataTemplate>
+                    <Image Width="16"
+                           Height="16"
+                           Source="..\Resources\NextArrow.png" />
+                  </DataTemplate>
+                </MenuItem.HeaderTemplate>
+              </MenuItem>
+            </ContextMenu>
+          </Rectangle.ContextMenu>
+        </Rectangle>
+
+      </DataTemplate>
+    </ItemsControl.ItemTemplate>
+  </ItemsControl>
+  
 </UserControl>
