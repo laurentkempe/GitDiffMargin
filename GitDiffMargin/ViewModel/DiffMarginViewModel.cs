@@ -44,7 +44,8 @@ namespace GitDiffMargin.ViewModel
 
             foreach (var hunkRangeInfo in rangeInfos)
             {
-                DiffViewModels.Add(new DiffViewModel(hunkRangeInfo, _textView));
+                var diffViewModel = new DiffViewModel(hunkRangeInfo, _textView);
+                DiffViewModels.Add(diffViewModel);
             }
         }
 

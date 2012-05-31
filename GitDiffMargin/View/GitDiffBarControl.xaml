@@ -7,15 +7,30 @@
              d:DesignWidth="300"
              d:DataContext="{d:DesignInstance ViewModel:DiffMarginViewModel}"
              mc:Ignorable="d">
-  <ItemsControl ItemsSource="{Binding DiffViewModels}">
+  <ItemsControl ItemsSource="{Binding DiffViewModels, Mode=TwoWay}">
+    <ItemsControl.ItemsPanel>
+      <ItemsPanelTemplate>
+        <Canvas HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch" />
+      </ItemsPanelTemplate>
+    </ItemsControl.ItemsPanel>
+    <ItemsControl.ItemContainerStyle>
+      <Style TargetType="ContentPresenter">
+        <Setter Property="Canvas.Top"
+                Value="{Binding Top}" />
+        <Setter Property="Height"
+                Value="{Binding Height}" />
+      </Style>
+    </ItemsControl.ItemContainerStyle>
     <ItemsControl.ItemTemplate>
       <DataTemplate>
         <Rectangle Width="6"
-                   Height="{Binding Height}"
-                   Margin="-22,0,0,0"
                    Fill="GreenYellow"
                    Stroke="Green"
                    StrokeThickness="1">
+          <Rectangle.ToolTip>
+            <ToolTip Content="{Binding Coordinates, Mode=OneWay}" />
+          </Rectangle.ToolTip>
           <Rectangle.ContextMenu>
             <ContextMenu>
               <ContextMenu.ItemsPanel>
