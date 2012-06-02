@@ -17,28 +17,29 @@ namespace GitDiffMargin.ViewModel
     public class DiffMarginViewModel : ViewModelBase
     {
         private readonly IWpfTextView _textView;
+        private readonly IGitCommands _gitCommands;
         private ITextDocument _document;
 
-        public DiffMarginViewModel(IWpfTextView textView)
+        public DiffMarginViewModel(IWpfTextView textView, IGitCommands gitCommands)
         {
             _textView = textView;
+            _gitCommands = gitCommands;
             DiffViewModels = new ObservableCollection<DiffViewModel>();
+
+            _textView.Closed += TextViewClosed;
 
             _textView.TextDataModel.DocumentBuffer.Properties.TryGetProperty(typeof (ITextDocument), out _document);
             if (_document != null)
             {
                 _document.FileActionOccurred += FileActionOccurred;
-                UpdateDiffViewModels();
             }
-
-            _textView.Closed += TextViewClosed;
         }
 
         public ObservableCollection<DiffViewModel> DiffViewModels { get; set; }
 
         private void UpdateDiffViewModels()
         {
-            var rangeInfos = GetGitDiffFor(_document.FilePath);
+            var rangeInfos = _gitCommands.GetGitDiffFor(_document.FilePath);
 
             DiffViewModels.Clear();
 
@@ -47,29 +48,6 @@ namespace GitDiffMargin.ViewModel
                 var diffViewModel = new DiffViewModel(hunkRangeInfo, _textView);
                 DiffViewModels.Add(diffViewModel);
             }
-        }
-
-        private IEnumerable<HunkRangeInfo> GetGitDiffFor(string filename)
-        {
-            var p = new Process();
-            // Redirect the output stream of the child process.
-            p.StartInfo.UseShellExecute = false;
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.CreateNoWindow = true;
-            p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            p.StartInfo.FileName = @"C:\@Tools\Development\Git\Git\bin\git.exe";
-            p.StartInfo.Arguments = string.Format(@" diff --unified=0 {0}", Path.GetFileName(filename));
-            p.StartInfo.WorkingDirectory = Path.GetDirectoryName(filename);
-            p.Start();
-            // Do not wait for the child process to exit before
-            // reading to the end of its redirected stream.
-            // p.WaitForExit();
-            // Read the output stream first and then wait.
-            var output = p.StandardOutput.ReadToEnd();
-            p.WaitForExit();
-
-            var gitDiffParser = new GitDiffParser(output);
-            return gitDiffParser.Parse();
         }
 
         private void FileActionOccurred(object sender, TextDocumentFileActionEventArgs e)

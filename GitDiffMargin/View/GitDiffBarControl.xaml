@@ -3,23 +3,28 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:ViewModel="clr-namespace:GitDiffMargin.ViewModel" d:DesignHeight="300"
-             d:DesignWidth="300"
+             xmlns:ViewModel="clr-namespace:GitDiffMargin.ViewModel"
              d:DataContext="{d:DesignInstance ViewModel:DiffMarginViewModel}"
+             d:DesignHeight="300"
+             d:DesignWidth="300"
+             Width="300"
+             Height="300"
              mc:Ignorable="d">
-  <ItemsControl ItemsSource="{Binding DiffViewModels, Mode=TwoWay}">
+  <ItemsControl HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                BorderBrush="Red"
+                BorderThickness="2"
+                ItemsSource="{Binding DiffViewModels,
+                                      Mode=TwoWay}">
     <ItemsControl.ItemsPanel>
       <ItemsPanelTemplate>
-        <Canvas HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch" />
+        <Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
       </ItemsPanelTemplate>
     </ItemsControl.ItemsPanel>
     <ItemsControl.ItemContainerStyle>
       <Style TargetType="ContentPresenter">
-        <Setter Property="Canvas.Top"
-                Value="{Binding Top}" />
-        <Setter Property="Height"
-                Value="{Binding Height}" />
+        <Setter Property="Canvas.Top" Value="{Binding Top}" />
+        <Setter Property="Height" Value="{Binding Height}" />
       </Style>
     </ItemsControl.ItemContainerStyle>
     <ItemsControl.ItemTemplate>
@@ -63,5 +68,5 @@
       </DataTemplate>
     </ItemsControl.ItemTemplate>
   </ItemsControl>
-  
+
 </UserControl>

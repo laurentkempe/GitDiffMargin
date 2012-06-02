@@ -2,6 +2,7 @@
 
 using System;
 using System.Windows.Controls;
+using GitDiffMargin.Git;
 using GitDiffMargin.View;
 using GitDiffMargin.ViewModel;
 using Microsoft.VisualStudio.Text.Editor;
@@ -28,7 +29,7 @@ namespace GitDiffMargin
         {
             _textView = textView;
 
-            _gitDiffBarControl = new GitDiffBarControl { DataContext = new DiffMarginViewModel(_textView) };
+            _gitDiffBarControl = new GitDiffBarControl { DataContext = new DiffMarginViewModel(_textView, new GitCommands()) };
 
             Children.Add(_gitDiffBarControl);
         }
