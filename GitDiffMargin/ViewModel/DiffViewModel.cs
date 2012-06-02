@@ -12,6 +12,7 @@
 #region using
 
 using System;
+using System.Linq;
 using GalaSoft.MvvmLight;
 using GitDiffMargin.Git;
 using Microsoft.VisualStudio.Text.Editor;
@@ -50,8 +51,9 @@ namespace GitDiffMargin.ViewModel
 
         public string Coordinates { get
         {
-            return string.Format("Top:{0}, Height:{1}, New number of Lines: {2}, StartingLineNumber: {3}", Top, Height,
-                                 _hunkRangeInfo.NewHunkRange.NumberOfLines, _hunkRangeInfo.NewHunkRange.StartingLineNumber);
+            return string.Format("Top:{0}, Height:{1}, New number of Lines: {2}, StartingLineNumber: {3}\n{4}", Top, Height,
+                                 _hunkRangeInfo.NewHunkRange.NumberOfLines, _hunkRangeInfo.NewHunkRange.StartingLineNumber,
+                                 string.Join("\n", _hunkRangeInfo.DiffLines.Select(s => s)));
         } }
     }
 }

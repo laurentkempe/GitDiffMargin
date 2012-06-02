@@ -17,7 +17,7 @@ namespace GitDiffMargin.Git
         {
             return from hunkLine in GetUnifiedFormatHunkLines() 
                    where !string.IsNullOrEmpty(hunkLine.Item1) 
-                   select new HunkRangeInfo(new HunkRange(GetHunkOriginalFile(hunkLine.Item1)), new HunkRange(GetHunkNewFile(hunkLine.Item1)));
+                   select new HunkRangeInfo(new HunkRange(GetHunkOriginalFile(hunkLine.Item1)), new HunkRange(GetHunkNewFile(hunkLine.Item1)), hunkLine.Item2);
         }
 
         public IEnumerable<Tuple<string, IEnumerable<string>>> GetUnifiedFormatHunkLines()
