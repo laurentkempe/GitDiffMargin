@@ -1,10 +1,7 @@
 #region using
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.IO;
 using GalaSoft.MvvmLight;
 using GitDiffMargin.Git;
 using Microsoft.VisualStudio.Text;
@@ -66,7 +63,7 @@ namespace GitDiffMargin.ViewModel
 
         private void CleanUp()
         {
-            if (_document == null)
+            if (_document != null)
             {
                 _document.FileActionOccurred -= FileActionOccurred;
                 _document = null;

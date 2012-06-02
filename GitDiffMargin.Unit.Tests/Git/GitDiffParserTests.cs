@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using GitDiffMargin.Git;
 using NUnit.Framework;
@@ -204,7 +205,7 @@ index 8bb01f5..51495f9 100644
             var unifiedFormatHunk = gitDiffParser.GetUnifiedFormatHunkLines().ToList();
 
             //Assert
-            unifiedFormatHunk[0].ShouldBe("@@ -41,0 +42,20 @@ namespace skyeEditor.Core.Model.Dependency");
+            unifiedFormatHunk[0].Item1.ShouldBe("@@ -41,0 +42,20 @@ namespace skyeEditor.Core.Model.Dependency");
         }
 
         [Test]
@@ -214,12 +215,12 @@ index 8bb01f5..51495f9 100644
             var gitDiffParser = new GitDiffParser(SecondGitDiff);
             
             //Act
-            List<string> unifiedFormatHunk = gitDiffParser.GetUnifiedFormatHunkLines().ToList();
+            List<Tuple<string, IEnumerable<string>>> unifiedFormatHunk = gitDiffParser.GetUnifiedFormatHunkLines().ToList();
 
             //Assert
-            unifiedFormatHunk[0].ShouldBe("@@ -68,2 +67,0 @@ namespace skyeEditor.Core.Model.Dependency");
-            unifiedFormatHunk[1].ShouldBe("@@ -170,0 +169,27 @@ namespace skyeEditor.Core.Model.Dependency");
-            unifiedFormatHunk[2].ShouldBe("@@ -185,2 +209,0 @@ namespace skyeEditor.Core.Model.Dependency");
+            unifiedFormatHunk[0].Item1.ShouldBe("@@ -68,2 +67,0 @@ namespace skyeEditor.Core.Model.Dependency");
+            unifiedFormatHunk[1].Item1.ShouldBe("@@ -170,0 +169,27 @@ namespace skyeEditor.Core.Model.Dependency");
+            unifiedFormatHunk[2].Item1.ShouldBe("@@ -185,2 +209,0 @@ namespace skyeEditor.Core.Model.Dependency");
         }
 
         [Test]
@@ -229,7 +230,7 @@ index 8bb01f5..51495f9 100644
             var gitDiffParser = new GitDiffParser(FirstGitDiff);
             
             //Act
-            string hunkOriginalFile = gitDiffParser.GetHunkNewFile(gitDiffParser.GetUnifiedFormatHunkLines().First());
+            string hunkOriginalFile = gitDiffParser.GetHunkNewFile(gitDiffParser.GetUnifiedFormatHunkLines().First().Item1);
 
             //Assert
             hunkOriginalFile.ShouldBe("42,20");
@@ -242,7 +243,7 @@ index 8bb01f5..51495f9 100644
             var gitDiffParser = new GitDiffParser(FirstGitDiff);
             
             //Act
-            string hunkOriginalFile = gitDiffParser.GetHunkOriginalFile(gitDiffParser.GetUnifiedFormatHunkLines().First());
+            string hunkOriginalFile = gitDiffParser.GetHunkOriginalFile(gitDiffParser.GetUnifiedFormatHunkLines().First().Item1);
 
             //Assert
             hunkOriginalFile.ShouldBe("41,0");
