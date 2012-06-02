@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Git\GitDiffParserTests.cs" />
+    <Compile Include="Git\HunkRangeInfoTests.cs" />
     <Compile Include="Git\HunkRangeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -13,6 +13,7 @@
 
 using System;
 using System.Linq;
+using System.Windows.Media;
 using GalaSoft.MvvmLight;
 using GitDiffMargin.Git;
 using Microsoft.VisualStudio.Text.Editor;
@@ -43,11 +44,15 @@ namespace GitDiffMargin.ViewModel
 
             var ratio = (double) _hunkRangeInfo.NewHunkRange.StartingLineNumber/(double) _lineCount;
             Top = Math.Ceiling(ratio*_windowHeight);
+
+            DiffBrush = _hunkRangeInfo.IsAddition ? Brushes.SeaGreen : Brushes.RoyalBlue;
         }
 
         public double Height { get; set; }
 
         public double Top { get; set; }
+
+        public Brush DiffBrush { get; private set; }
 
         public string Coordinates { get
         {

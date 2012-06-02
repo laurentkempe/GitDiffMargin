@@ -12,8 +12,6 @@
              mc:Ignorable="d">
   <ItemsControl HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
-                BorderBrush="Red"
-                BorderThickness="2"
                 ItemsSource="{Binding DiffViewModels,
                                       Mode=TwoWay}">
     <ItemsControl.ItemsPanel>
@@ -30,7 +28,7 @@
     <ItemsControl.ItemTemplate>
       <DataTemplate>
         <Rectangle Width="6"
-                   Fill="GreenYellow"
+                   Fill="{Binding DiffBrush}"
                    Stroke="Green"
                    StrokeThickness="1">
           <Rectangle.ToolTip>

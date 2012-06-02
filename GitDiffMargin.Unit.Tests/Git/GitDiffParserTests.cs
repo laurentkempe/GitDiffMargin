@@ -248,8 +248,6 @@ index 8bb01f5..51495f9 100644
             //Assert
             hunkOriginalFile.ShouldBe("41,0");
         }
-
-
     }
 
     // ReSharper restore InconsistentNaming 
