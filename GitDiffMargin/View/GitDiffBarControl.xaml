@@ -4,11 +4,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ViewModel="clr-namespace:GitDiffMargin.ViewModel"
+             Width="300"
+             Height="300"
              d:DataContext="{d:DesignInstance ViewModel:DiffMarginViewModel}"
              d:DesignHeight="300"
              d:DesignWidth="300"
-             Width="300"
-             Height="300"
              mc:Ignorable="d">
   <ItemsControl HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
@@ -27,42 +27,48 @@
     </ItemsControl.ItemContainerStyle>
     <ItemsControl.ItemTemplate>
       <DataTemplate>
-        <Rectangle Width="6"
-                   Fill="{Binding DiffBrush}"
-                   Stroke="Green"
-                   StrokeThickness="1">
-          <Rectangle.ToolTip>
-            <ToolTip Content="{Binding Coordinates, Mode=OneWay}" />
-          </Rectangle.ToolTip>
-          <Rectangle.ContextMenu>
-            <ContextMenu>
-              <ContextMenu.ItemsPanel>
-                <ItemsPanelTemplate>
-                  <ToolBarPanel Orientation="Horizontal" />
-                </ItemsPanelTemplate>
-              </ContextMenu.ItemsPanel>
-              <MenuItem>
-                <MenuItem.HeaderTemplate>
-                  <DataTemplate>
-                    <Image Width="16"
-                           Height="16"
-                           Source="..\Resources\PreviousArrow.png" />
-                  </DataTemplate>
-                </MenuItem.HeaderTemplate>
-              </MenuItem>
-              <MenuItem>
-                <MenuItem.HeaderTemplate>
-                  <DataTemplate>
-                    <Image Width="16"
-                           Height="16"
-                           Source="..\Resources\NextArrow.png" />
-                  </DataTemplate>
-                </MenuItem.HeaderTemplate>
-              </MenuItem>
-            </ContextMenu>
-          </Rectangle.ContextMenu>
-        </Rectangle>
-
+        <Grid>
+          <Button Name="diffRectangle" Command="{Binding ShowPopUpCommand}">
+            <Button.Template>
+              <ControlTemplate>
+                <Rectangle Width="6"
+                           Fill="{Binding DiffBrush}"
+                           Stroke="Green"
+                           StrokeThickness="1">
+                  <Rectangle.ToolTip>
+                    <ToolTip Content="{Binding Coordinates, Mode=OneWay}" />
+                  </Rectangle.ToolTip>
+                </Rectangle>
+              </ControlTemplate>
+            </Button.Template>
+          </Button>
+          <Popup AllowsTransparency="True"
+                 IsOpen="{Binding ShowPopup,
+                                  Mode=TwoWay}"
+                 PlacementTarget="{Binding ElementName=diffRectangle}">
+            <Border Background="Transparent">
+              <StackPanel Orientation="Vertical">
+                <Border BorderBrush="Black" BorderThickness="1">
+                  <StackPanel Orientation="Horizontal">
+                    <Button>
+                      <Image Width="16"
+                             Height="16"
+                             Source="..\Resources\PreviousArrow.png" />
+                    </Button>
+                    <Button>
+                      <Image Width="16"
+                             Height="16"
+                             Source="..\Resources\NextArrow.png" />
+                    </Button>
+                  </StackPanel>
+                </Border>
+                <Border BorderBrush="Black" BorderThickness="1">
+                  <TextBlock Background="White" Text="{Binding DiffText, Mode=OneWay}" />
+                </Border>
+              </StackPanel>
+            </Border>
+          </Popup>
+        </Grid>
       </DataTemplate>
     </ItemsControl.ItemTemplate>
   </ItemsControl>
