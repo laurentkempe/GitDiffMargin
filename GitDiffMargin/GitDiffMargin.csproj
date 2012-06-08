@@ -100,7 +100,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\Rollback.png" />
+    <Resource Include="Resources\ShowDifference.png" />
     <Resource Include="Resources\NextArrow.png" />
+    <Resource Include="Resources\CopyOldText.png" />
     <Content Include="Resources\Git-Icon-1788C.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>

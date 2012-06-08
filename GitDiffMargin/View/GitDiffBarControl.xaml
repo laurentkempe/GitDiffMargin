@@ -9,7 +9,11 @@
              d:DataContext="{d:DesignInstance ViewModel:DiffMarginViewModel}"
              d:DesignHeight="300"
              d:DesignWidth="300"
+             Cursor="Hand"
              mc:Ignorable="d">
+  <UserControl.Resources>
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+  </UserControl.Resources>
   <ItemsControl HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 ItemsSource="{Binding DiffViewModels,
@@ -31,39 +35,65 @@
           <Button Name="diffRectangle" Command="{Binding ShowPopUpCommand}">
             <Button.Template>
               <ControlTemplate>
-                <Rectangle Width="6"
-                           Fill="{Binding DiffBrush}"
-                           Stroke="Green"
-                           StrokeThickness="1">
-                  <Rectangle.ToolTip>
-                    <ToolTip Content="{Binding Coordinates, Mode=OneWay}" />
-                  </Rectangle.ToolTip>
-                </Rectangle>
+                <Border Width="9"
+                        BorderBrush="#F0F0F0"
+                        BorderThickness="0,1,1,1">
+                  <Rectangle Fill="{Binding DiffBrush}">
+                    <Rectangle.ToolTip>
+                      <ToolTip Content="{Binding Coordinates, Mode=OneWay}" />
+                    </Rectangle.ToolTip>
+                  </Rectangle>
+                </Border>
               </ControlTemplate>
             </Button.Template>
           </Button>
           <Popup AllowsTransparency="True"
+                 HorizontalOffset="8"
                  IsOpen="{Binding ShowPopup,
                                   Mode=TwoWay}"
-                 PlacementTarget="{Binding ElementName=diffRectangle}">
+                 Placement="MousePoint"
+                 PlacementTarget="{Binding ElementName=diffRectangle}"
+                 StaysOpen="False">
             <Border Background="Transparent">
               <StackPanel Orientation="Vertical">
-                <Border BorderBrush="Black" BorderThickness="1">
-                  <StackPanel Orientation="Horizontal">
-                    <Button>
-                      <Image Width="16"
-                             Height="16"
-                             Source="..\Resources\PreviousArrow.png" />
-                    </Button>
-                    <Button>
-                      <Image Width="16"
-                             Height="16"
-                             Source="..\Resources\NextArrow.png" />
-                    </Button>
-                  </StackPanel>
-                </Border>
-                <Border BorderBrush="Black" BorderThickness="1">
-                  <TextBlock Background="White" Text="{Binding DiffText, Mode=OneWay}" />
+                <StackPanel Orientation="Horizontal">
+                  <Button ToolTip="Previous Change">
+                    <Image Width="16"
+                           Height="16"
+                           Source="..\Resources\PreviousArrow.png" />
+                  </Button>
+                  <Button ToolTip="Next Change">
+                    <Image Width="16"
+                           Height="16"
+                           Source="..\Resources\NextArrow.png" />
+                  </Button>
+                  <Button ToolTip="Rollback">
+                    <Image Width="16"
+                           Height="16"
+                           Source="..\Resources\Rollback.png" />
+                  </Button>
+                  <Button ToolTip="Show Difference">
+                    <Image Width="16"
+                           Height="16"
+                           Source="..\Resources\ShowDifference.png" />
+                  </Button>
+                  <Button ToolTip="Copy Old Text">
+                    <Image Width="16"
+                           Height="16"
+                           Source="..\Resources\CopyOldText.png" />
+                  </Button>
+                </StackPanel>
+
+                <Border Background="White"
+                        BorderBrush="Black"
+                        BorderThickness="1"
+                        Visibility="{Binding IsDiffTextVisible,
+                                             Converter={StaticResource BooleanToVisibilityConverter}}">
+                  <TextBlock Margin="5"
+                             FontFamily="Consolas"
+                             FontSize="12"
+                             Text="{Binding DiffText,
+                                            Mode=OneWay}" />
                 </Border>
               </StackPanel>
             </Border>

@@ -19,6 +19,8 @@ namespace GitDiffMargin.ViewModel
         private readonly double _lineCount;
         private readonly IWpfTextView _textView;
         private readonly double _windowHeight;
+        private bool _isDiffTextVisible;
+        private ICommand _showPopUpCommand;
         private bool _showPopup;
 
         public DiffViewModel(HunkRangeInfo hunkRangeInfo, IWpfTextView textView)
@@ -37,9 +39,17 @@ namespace GitDiffMargin.ViewModel
             var ratio = (double) _hunkRangeInfo.NewHunkRange.StartingLineNumber/(double) _lineCount;
             Top = Math.Ceiling(ratio*_windowHeight);
 
-            DiffBrush = _hunkRangeInfo.IsAddition ? Brushes.SeaGreen : Brushes.RoyalBlue;
+            var bc = new BrushConverter();
+
+            DiffBrush = _hunkRangeInfo.IsAddition ? (Brush) bc.ConvertFrom("#E0FFE0") : (Brush) bc.ConvertFrom("#E0F0FF");
 
             ShowPopup = false;
+
+            DiffText = _hunkRangeInfo.IsModification
+                           ? string.Join("\n", _hunkRangeInfo.DiffLines.Where(s => s.StartsWith("-")).Select(s => s.TrimStart('-')))
+                           : string.Empty;
+
+            _isDiffTextVisible = !string.IsNullOrWhiteSpace(DiffText);
         }
 
         public double Height { get; set; }
@@ -48,16 +58,9 @@ namespace GitDiffMargin.ViewModel
 
         public Brush DiffBrush { get; private set; }
 
-        private ICommand _showPopUpCommand;
-
         public ICommand ShowPopUpCommand
         {
             get { return _showPopUpCommand ?? (_showPopUpCommand = new RelayCommand(ShowPopUp)); }
-        }
-
-        private void ShowPopUp()
-        {
-            ShowPopup = true;
         }
 
         public bool ShowPopup
@@ -80,12 +83,22 @@ namespace GitDiffMargin.ViewModel
             }
         }
 
-        public string DiffText
+        public string DiffText { get; private set; }
+
+        public bool IsDiffTextVisible
         {
-            get
+            get { return _isDiffTextVisible; }
+            set
             {
-                return string.Join("\n", _hunkRangeInfo.DiffLines.Select(s => s));
+                if (value == _isDiffTextVisible) return;
+                _isDiffTextVisible = value;
+                RaisePropertyChanged(() => IsDiffTextVisible);
             }
+        }
+
+        private void ShowPopUp()
+        {
+            ShowPopup = true;
         }
     }
 }
