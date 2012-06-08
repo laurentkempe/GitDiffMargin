@@ -11,9 +11,9 @@ namespace GitDiffMargin
     /// </summary>
     [Export(typeof(IWpfTextViewMarginProvider))]
     [Name(GitDiffMargin.MarginName)]
-    [Order(After = PredefinedMarginNames.VerticalScrollBar)] //Ensure that the margin occurs below the horizontal scrollbar
-    [MarginContainer(PredefinedMarginNames.Left)] //Set the container to the bottom of the editor window
-    [ContentType("text")] //Show this margin for all text-based types
+    [Order(After = PredefinedMarginNames.LeftSelection)]
+    [MarginContainer(PredefinedMarginNames.LeftSelection)]
+    [ContentType("text")]
     [TextViewRole(PredefinedTextViewRoles.Interactive)]
     internal sealed class MarginFactory : IWpfTextViewMarginProvider
     {
