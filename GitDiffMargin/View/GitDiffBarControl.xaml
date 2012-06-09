@@ -6,13 +6,63 @@
              xmlns:ViewModel="clr-namespace:GitDiffMargin.ViewModel"
              Width="300"
              Height="300"
+             Cursor="Hand"
              d:DataContext="{d:DesignInstance ViewModel:DiffMarginViewModel}"
              d:DesignHeight="300"
              d:DesignWidth="300"
-             Cursor="Hand"
              mc:Ignorable="d">
   <UserControl.Resources>
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    <Style x:Key="ButtonFocusVisual">
+      <Setter Property="Control.Template">
+        <Setter.Value>
+          <ControlTemplate>
+            <Rectangle Margin="2"
+                       SnapsToDevicePixels="true"
+                       Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
+                       StrokeDashArray="1 2"
+                       StrokeThickness="1" />
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+    <LinearGradientBrush x:Key="ButtonNormalBackground" StartPoint="0,0" EndPoint="0,1">
+      <GradientStop Offset="0" Color="#F3F3F3" />
+      <GradientStop Offset="0.5" Color="#EBEBEB" />
+      <GradientStop Offset="0.5" Color="#DDDDDD" />
+      <GradientStop Offset="1" Color="#CDCDCD" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="ButtonNormalBorder" Color="#FF707070" />
+    <Style x:Key="PopupButtonStyle" TargetType="{x:Type Button}">
+      <Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisual}" />
+      <Setter Property="Background" Value="{StaticResource ButtonNormalBackground}" />
+      <Setter Property="BorderBrush" Value="{StaticResource ButtonNormalBorder}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+      <Setter Property="HorizontalContentAlignment" Value="Center" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+      <Setter Property="Padding" Value="1" />
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="{x:Type Button}">
+            <Grid>
+              <ContentPresenter Margin="{TemplateBinding Padding}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                RecognizesAccessKey="True"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+            </Grid>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsKeyboardFocused" Value="true" />
+              <Trigger Property="ToggleButton.IsChecked" Value="true" />
+              <Trigger Property="IsEnabled" Value="false">
+                <Setter Property="Foreground" Value="#ADADAD" />
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
   </UserControl.Resources>
   <ItemsControl HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
@@ -56,34 +106,38 @@
                  StaysOpen="False">
             <Border Background="Transparent">
               <StackPanel Orientation="Vertical">
-                <StackPanel Orientation="Horizontal">
-                  <Button ToolTip="Previous Change">
-                    <Image Width="16"
-                           Height="16"
-                           Source="..\Resources\PreviousArrow.png" />
-                  </Button>
-                  <Button ToolTip="Next Change">
-                    <Image Width="16"
-                           Height="16"
-                           Source="..\Resources\NextArrow.png" />
-                  </Button>
-                  <Button ToolTip="Rollback">
-                    <Image Width="16"
-                           Height="16"
-                           Source="..\Resources\Rollback.png" />
-                  </Button>
-                  <Button ToolTip="Show Difference">
-                    <Image Width="16"
-                           Height="16"
-                           Source="..\Resources\ShowDifference.png" />
-                  </Button>
-                  <Button ToolTip="Copy Old Text">
-                    <Image Width="16"
-                           Height="16"
-                           Source="..\Resources\CopyOldText.png" />
-                  </Button>
-                </StackPanel>
-
+                <Border Background="White"
+                        BorderBrush="Black"
+                        BorderThickness="1,1,1,0"
+                        HorizontalAlignment="Left">
+                  <StackPanel Background="White" Orientation="Horizontal">
+                    <Button Style="{DynamicResource PopupButtonStyle}" ToolTip="Previous Change">
+                      <Image Width="16"
+                             Height="16"
+                             Source="..\Resources\PreviousArrow.png" />
+                    </Button>
+                    <Button Style="{DynamicResource PopupButtonStyle}" ToolTip="Next Change">
+                      <Image Width="16"
+                             Height="16"
+                             Source="..\Resources\NextArrow.png" />
+                    </Button>
+                    <Button Style="{DynamicResource PopupButtonStyle}" ToolTip="Rollback">
+                      <Image Width="16"
+                             Height="16"
+                             Source="..\Resources\Rollback.png" />
+                    </Button>
+                    <Button Style="{DynamicResource PopupButtonStyle}" ToolTip="Show Difference">
+                      <Image Width="16"
+                             Height="16"
+                             Source="..\Resources\ShowDifference.png" />
+                    </Button>
+                    <Button Style="{DynamicResource PopupButtonStyle}" ToolTip="Copy Old Text">
+                      <Image Width="16"
+                             Height="16"
+                             Source="..\Resources\CopyOldText.png" />
+                    </Button>
+                  </StackPanel>
+                </Border>
                 <Border Background="White"
                         BorderBrush="Black"
                         BorderThickness="1"
