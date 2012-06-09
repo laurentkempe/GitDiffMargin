@@ -106,11 +106,13 @@
                  StaysOpen="False">
             <Border Background="Transparent">
               <StackPanel Orientation="Vertical">
-                <Border Background="White"
+                <Border HorizontalAlignment="Left"
+                        Background="White"
                         BorderBrush="Black"
-                        BorderThickness="1,1,1,0"
-                        HorizontalAlignment="Left">
-                  <StackPanel Background="White" Orientation="Horizontal">
+                        BorderThickness="1,1,1,0">
+                  <StackPanel Margin="2"
+                              Background="White"
+                              Orientation="Horizontal">
                     <Button Style="{DynamicResource PopupButtonStyle}" ToolTip="Previous Change">
                       <Image Width="16"
                              Height="16"
