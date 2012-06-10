@@ -133,7 +133,8 @@
                              Height="16"
                              Source="..\Resources\ShowDifference.png" />
                     </Button>
-                    <Button Style="{DynamicResource PopupButtonStyle}" ToolTip="Copy Old Text">
+                    <Button Style="{DynamicResource PopupButtonStyle}" ToolTip="Copy Old Text"
+                            Command="{Binding CopyOldTextCommand}">
                       <Image Width="16"
                              Height="16"
                              Source="..\Resources\CopyOldText.png" />

@@ -2,6 +2,7 @@
 
 using System;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using GalaSoft.MvvmLight;
@@ -45,9 +46,7 @@ namespace GitDiffMargin.ViewModel
 
             ShowPopup = false;
 
-            DiffText = _hunkRangeInfo.IsModification
-                           ? string.Join("\n", _hunkRangeInfo.DiffLines.Where(s => s.StartsWith("-")).Select(s => s.TrimStart('-')))
-                           : string.Empty;
+            DiffText = _hunkRangeInfo.IsModification ? _hunkRangeInfo.OriginalText : string.Empty;
 
             _isDiffTextVisible = !string.IsNullOrWhiteSpace(DiffText);
         }
@@ -94,6 +93,18 @@ namespace GitDiffMargin.ViewModel
                 _isDiffTextVisible = value;
                 RaisePropertyChanged(() => IsDiffTextVisible);
             }
+        }
+
+        private ICommand _copyOldTextCommand;
+
+        public ICommand CopyOldTextCommand
+        {
+            get { return _copyOldTextCommand ?? (_copyOldTextCommand = new RelayCommand(CopyOldText)); }
+        }
+
+        private void CopyOldText()
+        {
+            Clipboard.SetText(_hunkRangeInfo.OriginalText);
         }
 
         private void ShowPopUp()

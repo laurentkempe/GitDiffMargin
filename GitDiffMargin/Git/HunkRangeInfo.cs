@@ -19,11 +19,14 @@ namespace GitDiffMargin.Git
             DiffLines = diffLines.ToList();
             _isAddition = DiffLines.All(s => s.StartsWith("+"));
             _isModification = DiffLines.Any(s => s.StartsWith("-")) && !_isAddition;
+
+            OriginalText = string.Join("\n", DiffLines.Where(s => s.StartsWith("-")).Select(s => s.TrimStart('-')));
         }
 
         public HunkRange OriginaleHunkRange { get; private set; }
         public HunkRange NewHunkRange { get; private set; }
         public List<string> DiffLines { get; private set; }
+        public string OriginalText { get; private set; }
 
         public bool IsAddition
         {
