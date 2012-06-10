@@ -52,6 +52,19 @@ namespace GitDiffMargin.Unit.Tests.Git
             //Assert
             isModification.ShouldBe(true);
         }
+
+        [Test]
+        public void OriginalText_1NewLineAnd1OriginalLine_ExpectedOriginalText()
+        {
+            //Arrange
+            var hunkRangeInfo = new HunkRangeInfo(new HunkRange("-41,0"), new HunkRange("+42,20"), new List<string> { "+ New Text", "- Original Text" }.ToArray());
+
+            //Act
+            string originalText = hunkRangeInfo.OriginalText;
+
+            //Assert
+            originalText.ShouldBe("Original Text");
+        }
     }
 
     // ReSharper restore InconsistentNaming 
