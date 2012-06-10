@@ -8,6 +8,7 @@ using System.Windows.Media;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GitDiffMargin.Git;
+using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 
 #endregion
@@ -99,12 +100,52 @@ namespace GitDiffMargin.ViewModel
 
         public ICommand CopyOldTextCommand
         {
-            get { return _copyOldTextCommand ?? (_copyOldTextCommand = new RelayCommand(CopyOldText)); }
+            get { return _copyOldTextCommand ?? (_copyOldTextCommand = new RelayCommand(CopyOldText, CopyOldTextCanExecute)); }
+        }
+
+        private bool CopyOldTextCanExecute()
+        {
+            return _hunkRangeInfo.IsModification;
         }
 
         private void CopyOldText()
         {
             Clipboard.SetText(_hunkRangeInfo.OriginalText);
+        }
+
+        private ICommand _rollbackCommand;
+
+        public ICommand RollbackCommand
+        {
+            get { return _rollbackCommand ?? (_rollbackCommand = new RelayCommand(Rollback, RollbackCanExecute)); }
+        }
+
+        private bool RollbackCanExecute()
+        {
+            return _hunkRangeInfo.IsModification;
+        }
+
+        private void Rollback()
+        {
+            var snapshot = _textView.TextSnapshot;
+
+            if (snapshot != snapshot.TextBuffer.CurrentSnapshot)
+                return;
+
+            using (var edit = snapshot.TextBuffer.CreateEdit())
+            {
+                for (int n = 0; n < _hunkRangeInfo.NewHunkRange.NumberOfLines; n++)
+                {
+                    var line = snapshot.GetLineFromLineNumber((int)_hunkRangeInfo.NewHunkRange.StartingLineNumber + n);
+                    edit.Delete(line.Start.Position, line.Length);
+                }
+
+                var startLine = snapshot.GetLineFromLineNumber((int) _hunkRangeInfo.NewHunkRange.StartingLineNumber);
+
+                edit.Insert(startLine.Start.Position, _hunkRangeInfo.OriginalText);
+
+                edit.Apply();
+            }
         }
 
         private void ShowPopUp()

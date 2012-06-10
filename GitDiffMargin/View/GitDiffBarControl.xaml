@@ -123,7 +123,8 @@
                              Height="16"
                              Source="..\Resources\NextArrow.png" />
                     </Button>
-                    <Button Style="{DynamicResource PopupButtonStyle}" ToolTip="Rollback">
+                    <Button Style="{DynamicResource PopupButtonStyle}" ToolTip="Rollback"
+                            Command="{Binding RollbackCommand}">
                       <Image Width="16"
                              Height="16"
                              Source="..\Resources\Rollback.png" />
