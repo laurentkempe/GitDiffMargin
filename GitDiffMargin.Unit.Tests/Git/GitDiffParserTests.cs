@@ -114,7 +114,8 @@ index 157e930..571aa23 100644
         
         private string EmptyGitDiff = "";
 
-        private string ThirdGitDiff = @"
+        private string ThirdGitDiff = 
+@"
 diff --git a/README.md b/README.md
 index 8bb01f5..51495f9 100644
 --- a/README.md
@@ -123,6 +124,24 @@ index 8bb01f5..51495f9 100644
 -# Hubot
 +# Hubot 2
 ";
+
+        private string DiffWith2Changes =
+            @"diff --git a/Class1.cs b/Class1.cs                                                                                                                              
+index c9efd2f..2e3b402 100644                                                                                                                                   
+--- a/Class1.cs                                                                                                                                                 
++++ b/Class1.cs                                                                                                                                                 
+@@ -2,0 +3,4 @@                                                                                                                                                 
++    /*                                                                                                                                                         
++     * test                                                                                                                                                    
++     */                                                                                                                                                        
++                                                                                                                                                               
+@@ -9 +13,3 @@                                                                                                                                                  
+-            it++; // this is just a comment                                                                                                                    
++            it--;                                                                                                                                              
++            // this is just a comment                                                                                                                          
++            it++;                                ";
+
+
 
         [Test]
         public void Parse_EmptyGitDiff_Expect0HunkRangeInfos()

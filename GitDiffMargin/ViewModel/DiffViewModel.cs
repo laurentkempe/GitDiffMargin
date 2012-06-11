@@ -1,7 +1,6 @@
 ﻿#region using
 
 using System;
-using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -21,7 +20,9 @@ namespace GitDiffMargin.ViewModel
         private readonly double _lineCount;
         private readonly IWpfTextView _textView;
         private readonly double _windowHeight;
+        private ICommand _copyOldTextCommand;
         private bool _isDiffTextVisible;
+        private ICommand _rollbackCommand;
         private ICommand _showPopUpCommand;
         private bool _showPopup;
 
@@ -47,7 +48,13 @@ namespace GitDiffMargin.ViewModel
 
             ShowPopup = false;
 
-            DiffText = _hunkRangeInfo.IsModification ? _hunkRangeInfo.OriginalText : string.Empty;
+            if (_hunkRangeInfo.OriginalText.Count > 1)
+            {
+                DiffText = _hunkRangeInfo.IsModification ? String.Join(Environment.NewLine, _hunkRangeInfo.OriginalText) : string.Empty;
+            }
+            {
+                DiffText = _hunkRangeInfo.IsModification ? _hunkRangeInfo.OriginalText[0].TrimEnd('\r') : string.Empty;
+            }
 
             _isDiffTextVisible = !string.IsNullOrWhiteSpace(DiffText);
         }
@@ -96,11 +103,14 @@ namespace GitDiffMargin.ViewModel
             }
         }
 
-        private ICommand _copyOldTextCommand;
-
         public ICommand CopyOldTextCommand
         {
             get { return _copyOldTextCommand ?? (_copyOldTextCommand = new RelayCommand(CopyOldText, CopyOldTextCanExecute)); }
+        }
+
+        public ICommand RollbackCommand
+        {
+            get { return _rollbackCommand ?? (_rollbackCommand = new RelayCommand(Rollback, RollbackCanExecute)); }
         }
 
         private bool CopyOldTextCanExecute()
@@ -110,14 +120,7 @@ namespace GitDiffMargin.ViewModel
 
         private void CopyOldText()
         {
-            Clipboard.SetText(_hunkRangeInfo.OriginalText);
-        }
-
-        private ICommand _rollbackCommand;
-
-        public ICommand RollbackCommand
-        {
-            get { return _rollbackCommand ?? (_rollbackCommand = new RelayCommand(Rollback, RollbackCanExecute)); }
+            Clipboard.SetText(DiffText);
         }
 
         private bool RollbackCanExecute()
@@ -132,17 +135,38 @@ namespace GitDiffMargin.ViewModel
             if (snapshot != snapshot.TextBuffer.CurrentSnapshot)
                 return;
 
-            using (var edit = snapshot.TextBuffer.CreateEdit())
+            using (ITextEdit edit = snapshot.TextBuffer.CreateEdit())
             {
-                for (int n = 0; n < _hunkRangeInfo.NewHunkRange.NumberOfLines; n++)
+                if (_hunkRangeInfo.NewHunkRange.NumberOfLines == 1)
                 {
-                    var line = snapshot.GetLineFromLineNumber((int)_hunkRangeInfo.NewHunkRange.StartingLineNumber + n);
-                    edit.Delete(line.Start.Position, line.Length);
+                    var line = snapshot.GetLineFromLineNumber((int) _hunkRangeInfo.NewHunkRange.StartingLineNumber);
+
+                    var text = line.ExtentIncludingLineBreak.GetText();
+
+                    if(text.EndsWith("\r\n"))
+                    {
+                        edit.Replace(line.ExtentIncludingLineBreak, _hunkRangeInfo.OriginalText[0] + "\r\n");
+                    }
+                    else
+                    {
+                        edit.Replace(line.ExtentIncludingLineBreak, _hunkRangeInfo.OriginalText[0]);
+                    }
                 }
+                else
+                {
+                    for (var n = 0; n <= _hunkRangeInfo.NewHunkRange.NumberOfLines; n++)
+                    {
+                        var line = snapshot.GetLineFromLineNumber((int)_hunkRangeInfo.NewHunkRange.StartingLineNumber + n);
+                        edit.Delete(line.Start.Position, line.Length);
+                    }
 
-                var startLine = snapshot.GetLineFromLineNumber((int) _hunkRangeInfo.NewHunkRange.StartingLineNumber);
+                    var startLine = snapshot.GetLineFromLineNumber((int) _hunkRangeInfo.NewHunkRange.StartingLineNumber);
 
-                edit.Insert(startLine.Start.Position, _hunkRangeInfo.OriginalText);
+                    foreach (var line in _hunkRangeInfo.OriginalText)
+                    {
+                        edit.Insert(startLine.Start.Position, line + "\r\n");                        
+                    }
+                }
 
                 edit.Apply();
             }

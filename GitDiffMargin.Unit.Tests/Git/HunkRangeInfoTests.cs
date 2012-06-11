@@ -57,10 +57,10 @@ namespace GitDiffMargin.Unit.Tests.Git
         public void OriginalText_1NewLineAnd1OriginalLine_ExpectedOriginalText()
         {
             //Arrange
-            var hunkRangeInfo = new HunkRangeInfo(new HunkRange("-41,0"), new HunkRange("+42,20"), new List<string> { "+ New Text", "- Original Text" }.ToArray());
+            var hunkRangeInfo = new HunkRangeInfo(new HunkRange("-41,0"), new HunkRange("+42,20"), new List<string> { "+New Text", "-Original Text" }.ToArray());
 
             //Act
-            string originalText = hunkRangeInfo.OriginalText;
+            string originalText = hunkRangeInfo.OriginalText[0];
 
             //Assert
             originalText.ShouldBe("Original Text");
@@ -73,10 +73,23 @@ namespace GitDiffMargin.Unit.Tests.Git
             var hunkRangeInfo = new HunkRangeInfo(new HunkRange("-41,0"), new HunkRange("+42,20"), new List<string> { "+ New Text", "-    Original Text" }.ToArray());
 
             //Act
-            string originalText = hunkRangeInfo.OriginalText;
+            string originalText = hunkRangeInfo.OriginalText[0];
 
             //Assert
-            originalText.ShouldBe("   Original Text");
+            originalText.ShouldBe("    Original Text");
+        }
+
+        [Test]
+        public void OriginalText_1NewLineAnd1OriginalLineWithLeadingSpacesAndInvertedOrder_ExpectedOriginalText()
+        {
+            //Arrange
+            var hunkRangeInfo = new HunkRangeInfo(new HunkRange("-18"), new HunkRange("+18"), new List<string> { "-            it++; // this is just a comment", "+            it--;" }.ToArray());
+
+            //Act
+            var originalText = hunkRangeInfo.OriginalText;
+
+            //Assert
+            originalText[0].ShouldBe("            it++; // this is just a comment");
         }
     }
 

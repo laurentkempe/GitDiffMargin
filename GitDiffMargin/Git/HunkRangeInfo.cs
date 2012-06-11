@@ -1,5 +1,6 @@
 #region using
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,6 +12,7 @@ namespace GitDiffMargin.Git
     {
         private readonly bool _isAddition;
         private readonly bool _isModification;
+        private List<string> DiffLines { get; set; }
 
         public HunkRangeInfo(HunkRange originaleHunkRange, HunkRange newHunkRange, IEnumerable<string> diffLines)
         {
@@ -20,13 +22,12 @@ namespace GitDiffMargin.Git
             _isAddition = DiffLines.All(s => s.StartsWith("+"));
             _isModification = DiffLines.Any(s => s.StartsWith("-")) && !_isAddition;
 
-            OriginalText = string.Join("\n", DiffLines.Where(s => s.StartsWith("-")).Select(s => s.Remove(0, 2)));
+            OriginalText = DiffLines.Where(s => s.StartsWith("-")).Select(s => s.Remove(0, 1).TrimEnd('\n').TrimEnd('\r')).ToList();
         }
 
         public HunkRange OriginaleHunkRange { get; private set; }
         public HunkRange NewHunkRange { get; private set; }
-        public List<string> DiffLines { get; private set; }
-        public string OriginalText { get; private set; }
+        public List<string> OriginalText { get; private set; }
 
         public bool IsAddition
         {

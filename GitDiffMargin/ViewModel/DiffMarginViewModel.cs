@@ -24,12 +24,19 @@ namespace GitDiffMargin.ViewModel
             DiffViewModels = new ObservableCollection<DiffViewModel>();
 
             _textView.Closed += TextViewClosed;
+            _textView.TextBuffer.Changed += TextBufferChanged;
 
             _textView.TextDataModel.DocumentBuffer.Properties.TryGetProperty(typeof (ITextDocument), out _document);
             if (_document != null)
             {
                 _document.FileActionOccurred += FileActionOccurred;
             }
+        }
+
+        private void TextBufferChanged(object sender, TextContentChangedEventArgs e)
+        {
+            //todo this is correctly called but the file is not saved and then nothing new is shown
+            UpdateDiffViewModels();
         }
 
         public ObservableCollection<DiffViewModel> DiffViewModels { get; set; }
@@ -72,6 +79,10 @@ namespace GitDiffMargin.ViewModel
             if (_textView != null)
             {
                 _textView.Closed -= TextViewClosed;
+                if (_textView.TextBuffer != null)
+                {
+                    _textView.TextBuffer.Changed -= TextBufferChanged;
+                }
             }
         }
     }
