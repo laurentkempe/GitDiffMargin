@@ -12,12 +12,13 @@ namespace GitDiffMargin.Git
             }
             else
             {
-                StartingLineNumber = long.Parse(hunkRange) - 1;                
+                StartingLineNumber = long.Parse(hunkRange) - 1;
+                NumberOfLines = 1;
             }
 
         }
 
-        public long StartingLineNumber { get; set; }
-        public long NumberOfLines { get; set; }
+        public long StartingLineNumber { get; private set; }
+        public long NumberOfLines { get; private set; }
     }
 }

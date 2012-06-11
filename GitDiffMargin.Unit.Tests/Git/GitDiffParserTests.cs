@@ -164,9 +164,9 @@ index 8bb01f5..51495f9 100644
 
             //Assert
             hunkRanges[0].OriginaleHunkRange.StartingLineNumber.ShouldBe(0);
-            hunkRanges[0].OriginaleHunkRange.NumberOfLines.ShouldBe(0);
+            hunkRanges[0].OriginaleHunkRange.NumberOfLines.ShouldBe(1);
             hunkRanges[0].NewHunkRange.StartingLineNumber.ShouldBe(0);
-            hunkRanges[0].NewHunkRange.NumberOfLines.ShouldBe(0);
+            hunkRanges[0].NewHunkRange.NumberOfLines.ShouldBe(1);
         }
 
         [Test]

@@ -32,6 +32,32 @@ namespace GitDiffMargin.Unit.Tests.Git
             hunkRange.StartingLineNumber.ShouldBe(41);
             hunkRange.NumberOfLines.ShouldBe(20);
         }
+
+        [Test]
+        public void NumberOfLines_HunkWithoutLineNumber_ExpectDefaultTo1LineNumber()
+        {
+            //Arrange
+            var hunkRange = new HunkRange(@"-18");
+
+            //Act
+            var numberOfLines = hunkRange.NumberOfLines;
+
+            //Assert
+            numberOfLines.ShouldBe(1);
+        }
+
+        [Test]
+        public void StartingLineNumber_HunkWithoutLineNumber_ExpectLienNumber()
+        {
+            //Arrange
+            var hunkRange = new HunkRange(@"18");
+
+            //Act
+            var startingLineNumber = hunkRange.StartingLineNumber;
+
+            //Assert
+            startingLineNumber.ShouldBe(17);
+        }
     }
 
     // ReSharper restore InconsistentNaming 
