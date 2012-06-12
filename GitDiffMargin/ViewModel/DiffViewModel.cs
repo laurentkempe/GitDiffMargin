@@ -103,6 +103,29 @@ namespace GitDiffMargin.ViewModel
             }
         }
 
+        private ICommand _showDifferenceCommand;
+
+        public ICommand ShowDifferenceCommand
+        {
+            get { return _showDifferenceCommand ?? (_showDifferenceCommand = new RelayCommand(ShowDifference, ShowDifferenceCanExecute)); }
+        }
+
+        private bool ShowDifferenceCanExecute()
+        {
+            return _hunkRangeInfo.IsModification;
+        }
+
+        private void ShowDifference()
+        {
+            ITextDocument document;
+            _textView.TextDataModel.DocumentBuffer.Properties.TryGetProperty(typeof(ITextDocument), out document);
+
+            if (document == null || string.IsNullOrEmpty(document.FilePath)) return;
+            
+            var gitCommands = new GitCommands();
+            gitCommands.StartExternalDiff(document.FilePath);
+        }
+
         public ICommand CopyOldTextCommand
         {
             get { return _copyOldTextCommand ?? (_copyOldTextCommand = new RelayCommand(CopyOldText, CopyOldTextCanExecute)); }

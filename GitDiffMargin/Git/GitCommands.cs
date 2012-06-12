@@ -1,13 +1,4 @@
-﻿#region Copyright
-// 
-// 
-// Copyright 2007 - 2012 Innoveo Solutions AG, Zurich/Switzerland 
-// All rights reserved. Use is subject to license terms.
-// 
-// 
-#endregion
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -30,6 +21,13 @@ namespace GitDiffMargin.Git
 
             var gitDiffParser = new GitDiffParser(output);
             return gitDiffParser.Parse();
+        }
+
+        public void StartExternalDiff(string filename)
+        {
+            var p = GetProcess(filename);
+            p.StartInfo.Arguments = String.Format(@" difftool -y {0}", Path.GetFileName(filename));
+            p.Start();
         }
 
         private static Process GetProcess(string filename)

@@ -129,7 +129,9 @@
                              Height="16"
                              Source="..\Resources\Rollback.png" />
                     </Button>
-                    <Button Style="{DynamicResource PopupButtonStyle}" ToolTip="Show Difference">
+                    <Button Style="{DynamicResource PopupButtonStyle}"
+                            ToolTip="Show Difference"
+                            Command="{Binding ShowDifferenceCommand}">
                       <Image Width="16"
                              Height="16"
                              Source="..\Resources\ShowDifference.png" />
