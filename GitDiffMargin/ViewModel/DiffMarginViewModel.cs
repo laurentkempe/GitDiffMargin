@@ -4,6 +4,7 @@ using System;
 using System.Collections.ObjectModel;
 using GalaSoft.MvvmLight;
 using GitDiffMargin.Git;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 
@@ -30,6 +31,8 @@ namespace GitDiffMargin.ViewModel
             if (_document != null)
             {
                 _document.FileActionOccurred += FileActionOccurred;
+
+                ActivityLog.LogInformation("GitDiffMargin", "Created DiffMarginViewModel for: " + _document.FilePath);
             }
         }
 
@@ -43,6 +46,8 @@ namespace GitDiffMargin.ViewModel
 
         private void UpdateDiffViewModels()
         {
+            ActivityLog.LogInformation("GitDiffMargin", "UpdateDiffViewModels: " + _document.FilePath);
+
             var rangeInfos = _gitCommands.GetGitDiffFor(_document.FilePath);
 
             DiffViewModels.Clear();

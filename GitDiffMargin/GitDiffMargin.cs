@@ -18,8 +18,8 @@ namespace GitDiffMargin
     {
         public const string MarginName = "GitDiffMargin";
         private bool _isDisposed = false;
-        private IWpfTextView _textView;
-        private GitDiffBarControl _gitDiffBarControl;
+        private readonly IWpfTextView _textView;
+        private readonly GitDiffBarControl _gitDiffBarControl;
 
         /// <summary>
         ///   Creates a <see cref="GitDiffMargin" /> for a given <see cref="IWpfTextView" /> .

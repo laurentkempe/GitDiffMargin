@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Composition;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
 
@@ -19,6 +20,8 @@ namespace GitDiffMargin
     {
         public IWpfTextViewMargin CreateMargin(IWpfTextViewHost textViewHost, IWpfTextViewMargin containerMargin)
         {
+            ActivityLog.LogInformation("GitDiffMargin", "GitDiffMargin plugin loaded");
+
             return new GitDiffMargin(textViewHost.TextView);
         }
     }
