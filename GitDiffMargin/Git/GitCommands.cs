@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using Microsoft.VisualStudio.Shell;
 
 namespace GitDiffMargin.Git
 {
@@ -10,7 +11,10 @@ namespace GitDiffMargin.Git
         public IEnumerable<HunkRangeInfo> GetGitDiffFor(string filename)
         {
             var p = GetProcess(filename);
-            p.StartInfo.Arguments = String.Format(@" diff --unified=0 {0}", Path.GetFileName(filename));
+            p.StartInfo.Arguments = String.Format(@" diff --unified=0 {0}", filename);
+
+            ActivityLog.LogInformation("GitDiffMargin", "Command:" + p.StartInfo.Arguments);
+
             p.Start();
             // Do not wait for the child process to exit before
             // reading to the end of its redirected stream.
@@ -19,6 +23,8 @@ namespace GitDiffMargin.Git
             var output = p.StandardOutput.ReadToEnd();
             p.WaitForExit();
 
+            ActivityLog.LogInformation("GitDiffMargin", "Git Diff output:" + output);
+
             var gitDiffParser = new GitDiffParser(output);
             return gitDiffParser.Parse();
         }
@@ -26,7 +32,10 @@ namespace GitDiffMargin.Git
         public void StartExternalDiff(string filename)
         {
             var p = GetProcess(filename);
-            p.StartInfo.Arguments = String.Format(@" difftool -y {0}", Path.GetFileName(filename));
+            p.StartInfo.Arguments = String.Format(@" difftool -y {0}", filename);
+
+            ActivityLog.LogInformation("GitDiffMargin", "Command:" + p.StartInfo.Arguments);
+
             p.Start();
         }
 
