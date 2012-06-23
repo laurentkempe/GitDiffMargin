@@ -27,6 +27,9 @@ namespace GitDiffMargin.ViewModel
             _textView.Closed += TextViewClosed;
             _textView.TextBuffer.Changed += TextBufferChanged;
 
+            // Delay the initial check until the view gets focus
+            _textView.GotAggregateFocus += GotAggregateFocus;
+            
             _textView.TextDataModel.DocumentBuffer.Properties.TryGetProperty(typeof (ITextDocument), out _document);
             if (_document != null)
             {
@@ -34,6 +37,13 @@ namespace GitDiffMargin.ViewModel
 
                 ActivityLog.LogInformation("GitDiffMargin", "Created DiffMarginViewModel for: " + _document.FilePath);
             }
+        }
+
+        private void GotAggregateFocus(object sender, EventArgs e)
+        {
+            _textView.GotAggregateFocus -= GotAggregateFocus;
+
+            UpdateDiffViewModels();
         }
 
         private void TextBufferChanged(object sender, TextContentChangedEventArgs e)
@@ -84,6 +94,7 @@ namespace GitDiffMargin.ViewModel
             if (_textView != null)
             {
                 _textView.Closed -= TextViewClosed;
+                _textView.GotAggregateFocus -= GotAggregateFocus;
                 if (_textView.TextBuffer != null)
                 {
                     _textView.TextBuffer.Changed -= TextBufferChanged;
