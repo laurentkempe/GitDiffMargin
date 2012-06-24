@@ -10,9 +10,9 @@ namespace GitDiffMargin
     /// Export a <see cref="IWpfTextViewMarginProvider"/>, which returns an instance of the margin for the editor
     /// to use.
     /// </summary>
-    [Export(typeof(IWpfTextViewMarginProvider))]
+    [Export(typeof(IWpfTextViewMarginProvider))]    
     [Name(GitDiffMargin.MarginName)]
-    [Order(After = PredefinedMarginNames.LeftSelection)]
+    [Order(Before = PredefinedMarginNames.LineNumber)]
     [MarginContainer(PredefinedMarginNames.LeftSelection)]
     [ContentType("text")]
     [TextViewRole(PredefinedTextViewRoles.Interactive)]

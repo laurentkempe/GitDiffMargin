@@ -4,12 +4,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ViewModel="clr-namespace:GitDiffMargin.ViewModel"
-             Width="300"
-             Height="300"
              Cursor="Hand"
              d:DataContext="{d:DesignInstance ViewModel:DiffMarginViewModel}"
              d:DesignHeight="300"
-             d:DesignWidth="300"
+             d:DesignWidth="9"
              mc:Ignorable="d">
   <UserControl.Resources>
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
@@ -64,103 +62,110 @@
       </Setter>
     </Style>
   </UserControl.Resources>
-  <ItemsControl HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                ItemsSource="{Binding DiffViewModels,
-                                      Mode=TwoWay}">
-    <ItemsControl.ItemsPanel>
-      <ItemsPanelTemplate>
-        <Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-      </ItemsPanelTemplate>
-    </ItemsControl.ItemsPanel>
-    <ItemsControl.ItemContainerStyle>
-      <Style TargetType="ContentPresenter">
-        <Setter Property="Canvas.Top" Value="{Binding Top}" />
-        <Setter Property="Height" Value="{Binding Height}" />
-      </Style>
-    </ItemsControl.ItemContainerStyle>
-    <ItemsControl.ItemTemplate>
-      <DataTemplate>
-        <Grid>
-          <Button Name="diffRectangle" Command="{Binding ShowPopUpCommand}">
-            <Button.Template>
-              <ControlTemplate>
-                <Border Width="9"
-                        BorderBrush="#F0F0F0"
-                        BorderThickness="0,1,1,1">
-                  <Rectangle Fill="{Binding DiffBrush}">
-                    <Rectangle.ToolTip>
-                      <ToolTip Content="{Binding Coordinates, Mode=OneWay}" />
-                    </Rectangle.ToolTip>
-                  </Rectangle>
-                </Border>
-              </ControlTemplate>
-            </Button.Template>
-          </Button>
-          <Popup AllowsTransparency="True"
-                 HorizontalOffset="8"
-                 IsOpen="{Binding ShowPopup,
-                                  Mode=TwoWay}"
-                 Placement="MousePoint"
-                 PlacementTarget="{Binding ElementName=diffRectangle}"
-                 StaysOpen="False">
-            <Border Background="Transparent">
-              <StackPanel Orientation="Vertical">
-                <Border HorizontalAlignment="Left"
-                        Background="White"
-                        BorderBrush="Black"
-                        BorderThickness="1,1,1,0">
-                  <StackPanel Margin="2"
-                              Background="White"
-                              Orientation="Horizontal">
-                    <Button Style="{DynamicResource PopupButtonStyle}" ToolTip="Previous Change">
-                      <Image Width="16"
-                             Height="16"
-                             Source="..\Resources\PreviousArrow.png" />
-                    </Button>
-                    <Button Style="{DynamicResource PopupButtonStyle}" ToolTip="Next Change">
-                      <Image Width="16"
-                             Height="16"
-                             Source="..\Resources\NextArrow.png" />
-                    </Button>
-                    <Button Style="{DynamicResource PopupButtonStyle}" ToolTip="Rollback"
-                            Command="{Binding RollbackCommand}">
-                      <Image Width="16"
-                             Height="16"
-                             Source="..\Resources\Rollback.png" />
-                    </Button>
-                    <Button Style="{DynamicResource PopupButtonStyle}"
-                            ToolTip="Show Difference"
-                            Command="{Binding ShowDifferenceCommand}">
-                      <Image Width="16"
-                             Height="16"
-                             Source="..\Resources\ShowDifference.png" />
-                    </Button>
-                    <Button Style="{DynamicResource PopupButtonStyle}" ToolTip="Copy Old Text"
-                            Command="{Binding CopyOldTextCommand}">
-                      <Image Width="16"
-                             Height="16"
-                             Source="..\Resources\CopyOldText.png" />
-                    </Button>
-                  </StackPanel>
-                </Border>
-                <Border Background="White"
-                        BorderBrush="Black"
-                        BorderThickness="1"
-                        Visibility="{Binding IsDiffTextVisible,
-                                             Converter={StaticResource BooleanToVisibilityConverter}}">
-                  <TextBlock Margin="5"
-                             FontFamily="Consolas"
-                             FontSize="12"
-                             Text="{Binding DiffText,
-                                            Mode=OneWay}" />
-                </Border>
-              </StackPanel>
-            </Border>
-          </Popup>
-        </Grid>
-      </DataTemplate>
-    </ItemsControl.ItemTemplate>
-  </ItemsControl>
-
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="9" MinWidth="9" />
+    </Grid.ColumnDefinitions>
+    <ItemsControl Grid.Column="0"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  ItemsSource="{Binding DiffViewModels,
+                                        Mode=TwoWay}">
+      <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate>
+          <Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        </ItemsPanelTemplate>
+      </ItemsControl.ItemsPanel>
+      <ItemsControl.ItemContainerStyle>
+        <Style TargetType="ContentPresenter">
+          <Setter Property="Canvas.Top" Value="{Binding Top}" />
+          <Setter Property="Height" Value="{Binding Height}" />
+        </Style>
+      </ItemsControl.ItemContainerStyle>
+      <ItemsControl.ItemTemplate>
+        <DataTemplate>
+          <Grid>
+            <Button Name="diffRectangle" Command="{Binding ShowPopUpCommand}">
+              <Button.Template>
+                <ControlTemplate>
+                  <Border Width="9"
+                          BorderBrush="#F0F0F0"
+                          BorderThickness="0,1,1,1">
+                    <Rectangle Fill="{Binding DiffBrush}">
+                      <Rectangle.ToolTip>
+                        <ToolTip Content="{Binding Coordinates, Mode=OneWay}" />
+                      </Rectangle.ToolTip>
+                    </Rectangle>
+                  </Border>
+                </ControlTemplate>
+              </Button.Template>
+            </Button>
+            <Popup AllowsTransparency="True"
+                   HorizontalOffset="8"
+                   IsOpen="{Binding ShowPopup,
+                                    Mode=TwoWay}"
+                   Placement="MousePoint"
+                   PlacementTarget="{Binding ElementName=diffRectangle}"
+                   StaysOpen="False">
+              <Border Background="Transparent">
+                <StackPanel Orientation="Vertical">
+                  <Border HorizontalAlignment="Left"
+                          Background="White"
+                          BorderBrush="Black"
+                          BorderThickness="1,1,1,0">
+                    <StackPanel Margin="2"
+                                Background="White"
+                                Orientation="Horizontal">
+                      <Button Style="{DynamicResource PopupButtonStyle}" ToolTip="Previous Change">
+                        <Image Width="16"
+                               Height="16"
+                               Source="..\Resources\PreviousArrow.png" />
+                      </Button>
+                      <Button Style="{DynamicResource PopupButtonStyle}" ToolTip="Next Change">
+                        <Image Width="16"
+                               Height="16"
+                               Source="..\Resources\NextArrow.png" />
+                      </Button>
+                      <Button Command="{Binding RollbackCommand}"
+                              Style="{DynamicResource PopupButtonStyle}"
+                              ToolTip="Rollback">
+                        <Image Width="16"
+                               Height="16"
+                               Source="..\Resources\Rollback.png" />
+                      </Button>
+                      <Button Command="{Binding ShowDifferenceCommand}"
+                              Style="{DynamicResource PopupButtonStyle}"
+                              ToolTip="Show Difference">
+                        <Image Width="16"
+                               Height="16"
+                               Source="..\Resources\ShowDifference.png" />
+                      </Button>
+                      <Button Command="{Binding CopyOldTextCommand}"
+                              Style="{DynamicResource PopupButtonStyle}"
+                              ToolTip="Copy Old Text">
+                        <Image Width="16"
+                               Height="16"
+                               Source="..\Resources\CopyOldText.png" />
+                      </Button>
+                    </StackPanel>
+                  </Border>
+                  <Border Background="White"
+                          BorderBrush="Black"
+                          BorderThickness="1"
+                          Visibility="{Binding IsDiffTextVisible,
+                                               Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <TextBlock Margin="5"
+                               FontFamily="Consolas"
+                               FontSize="12"
+                               Text="{Binding DiffText,
+                                              Mode=OneWay}" />
+                  </Border>
+                </StackPanel>
+              </Border>
+            </Popup>
+          </Grid>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+  </Grid>
 </UserControl>
