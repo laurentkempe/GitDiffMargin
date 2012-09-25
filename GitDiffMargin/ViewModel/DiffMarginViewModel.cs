@@ -27,6 +27,9 @@ namespace GitDiffMargin.ViewModel
             _textView.Closed += TextViewClosed;
             _textView.TextBuffer.Changed += TextBufferChanged;
 
+            _textView.LayoutChanged += OnLayoutChanged;
+            _textView.Caret.PositionChanged += OnPositionChanged;
+            
             // Delay the initial check until the view gets focus
             _textView.GotAggregateFocus += GotAggregateFocus;
             
@@ -39,6 +42,33 @@ namespace GitDiffMargin.ViewModel
             }
         }
 
+        private void OnPositionChanged(object sender, CaretPositionChangedEventArgs e)
+        {
+            int i = 0;
+        }
+
+        private void OnLayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
+        {
+            //called when collapsing code
+            if (AnyTextChanges(e.OldViewState.EditSnapshot.Version, e.NewViewState.EditSnapshot.Version))
+            {
+                //todo Update the diff usig the file which is not saved
+                //UpdateDiffViewModels();
+            }
+        }
+
+
+        private static bool AnyTextChanges(ITextVersion oldVersion, ITextVersion currentVersion)
+        {
+            while (oldVersion != currentVersion)
+            {
+                if (oldVersion.Changes.Count > 0)
+                    return true;
+                oldVersion = oldVersion.Next;
+            }
+
+            return false;
+        }
         private void GotAggregateFocus(object sender, EventArgs e)
         {
             _textView.GotAggregateFocus -= GotAggregateFocus;
