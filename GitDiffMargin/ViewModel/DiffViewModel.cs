@@ -44,7 +44,7 @@ namespace GitDiffMargin.ViewModel
 
             var bc = new BrushConverter();
 
-            DiffBrush = _hunkRangeInfo.IsAddition ? (Brush) bc.ConvertFrom("#E0FFE0") : (Brush) bc.ConvertFrom("#E0F0FF");
+            DiffBrush = _hunkRangeInfo.IsModification ? (Brush)bc.ConvertFrom("#0DC0FF") : (Brush)bc.ConvertFrom("#0DCE0E");
 
             ShowPopup = false;
 
