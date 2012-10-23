@@ -11,4 +11,4 @@ A Visual Studio 2012 extension to display Git Diff on the margin of the current 
 * Show the diff in extenral tool
 * Copy the old code into the clipboard
 
-You might see a little video on the [following page](http://www.flickr.com/photos/laurentkempe/8048233815/).
+You might see a little video on the [following page](http://www.flickr.com/photos/laurentkempe/8116990137/).
