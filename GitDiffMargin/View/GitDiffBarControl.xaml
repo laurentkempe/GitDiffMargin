@@ -69,7 +69,25 @@
         </Setter.Value>
       </Setter>
     </Style>
-  </UserControl.Resources>
+        <ControlTemplate x:Key="ChangeTemplate">
+            <Border Width="9"
+                          BorderBrush="#E0FFE0"
+                          BorderThickness="0,1,1,1">
+                <Rectangle Fill="{Binding DiffBrush}">
+                    <Rectangle.ToolTip>
+                        <ToolTip Content="{Binding Coordinates, Mode=OneWay}" />
+                    </Rectangle.ToolTip>
+                </Rectangle>
+            </Border>
+        </ControlTemplate>
+        <ControlTemplate x:Key="DeletionTemplate">
+            <Polygon Points="0,0 1,1 0,2 0,0" Fill="Gray" Width="9" Height="{Binding Height}" Stretch="Fill">
+                <Polygon.ToolTip>
+                    <ToolTip Content="{Binding Coordinates, Mode=OneWay}" />
+                </Polygon.ToolTip>
+            </Polygon>
+        </ControlTemplate>
+    </UserControl.Resources>
   <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="9" MinWidth="9" />
@@ -77,8 +95,7 @@
     <ItemsControl Grid.Column="0"
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch"
-                  ItemsSource="{Binding DiffViewModels,
-                                        Mode=TwoWay}">
+                  ItemsSource="{Binding DiffViewModels, Mode=TwoWay}">
       <ItemsControl.ItemsPanel>
         <ItemsPanelTemplate>
           <Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
@@ -93,27 +110,26 @@
       <ItemsControl.ItemTemplate>
         <DataTemplate>
           <Grid>
-            <Button Name="diffRectangle" Command="{Binding ShowPopUpCommand}">
-              <Button.Template>
-                <ControlTemplate>
-                  <Border Width="9"
-                          BorderBrush="#E0FFE0"
-                          BorderThickness="0,1,1,1">
-                    <Rectangle Fill="{Binding DiffBrush}">
-                      <Rectangle.ToolTip>
-                        <ToolTip Content="{Binding Coordinates, Mode=OneWay}" />
-                      </Rectangle.ToolTip>
-                    </Rectangle>
-                  </Border>
-                </ControlTemplate>
-              </Button.Template>
-            </Button>
+              <Button Name="diffControl" Command="{Binding ShowPopUpCommand}">
+                  <Button.Style>
+                      <Style TargetType="{x:Type Button}">
+                          <Style.Triggers>
+                              <DataTrigger Binding="{Binding IsDeletion}" Value="true">
+                                  <Setter Property="Template" Value="{StaticResource DeletionTemplate}" />
+                              </DataTrigger>
+                              <DataTrigger Binding="{Binding IsDeletion}" Value="false">
+                                  <Setter Property="Template" Value="{StaticResource ChangeTemplate}" />
+                              </DataTrigger>
+                          </Style.Triggers>
+                      </Style>
+                  </Button.Style>
+              </Button>
             <Popup AllowsTransparency="True"
                    HorizontalOffset="8"
                    IsOpen="{Binding ShowPopup,
                                     Mode=TwoWay}"
                    Placement="MousePoint"
-                   PlacementTarget="{Binding ElementName=diffRectangle}"
+                   PlacementTarget="{Binding ElementName=diffControl}"
                    StaysOpen="False">
               <Border Background="Transparent">
                 <StackPanel Orientation="Vertical">

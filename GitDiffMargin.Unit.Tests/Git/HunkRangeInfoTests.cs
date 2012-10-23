@@ -91,6 +91,19 @@ namespace GitDiffMargin.Unit.Tests.Git
             //Assert
             originalText[0].ShouldBe("            it++; // this is just a comment");
         }
+
+        [Test]
+        public void IsDeletion_3DeletedLines_ExpectTrue()
+        {
+            //Arrange
+            var hunkRangeInfo = new HunkRangeInfo(new HunkRange("-7,3"), new HunkRange("+6,0"), new List<string> { "-using Microsoft.VisualStudio.Shell;", "-using Microsoft.VisualStudio.Text;", "-using Microsoft.VisualStudio.Text.Editor;" }.ToArray());
+
+            //Act
+            var isDeletion = hunkRangeInfo.IsDeletion;
+
+            //Assert
+            isDeletion.ShouldBe(true);
+        }
     }
 
     // ReSharper restore InconsistentNaming 

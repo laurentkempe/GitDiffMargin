@@ -53,7 +53,7 @@ namespace GitDiffMargin.ViewModel
             if (AnyTextChanges(e.OldViewState.EditSnapshot.Version, e.NewViewState.EditSnapshot.Version))
             {
                 //todo Update the diff usig the file which is not saved
-                //UpdateDiffViewModels();
+                UpdateDiffViewModels();
             }
         }
 

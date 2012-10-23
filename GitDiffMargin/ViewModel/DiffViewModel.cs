@@ -9,6 +9,7 @@ using GalaSoft.MvvmLight.Command;
 using GitDiffMargin.Git;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
+using System.Linq;
 
 #endregion
 
@@ -34,29 +35,52 @@ namespace GitDiffMargin.ViewModel
             var lineHeight = _textView.LineHeight;
 
             _windowHeight = textView.ViewportHeight;
-            //_lineCount = _textView.TextSnapshot.LineCount;
             _lineCount = _windowHeight/lineHeight;
 
-            Height = _hunkRangeInfo.NewHunkRange.NumberOfLines*lineHeight;
+            if (_hunkRangeInfo.IsDeletion)
+            {
+                Height = _textView.LineHeight;
+            }
+            else
+            {
+                Height = _hunkRangeInfo.NewHunkRange.NumberOfLines * lineHeight;
+            }
 
             var ratio = (double) _hunkRangeInfo.NewHunkRange.StartingLineNumber/(double) _lineCount;
             Top = Math.Ceiling(ratio*_windowHeight);
 
             var bc = new BrushConverter();
-
             DiffBrush = _hunkRangeInfo.IsModification ? (Brush)bc.ConvertFrom("#0DC0FF") : (Brush)bc.ConvertFrom("#0DCE0E");
 
             ShowPopup = false;
 
-            if (_hunkRangeInfo.OriginalText.Count > 1)
+            if (_hunkRangeInfo.OriginalText != null && _hunkRangeInfo.OriginalText.Any())
             {
-                DiffText = _hunkRangeInfo.IsModification ? String.Join(Environment.NewLine, _hunkRangeInfo.OriginalText) : string.Empty;
-            }
-            {
-                DiffText = _hunkRangeInfo.IsModification ? _hunkRangeInfo.OriginalText[0].TrimEnd('\r') : string.Empty;
+                DiffText = _hunkRangeInfo.IsModification || _hunkRangeInfo.IsDeletion ? String.Join(Environment.NewLine, _hunkRangeInfo.OriginalText) : string.Empty;
             }
 
-            _isDiffTextVisible = !string.IsNullOrWhiteSpace(DiffText);
+            var startLineNumber = (int)_hunkRangeInfo.NewHunkRange.StartingLineNumber;
+            var endLineNumber = (int)(_hunkRangeInfo.NewHunkRange.StartingLineNumber + _hunkRangeInfo.NewHunkRange.NumberOfLines);
+
+            _isVisible = _textView.TextViewLines.SelectMany(line => line.Snapshot.Lines).All(line => line.LineNumber <= endLineNumber && line.LineNumber >= startLineNumber);
+
+            if (_hunkRangeInfo.IsDeletion || _hunkRangeInfo.IsModification)
+            {
+                _isDiffTextVisible = true;
+            }
+
+            //if ((int)_hunkRangeInfo.NewHunkRange.StartingLineNumber < _textView.TextViewLines.Count)
+            //{
+            //    var wpfTextViewLine = _textView.TextViewLines[(int)_hunkRangeInfo.NewHunkRange.StartingLineNumber];
+
+            //    _isDiffTextVisible = !string.IsNullOrWhiteSpace(DiffText) && wpfTextViewLine.VisibilityState == VisibilityState.FullyVisible;                
+            //}
+            //else
+            //{
+            //    _isDiffTextVisible = false;
+            //}
+
+            //_isVisible = lines.All(line =>  line.VisibilityState == VisibilityState.FullyVisible);
         }
 
         public double Height { get; set; }
@@ -64,6 +88,8 @@ namespace GitDiffMargin.ViewModel
         public double Top { get; set; }
 
         public Brush DiffBrush { get; private set; }
+
+        public bool IsDeletion { get { return _hunkRangeInfo.IsDeletion;} }
 
         public ICommand ShowPopUpCommand
         {
@@ -92,6 +118,13 @@ namespace GitDiffMargin.ViewModel
 
         public string DiffText { get; private set; }
 
+        public bool IsVisible
+        {
+            get { return _isVisible; }
+            set { _isVisible = value;
+            RaisePropertyChanged(() => IsVisible);}
+        }
+
         public bool IsDiffTextVisible
         {
             get { return _isDiffTextVisible; }
@@ -104,6 +137,7 @@ namespace GitDiffMargin.ViewModel
         }
 
         private ICommand _showDifferenceCommand;
+        private bool _isVisible;
 
         public ICommand ShowDifferenceCommand
         {
@@ -138,7 +172,7 @@ namespace GitDiffMargin.ViewModel
 
         private bool CopyOldTextCanExecute()
         {
-            return _hunkRangeInfo.IsModification;
+            return _hunkRangeInfo.IsModification || _hunkRangeInfo.IsDeletion;
         }
 
         private void CopyOldText()
@@ -148,7 +182,7 @@ namespace GitDiffMargin.ViewModel
 
         private bool RollbackCanExecute()
         {
-            return _hunkRangeInfo.IsModification;
+            return _hunkRangeInfo.IsModification || _hunkRangeInfo.IsDeletion;
         }
 
         private void Rollback()

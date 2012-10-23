@@ -141,7 +141,15 @@ index c9efd2f..2e3b402 100644
 +            // this is just a comment                                                                                                                          
 +            it++;                                ";
 
-
+        private string DiffOfADeleteOfThreeLines =
+@"diff --git a/note.txt b/note.txt
+index e91ba58..e2dbef0 100644
+--- a/note.txt
++++ b/note.txt
+@@ -7,3 +6,0 @@ using GitDiffMargin.Git;
+-using Microsoft.VisualStudio.Shell;
+-using Microsoft.VisualStudio.Text;
+-using Microsoft.VisualStudio.Text.Editor;";
 
         [Test]
         public void Parse_EmptyGitDiff_Expect0HunkRangeInfos()
@@ -228,6 +236,19 @@ index c9efd2f..2e3b402 100644
         }
 
         [Test]
+        public void GetUnifiedFormatHunkLine_DeleteDiff_ExpectedHunkLine()
+        {
+            //Arrange
+            var gitDiffParser = new GitDiffParser(DiffOfADeleteOfThreeLines);
+
+            //Act
+            var unifiedFormatHunk = gitDiffParser.GetUnifiedFormatHunkLines().ToList();
+
+            //Assert
+            unifiedFormatHunk[0].Item1.ShouldBe("@@ -7,3 +6,0 @@ using GitDiffMargin.Git;");
+        }
+
+        [Test]
         public void GetUnifiedFormatHunkLine_WithTwoHunk_ExpectHunkLine()
         {
             //Arrange
@@ -266,6 +287,32 @@ index c9efd2f..2e3b402 100644
 
             //Assert
             hunkOriginalFile.ShouldBe("41,0");
+        }
+
+        [Test]
+        public void GetHunkOriginalFile_DeleteDiff_ExpectHunkOriginalFile()
+        {
+            //Arrange
+            var gitDiffParser = new GitDiffParser(DiffOfADeleteOfThreeLines);
+
+            //Act
+            var hunkOriginalFile = gitDiffParser.GetHunkNewFile(gitDiffParser.GetUnifiedFormatHunkLines().First().Item1);
+
+            //Assert
+            hunkOriginalFile.ShouldBe("6,0");
+        }
+
+        [Test]
+        public void GetHunkNewFile_DeleteDiff_ExpectHunkNewFile()
+        {
+            //Arrange
+            var gitDiffParser = new GitDiffParser(DiffOfADeleteOfThreeLines);
+
+            //Act
+            var hunkOriginalFile = gitDiffParser.GetHunkOriginalFile(gitDiffParser.GetUnifiedFormatHunkLines().First().Item1);
+
+            //Assert
+            hunkOriginalFile.ShouldBe("7,3");
         }
     }
 

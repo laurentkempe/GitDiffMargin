@@ -47,7 +47,7 @@ namespace GitDiffMargin.Unit.Tests.Git
         }
 
         [Test]
-        public void StartingLineNumber_HunkWithoutLineNumber_ExpectLienNumber()
+        public void StartingLineNumber_HunkWithoutLineNumber_ExpectLineNumber()
         {
             //Arrange
             var hunkRange = new HunkRange(@"18");
