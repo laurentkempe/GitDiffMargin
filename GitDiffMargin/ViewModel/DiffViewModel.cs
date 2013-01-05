@@ -19,8 +19,8 @@ namespace GitDiffMargin.ViewModel
     public class DiffViewModel : ViewModelBase
     {
         private HunkRangeInfo _hunkRangeInfo;
-        private double _lineCount;
         private IWpfTextView _textView;
+        private double _lineCount;
         private double _windowHeight;
         private ICommand _copyOldTextCommand;
         private bool _isDiffTextVisible;
@@ -33,34 +33,44 @@ namespace GitDiffMargin.ViewModel
             _hunkRangeInfo = hunkRangeInfo;
             _textView = textView;
 
-            var lineHeight = _textView.LineHeight;
-
-            _windowHeight = textView.ViewportHeight;
-            _lineCount = _windowHeight/lineHeight;
-
-            if (_hunkRangeInfo.IsDeletion)
-            {
-                Height = _textView.LineHeight;
-            }
-            else
-            {
-                Height = _hunkRangeInfo.NewHunkRange.NumberOfLines * lineHeight;
-            }
-
-            Top = GetTopCoordinate();
-
-            var bc = new BrushConverter();
-            DiffBrush = _hunkRangeInfo.IsModification ? (Brush)bc.ConvertFrom("#0DC0FF") : (Brush)bc.ConvertFrom("#0DCE0E");
-
             ShowPopup = false;
 
+            SetDisplayProperties();
+
+            DiffBrush = GetDiffBrush();
+            
+            DiffText = GetDiffText();
+
+            IsDiffTextVisible = GetIsDiffTextVisible();
+        }
+
+        private void SetDisplayProperties()
+        {
+            Height = GetHeight();
+            Top = GetTopCoordinate();
+
+            IsVisible = GetIsVisible();
+        }
+
+        private bool GetIsDiffTextVisible()
+        {
+            return _hunkRangeInfo.IsDeletion || _hunkRangeInfo.IsModification;
+        }
+
+        private string GetDiffText()
+        {
             if (_hunkRangeInfo.OriginalText != null && _hunkRangeInfo.OriginalText.Any())
             {
-                DiffText = _hunkRangeInfo.IsModification || _hunkRangeInfo.IsDeletion ? String.Join(Environment.NewLine, _hunkRangeInfo.OriginalText) : string.Empty;
+                return _hunkRangeInfo.IsModification || _hunkRangeInfo.IsDeletion ? String.Join(Environment.NewLine, _hunkRangeInfo.OriginalText) : string.Empty;
             }
 
-            var startLineNumber = (int)_hunkRangeInfo.NewHunkRange.StartingLineNumber;
-            var endLineNumber = (int)(_hunkRangeInfo.NewHunkRange.StartingLineNumber + _hunkRangeInfo.NewHunkRange.NumberOfLines);
+            return string.Empty;
+        }
+
+        private bool GetIsVisible()
+        {
+            var startLineNumber = (int) _hunkRangeInfo.NewHunkRange.StartingLineNumber;
+            var endLineNumber = (int) (_hunkRangeInfo.NewHunkRange.StartingLineNumber + _hunkRangeInfo.NewHunkRange.NumberOfLines);
 
             var startline = _textView.TextSnapshot.GetLineFromLineNumber(startLineNumber);
             var endline = _textView.TextSnapshot.GetLineFromLineNumber(endLineNumber);
@@ -71,29 +81,33 @@ namespace GitDiffMargin.ViewModel
 
                 if (topLine.VisibilityState == VisibilityState.FullyVisible && bottomLine.VisibilityState == VisibilityState.FullyVisible)
                 {
-                    _isVisible = true;
+                    return true;
                 }
             }
 
-            //_isVisible = _textView.TextViewLines.SelectMany(line => line.Snapshot.Lines).All(line => line.LineNumber <= endLineNumber && line.LineNumber >= startLineNumber);
+            return false;
+        }
 
-            if (_hunkRangeInfo.IsDeletion || _hunkRangeInfo.IsModification)
+        private Brush GetDiffBrush()
+        {
+            var bc = new BrushConverter();
+            var diffBrush = _hunkRangeInfo.IsModification ? (Brush) bc.ConvertFrom("#0DC0FF") : (Brush) bc.ConvertFrom("#0DCE0E");
+            return diffBrush;
+        }
+
+        private double GetHeight()
+        {
+            var lineHeight = _textView.LineHeight;
+
+            _windowHeight = _textView.ViewportHeight;
+            _lineCount = _windowHeight/lineHeight;
+
+            if (_hunkRangeInfo.IsDeletion)
             {
-                _isDiffTextVisible = true;
+                return _textView.LineHeight;
             }
-
-            //if ((int)_hunkRangeInfo.NewHunkRange.StartingLineNumber < _textView.TextViewLines.Count)
-            //{
-            //    var wpfTextViewLine = _textView.TextViewLines[(int)_hunkRangeInfo.NewHunkRange.StartingLineNumber];
-
-            //    _isDiffTextVisible = !string.IsNullOrWhiteSpace(DiffText) && wpfTextViewLine.VisibilityState == VisibilityState.FullyVisible;                
-            //}
-            //else
-            //{
-            //    _isDiffTextVisible = false;
-            //}
-
-            //_isVisible = lines.All(line =>  line.VisibilityState == VisibilityState.FullyVisible);
+            
+            return _hunkRangeInfo.NewHunkRange.NumberOfLines*lineHeight;
         }
 
         private double GetTopCoordinate()
@@ -102,9 +116,30 @@ namespace GitDiffMargin.ViewModel
             return Math.Ceiling((ratio * _windowHeight) - _textView.ViewportTop);
         }
 
-        public double Height { get; set; }
+        public void RefreshPosition()
+        {
+            SetDisplayProperties();
+        }
 
-        public double Top { get; set; }
+        public double Height
+        {
+            get { return _height; }
+            set
+            {
+                _height = value;
+                RaisePropertyChanged(() => Height);
+            }
+        }
+
+        public double Top
+        {
+            get { return _top; }
+            set
+            {
+                _top = value;
+                RaisePropertyChanged(() => Top);
+            }
+        }
 
         public Brush DiffBrush { get; private set; }
 
@@ -156,7 +191,10 @@ namespace GitDiffMargin.ViewModel
         }
 
         private ICommand _showDifferenceCommand;
+
         private bool _isVisible;
+        private double _height;
+        private double _top;
 
         public ICommand ShowDifferenceCommand
         {

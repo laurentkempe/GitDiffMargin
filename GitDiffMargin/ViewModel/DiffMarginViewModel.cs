@@ -46,7 +46,7 @@ namespace GitDiffMargin.ViewModel
 
         private void OnViewportHeightChanged(object sender, EventArgs e)
         {
-            UpdateDiffViewModels();
+            RefreshDiffViewModelPositions();
         }
 
         private void OnPositionChanged(object sender, CaretPositionChangedEventArgs e)
@@ -70,7 +70,7 @@ namespace GitDiffMargin.ViewModel
             //if (AnyTextChanges(e.OldViewState.EditSnapshot.Version, e.NewViewState.EditSnapshot.Version))
             {
                 //todo Update the diff usig the file which is not saved
-                UpdateDiffViewModels();
+                RefreshDiffViewModelPositions();
             }
         }
 
@@ -90,20 +90,30 @@ namespace GitDiffMargin.ViewModel
         {
             _textView.GotAggregateFocus -= GotAggregateFocus;
 
-            UpdateDiffViewModels();
+            RefreshDiffViewModelPositions();
         }
 
         private void TextBufferChanged(object sender, TextContentChangedEventArgs e)
         {
             //todo this is correctly called but the file is not saved and then nothing new is shown
-            UpdateDiffViewModels();
+            RefreshDiffViewModelPositions();
         }
 
         public ObservableCollection<DiffViewModel> DiffViewModels { get; set; }
 
-        private void UpdateDiffViewModels()
+        private void RefreshDiffViewModelPositions()
         {
-            ActivityLog.LogInformation("GitDiffMargin", "UpdateDiffViewModels: " + _document.FilePath);
+            ActivityLog.LogInformation("GitDiffMargin", "RefreshDiffViewModelPositions: " + _document.FilePath);
+
+            foreach (var diffViewModel in DiffViewModels)
+            {
+                diffViewModel.RefreshPosition();
+            }
+        }
+
+        private void CreateDiffViewModels()
+        {
+            ActivityLog.LogInformation("GitDiffMargin", "CreateDiffViewModels: " + _document.FilePath);
 
             //According to the caller we might not need to re-run the git command to get the diffs but just re-draw for new positions
             var rangeInfos = _gitCommands.GetGitDiffFor(_document.FilePath);
@@ -122,7 +132,7 @@ namespace GitDiffMargin.ViewModel
             if ((e.FileActionType & FileActionTypes.ContentLoadedFromDisk) != 0 ||
                 (e.FileActionType & FileActionTypes.ContentSavedToDisk) != 0)
             {
-                UpdateDiffViewModels();
+                CreateDiffViewModels();
             }
         }
 
