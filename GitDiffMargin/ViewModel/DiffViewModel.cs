@@ -18,8 +18,8 @@ namespace GitDiffMargin.ViewModel
 {
     public class DiffViewModel : ViewModelBase
     {
-        private HunkRangeInfo _hunkRangeInfo;
-        private IWpfTextView _textView;
+        private readonly HunkRangeInfo _hunkRangeInfo;
+        private readonly IWpfTextView _textView;
         private double _lineCount;
         private double _windowHeight;
         private ICommand _copyOldTextCommand;
@@ -50,6 +50,8 @@ namespace GitDiffMargin.ViewModel
             Top = GetTopCoordinate();
 
             IsVisible = GetIsVisible();
+
+            Coordinates = string.Format("Top:{0}, Height:{1}, New number of Lines: {2}, StartingLineNumber: {3}", Top, Height, _hunkRangeInfo.NewHunkRange.NumberOfLines, _hunkRangeInfo.NewHunkRange.StartingLineNumber);
         }
 
         private bool GetIsDiffTextVisible()
@@ -69,18 +71,31 @@ namespace GitDiffMargin.ViewModel
 
         private bool GetIsVisible()
         {
-            var startLineNumber = (int) _hunkRangeInfo.NewHunkRange.StartingLineNumber;
-            var endLineNumber = (int) (_hunkRangeInfo.NewHunkRange.StartingLineNumber + _hunkRangeInfo.NewHunkRange.NumberOfLines);
+            var hunkStartLineNumber = (int) _hunkRangeInfo.NewHunkRange.StartingLineNumber;
+            var hunkEndLineNumber = (int) (_hunkRangeInfo.NewHunkRange.StartingLineNumber + _hunkRangeInfo.NewHunkRange.NumberOfLines);
 
-            var startline = _textView.TextSnapshot.GetLineFromLineNumber(startLineNumber);
-            var endline = _textView.TextSnapshot.GetLineFromLineNumber(endLineNumber);
-            if (startline != null && endline != null)
+            var hunkStartline = _textView.TextSnapshot.GetLineFromLineNumber(hunkStartLineNumber);
+            var hunkEndline = _textView.TextSnapshot.GetLineFromLineNumber(hunkEndLineNumber);
+            if (hunkStartline != null && hunkEndline != null)
             {
-                var topLine = _textView.GetTextViewLineContainingBufferPosition(startline.Start);
-                var bottomLine = _textView.GetTextViewLineContainingBufferPosition(endline.End);
+                var topLine = _textView.GetTextViewLineContainingBufferPosition(hunkStartline.Start);
+                var bottomLine = _textView.GetTextViewLineContainingBufferPosition(hunkEndline.End);
 
                 if (topLine.VisibilityState == VisibilityState.FullyVisible && bottomLine.VisibilityState == VisibilityState.FullyVisible)
                 {
+                    return true;
+                }
+
+                if (topLine.VisibilityState != VisibilityState.FullyVisible && bottomLine.VisibilityState == VisibilityState.FullyVisible)
+                {
+                    Top = 0;
+
+                    var numberofHiddenLines = _textView.ViewportTop/_textView.LineHeight;
+
+                    var hiddenHunkLines = numberofHiddenLines - hunkStartLineNumber;
+
+                    Height = Height - (hiddenHunkLines * _textView.LineHeight);
+
                     return true;
                 }
             }
@@ -163,11 +178,8 @@ namespace GitDiffMargin.ViewModel
 
         public string Coordinates
         {
-            get
-            {
-                return string.Format("Top:{0}, Height:{1}, New number of Lines: {2}, StartingLineNumber: {3}", Top, Height,
-                                     _hunkRangeInfo.NewHunkRange.NumberOfLines, _hunkRangeInfo.NewHunkRange.StartingLineNumber);
-            }
+            get { return _coordinates; }
+            set { _coordinates = value; RaisePropertyChanged(() => Coordinates);}
         }
 
         public string DiffText { get; private set; }
@@ -195,6 +207,7 @@ namespace GitDiffMargin.ViewModel
         private bool _isVisible;
         private double _height;
         private double _top;
+        private string _coordinates;
 
         public ICommand ShowDifferenceCommand
         {
