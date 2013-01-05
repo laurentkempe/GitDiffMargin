@@ -28,6 +28,8 @@ namespace GitDiffMargin.ViewModel
             _textView.TextBuffer.Changed += TextBufferChanged;
 
             _textView.LayoutChanged += OnLayoutChanged;
+            _textView.ViewportHeightChanged += OnViewportHeightChanged;
+
             _textView.Caret.PositionChanged += OnPositionChanged;
             
             // Delay the initial check until the view gets focus
@@ -40,6 +42,11 @@ namespace GitDiffMargin.ViewModel
 
                 ActivityLog.LogInformation("GitDiffMargin", "Created DiffMarginViewModel for: " + _document.FilePath);
             }
+        }
+
+        private void OnViewportHeightChanged(object sender, EventArgs e)
+        {
+            UpdateDiffViewModels();
         }
 
         private void OnPositionChanged(object sender, CaretPositionChangedEventArgs e)
