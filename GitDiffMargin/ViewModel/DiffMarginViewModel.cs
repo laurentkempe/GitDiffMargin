@@ -49,8 +49,18 @@ namespace GitDiffMargin.ViewModel
 
         private void OnLayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
         {
+            // http://msdn.microsoft.com/en-us/library/dd885240.aspx#textview
+            /*
+             * A viewport (the part of the text visible in the text window) cannot be scrolled in the same manner horizontally as it is scrolled vertically. A viewport is scrolled horizontally by changing 
+             * its left coordinate so that it moves with respect to the drawing surface. However, a viewport can be scrolled vertically only by changing the rendered text, which causes a LayoutChanged 
+             * event to be raised.
+             * 
+             * Distances in the coordinate system correspond to logical pixels. If the text rendering surface is displayed without a scaling transform, then one unit in the text rendering coordinate system 
+             * corresponds to one pixel on the display.
+             */
+
             //called when collapsing code
-            if (AnyTextChanges(e.OldViewState.EditSnapshot.Version, e.NewViewState.EditSnapshot.Version))
+            //if (AnyTextChanges(e.OldViewState.EditSnapshot.Version, e.NewViewState.EditSnapshot.Version))
             {
                 //todo Update the diff usig the file which is not saved
                 UpdateDiffViewModels();
@@ -88,6 +98,7 @@ namespace GitDiffMargin.ViewModel
         {
             ActivityLog.LogInformation("GitDiffMargin", "UpdateDiffViewModels: " + _document.FilePath);
 
+            //According to the caller we might not need to re-run the git command to get the diffs but just re-draw for new positions
             var rangeInfos = _gitCommands.GetGitDiffFor(_document.FilePath);
 
             DiffViewModels.Clear();

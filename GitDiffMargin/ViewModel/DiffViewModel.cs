@@ -10,6 +10,7 @@ using GitDiffMargin.Git;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using System.Linq;
+using Microsoft.VisualStudio.Text.Formatting;
 
 #endregion
 
@@ -17,10 +18,10 @@ namespace GitDiffMargin.ViewModel
 {
     public class DiffViewModel : ViewModelBase
     {
-        private readonly HunkRangeInfo _hunkRangeInfo;
-        private readonly double _lineCount;
-        private readonly IWpfTextView _textView;
-        private readonly double _windowHeight;
+        private HunkRangeInfo _hunkRangeInfo;
+        private double _lineCount;
+        private IWpfTextView _textView;
+        private double _windowHeight;
         private ICommand _copyOldTextCommand;
         private bool _isDiffTextVisible;
         private ICommand _rollbackCommand;
@@ -46,8 +47,7 @@ namespace GitDiffMargin.ViewModel
                 Height = _hunkRangeInfo.NewHunkRange.NumberOfLines * lineHeight;
             }
 
-            var ratio = (double) _hunkRangeInfo.NewHunkRange.StartingLineNumber/(double) _lineCount;
-            Top = Math.Ceiling(ratio*_windowHeight);
+            Top = GetTopCoordinate();
 
             var bc = new BrushConverter();
             DiffBrush = _hunkRangeInfo.IsModification ? (Brush)bc.ConvertFrom("#0DC0FF") : (Brush)bc.ConvertFrom("#0DCE0E");
@@ -62,7 +62,20 @@ namespace GitDiffMargin.ViewModel
             var startLineNumber = (int)_hunkRangeInfo.NewHunkRange.StartingLineNumber;
             var endLineNumber = (int)(_hunkRangeInfo.NewHunkRange.StartingLineNumber + _hunkRangeInfo.NewHunkRange.NumberOfLines);
 
-            _isVisible = _textView.TextViewLines.SelectMany(line => line.Snapshot.Lines).All(line => line.LineNumber <= endLineNumber && line.LineNumber >= startLineNumber);
+            var startline = _textView.TextSnapshot.GetLineFromLineNumber(startLineNumber);
+            var endline = _textView.TextSnapshot.GetLineFromLineNumber(endLineNumber);
+            if (startline != null && endline != null)
+            {
+                var topLine = _textView.GetTextViewLineContainingBufferPosition(startline.Start);
+                var bottomLine = _textView.GetTextViewLineContainingBufferPosition(endline.End);
+
+                if (topLine.VisibilityState == VisibilityState.FullyVisible && bottomLine.VisibilityState == VisibilityState.FullyVisible)
+                {
+                    _isVisible = true;
+                }
+            }
+
+            //_isVisible = _textView.TextViewLines.SelectMany(line => line.Snapshot.Lines).All(line => line.LineNumber <= endLineNumber && line.LineNumber >= startLineNumber);
 
             if (_hunkRangeInfo.IsDeletion || _hunkRangeInfo.IsModification)
             {
@@ -81,6 +94,12 @@ namespace GitDiffMargin.ViewModel
             //}
 
             //_isVisible = lines.All(line =>  line.VisibilityState == VisibilityState.FullyVisible);
+        }
+
+        private double GetTopCoordinate()
+        {
+            var ratio = (double) _hunkRangeInfo.NewHunkRange.StartingLineNumber/(double) _lineCount;
+            return Math.Ceiling((ratio * _windowHeight) - _textView.ViewportTop);
         }
 
         public double Height { get; set; }
