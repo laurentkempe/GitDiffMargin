@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using GalaSoft.MvvmLight;
 using GitDiffMargin.Git;
 using Microsoft.VisualStudio.Shell;
@@ -30,8 +31,6 @@ namespace GitDiffMargin.ViewModel
             _textView.LayoutChanged += OnLayoutChanged;
             _textView.ViewportHeightChanged += OnViewportHeightChanged;
 
-            _textView.Caret.PositionChanged += OnPositionChanged;
-            
             // Delay the initial check until the view gets focus
             _textView.GotAggregateFocus += GotAggregateFocus;
             
@@ -39,8 +38,6 @@ namespace GitDiffMargin.ViewModel
             if (_document != null)
             {
                 _document.FileActionOccurred += FileActionOccurred;
-
-                ActivityLog.LogInformation("GitDiffMargin", "Created DiffMarginViewModel for: " + _document.FilePath);
             }
         }
 
@@ -49,43 +46,11 @@ namespace GitDiffMargin.ViewModel
             RefreshDiffViewModelPositions();
         }
 
-        private void OnPositionChanged(object sender, CaretPositionChangedEventArgs e)
-        {
-            int i = 0;
-        }
-
         private void OnLayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
         {
-            // http://msdn.microsoft.com/en-us/library/dd885240.aspx#textview
-            /*
-             * A viewport (the part of the text visible in the text window) cannot be scrolled in the same manner horizontally as it is scrolled vertically. A viewport is scrolled horizontally by changing 
-             * its left coordinate so that it moves with respect to the drawing surface. However, a viewport can be scrolled vertically only by changing the rendered text, which causes a LayoutChanged 
-             * event to be raised.
-             * 
-             * Distances in the coordinate system correspond to logical pixels. If the text rendering surface is displayed without a scaling transform, then one unit in the text rendering coordinate system 
-             * corresponds to one pixel on the display.
-             */
-
-            //called when collapsing code
-            //if (AnyTextChanges(e.OldViewState.EditSnapshot.Version, e.NewViewState.EditSnapshot.Version))
-            {
-                //todo Update the diff usig the file which is not saved
-                RefreshDiffViewModelPositions();
-            }
+            RefreshDiffViewModelPositions();
         }
 
-
-        private static bool AnyTextChanges(ITextVersion oldVersion, ITextVersion currentVersion)
-        {
-            while (oldVersion != currentVersion)
-            {
-                if (oldVersion.Changes.Count > 0)
-                    return true;
-                oldVersion = oldVersion.Next;
-            }
-
-            return false;
-        }
         private void GotAggregateFocus(object sender, EventArgs e)
         {
             _textView.GotAggregateFocus -= GotAggregateFocus;
@@ -95,7 +60,8 @@ namespace GitDiffMargin.ViewModel
 
         private void TextBufferChanged(object sender, TextContentChangedEventArgs e)
         {
-            //todo this is correctly called but the file is not saved and then nothing new is shown
+            // this is correctly called but the file is not saved and then nothing new is shown
+            //todo Modify to work on a copy of the file
             RefreshDiffViewModelPositions();
         }
 
@@ -115,14 +81,12 @@ namespace GitDiffMargin.ViewModel
         {
             ActivityLog.LogInformation("GitDiffMargin", "CreateDiffViewModels: " + _document.FilePath);
 
-            //According to the caller we might not need to re-run the git command to get the diffs but just re-draw for new positions
             var rangeInfos = _gitCommands.GetGitDiffFor(_document.FilePath);
 
             DiffViewModels.Clear();
 
-            foreach (var hunkRangeInfo in rangeInfos)
+            foreach (var diffViewModel in rangeInfos.Select(hunkRangeInfo => new DiffViewModel(hunkRangeInfo, _textView)))
             {
-                var diffViewModel = new DiffViewModel(hunkRangeInfo, _textView);
                 DiffViewModels.Add(diffViewModel);
             }
         }

@@ -69,7 +69,7 @@
         </Setter.Value>
       </Setter>
     </Style>
-        <ControlTemplate x:Key="ChangeTemplate">
+        <ControlTemplate x:Key="ChangeTemplate" d:DataContext="{d:DesignInstance ViewModel:DiffViewModel}">
             <Border Width="9"
                           BorderBrush="#E0FFE0"
                           BorderThickness="0,1,1,1">
@@ -80,7 +80,7 @@
                 </Rectangle>
             </Border>
         </ControlTemplate>
-        <ControlTemplate x:Key="DeletionTemplate">
+        <ControlTemplate x:Key="DeletionTemplate" d:DataContext="{d:DesignInstance ViewModel:DiffViewModel}">
             <Polygon Points="0,0 1,1 0,2 0,0" Fill="Gray" Width="9" Height="{Binding Height}" Stretch="Fill">
                 <Polygon.ToolTip>
                     <ToolTip Content="{Binding Coordinates, Mode=OneWay}" />
@@ -102,7 +102,7 @@
         </ItemsPanelTemplate>
       </ItemsControl.ItemsPanel>
       <ItemsControl.ItemContainerStyle>
-        <Style TargetType="ContentPresenter">
+        <Style TargetType="ContentPresenter" d:DataContext="{d:DesignInstance ViewModel:DiffViewModel}">
           <Setter Property="Canvas.Top" Value="{Binding Top}" />
           <Setter Property="Height" Value="{Binding Height}" />
         </Style>

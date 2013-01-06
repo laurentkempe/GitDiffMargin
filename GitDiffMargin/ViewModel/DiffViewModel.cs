@@ -86,6 +86,7 @@ namespace GitDiffMargin.ViewModel
                     return true;
                 }
 
+                //todo need to do the same for the bottom when user resize the window
                 if (topLine.VisibilityState != VisibilityState.FullyVisible && bottomLine.VisibilityState == VisibilityState.FullyVisible)
                 {
                     Top = 0;
@@ -98,6 +99,7 @@ namespace GitDiffMargin.ViewModel
 
                     return true;
                 }
+
             }
 
             return false;
@@ -127,7 +129,7 @@ namespace GitDiffMargin.ViewModel
 
         private double GetTopCoordinate()
         {
-            var ratio = (double) _hunkRangeInfo.NewHunkRange.StartingLineNumber/(double) _lineCount;
+            var ratio = _hunkRangeInfo.NewHunkRange.StartingLineNumber/_lineCount;
             return Math.Ceiling((ratio * _windowHeight) - _textView.ViewportTop);
         }
 
@@ -176,11 +178,7 @@ namespace GitDiffMargin.ViewModel
             }
         }
 
-        public string Coordinates
-        {
-            get { return _coordinates; }
-            set { _coordinates = value; RaisePropertyChanged(() => Coordinates);}
-        }
+        public string Coordinates { get; private set; }
 
         public string DiffText { get; private set; }
 
@@ -207,7 +205,6 @@ namespace GitDiffMargin.ViewModel
         private bool _isVisible;
         private double _height;
         private double _top;
-        private string _coordinates;
 
         public ICommand ShowDifferenceCommand
         {
