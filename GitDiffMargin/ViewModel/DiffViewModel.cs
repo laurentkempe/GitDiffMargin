@@ -86,7 +86,6 @@ namespace GitDiffMargin.ViewModel
                     return true;
                 }
 
-                //todo need to do the same for the bottom when user resize the window
                 if (topLine.VisibilityState != VisibilityState.FullyVisible && bottomLine.VisibilityState == VisibilityState.FullyVisible)
                 {
                     Top = 0;
@@ -95,7 +94,14 @@ namespace GitDiffMargin.ViewModel
 
                     var hiddenHunkLines = numberofHiddenLines - hunkStartLineNumber;
 
-                    Height = Height - (hiddenHunkLines * _textView.LineHeight);
+                    Height = Height - Math.Ceiling(hiddenHunkLines * _textView.LineHeight);
+
+                    return true;
+                }
+
+                if (topLine.VisibilityState == VisibilityState.FullyVisible && bottomLine.VisibilityState != VisibilityState.FullyVisible)
+                {
+                    Height = _textView.ViewportBottom - (Top + 1);
 
                     return true;
                 }
