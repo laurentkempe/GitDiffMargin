@@ -90,7 +90,7 @@ namespace GitDiffMargin.ViewModel
         {
             _textView.GotAggregateFocus -= GotAggregateFocus;
 
-            RefreshDiffViewModelPositions();
+            CreateDiffViewModels();
         }
 
         private void TextBufferChanged(object sender, TextContentChangedEventArgs e)
