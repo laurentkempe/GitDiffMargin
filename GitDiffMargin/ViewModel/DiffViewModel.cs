@@ -22,11 +22,11 @@ namespace GitDiffMargin.ViewModel
         private readonly IWpfTextView _textView;
         private double _lineCount;
         private double _windowHeight;
-        private ICommand _copyOldTextCommand;
         private bool _isDiffTextVisible;
+        private bool _showPopup;
+        private ICommand _copyOldTextCommand;
         private ICommand _rollbackCommand;
         private ICommand _showPopUpCommand;
-        private bool _showPopup;
 
         public DiffViewModel(HunkRangeInfo hunkRangeInfo, IWpfTextView textView)
         {

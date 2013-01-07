@@ -140,16 +140,24 @@
                     <StackPanel Margin="0"
                                 Background="White"
                                 Orientation="Horizontal">
-                      <Button Style="{DynamicResource PopupButtonStyle}" ToolTip="Previous Change">
-                        <Image Width="16"
-                               Height="16"
-                               Source="..\Resources\PreviousArrow.png" />
-                      </Button>
-                      <Button Style="{DynamicResource PopupButtonStyle}" ToolTip="Next Change">
-                        <Image Width="16"
-                               Height="16"
-                               Source="..\Resources\NextArrow.png" />
-                      </Button>
+                        <Button
+                            Command="{Binding DataContext.PreviousChangeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl} }}"
+                            CommandParameter="{Binding}"
+                            Style="{DynamicResource PopupButtonStyle}"
+                            ToolTip="Previous Change">
+                            <Image Width="16"
+                                   Height="16"
+                                   Source="..\Resources\PreviousArrow.png" />
+                        </Button>
+                        <Button
+                            Command="{Binding DataContext.NextChangeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl} }}"
+                            CommandParameter="{Binding}"
+                            Style="{DynamicResource PopupButtonStyle}"
+                            ToolTip="Next Change">
+                            <Image Width="16"
+                                   Height="16"
+                                   Source="..\Resources\NextArrow.png" />
+                        </Button>
                       <Button Command="{Binding RollbackCommand}"
                               Style="{DynamicResource PopupButtonStyle}"
                               ToolTip="Rollback">

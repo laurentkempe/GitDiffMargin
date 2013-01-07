@@ -3,7 +3,9 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Input;
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
 using GitDiffMargin.Git;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
@@ -18,6 +20,8 @@ namespace GitDiffMargin.ViewModel
         private readonly IWpfTextView _textView;
         private readonly IGitCommands _gitCommands;
         private ITextDocument _document;
+        private RelayCommand<DiffViewModel> _previousChangeCommand;
+        private RelayCommand<DiffViewModel> _nextChangeCommand;
 
         public DiffMarginViewModel(IWpfTextView textView, IGitCommands gitCommands)
         {
@@ -66,6 +70,35 @@ namespace GitDiffMargin.ViewModel
         }
 
         public ObservableCollection<DiffViewModel> DiffViewModels { get; set; }
+
+        public RelayCommand<DiffViewModel> PreviousChangeCommand
+        {
+            get { return _previousChangeCommand ?? (_previousChangeCommand = new RelayCommand<DiffViewModel>(PreviousChange, PreviousChangeCanExecute)); }
+        }
+
+        public RelayCommand<DiffViewModel> NextChangeCommand
+        {
+            get { return _nextChangeCommand ?? (_nextChangeCommand = new RelayCommand<DiffViewModel>(NextChange, NextChangeCanExecute)); }
+        }
+
+        private bool PreviousChangeCanExecute(DiffViewModel currentDiffViewModel)
+        {
+            return DiffViewModels.IndexOf(currentDiffViewModel) > 0;
+        }
+
+        private void PreviousChange(DiffViewModel currentDiffViewModel)
+        {
+        }
+
+        private bool NextChangeCanExecute(DiffViewModel currentDiffViewModel)
+        {
+            return DiffViewModels.IndexOf(currentDiffViewModel) < (DiffViewModels.Count - 1);
+        }
+
+        private void NextChange(DiffViewModel currentDiffViewModel)
+        {
+        }
+
 
         private void RefreshDiffViewModelPositions()
         {
