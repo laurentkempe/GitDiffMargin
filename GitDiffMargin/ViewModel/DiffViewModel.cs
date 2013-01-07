@@ -107,6 +107,19 @@ namespace GitDiffMargin.ViewModel
 
                     return true;
                 }
+
+                if (topLine.VisibilityState != VisibilityState.FullyVisible && bottomLine.VisibilityState != VisibilityState.FullyVisible)
+                {
+                    if ((hunkEndLineNumber - hunkStartLineNumber) * _textView.LineHeight >= _textView.ViewportHeight)
+                    {
+                        if (hunkEndLineNumber * _textView.LineHeight > _textView.ViewportBottom)
+                        {
+                            Top = 0;
+                            Height = _textView.ViewportHeight;
+                            return true;
+                        }
+                    }
+                }
             }
 
             return false;
