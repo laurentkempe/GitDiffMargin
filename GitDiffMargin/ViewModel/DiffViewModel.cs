@@ -44,6 +44,8 @@ namespace GitDiffMargin.ViewModel
             IsDiffTextVisible = GetIsDiffTextVisible();
         }
 
+        public int LineNumber { get { return (int)_hunkRangeInfo.NewHunkRange.StartingLineNumber; } }
+
         private void SetDisplayProperties()
         {
             Height = GetHeight();
@@ -105,7 +107,6 @@ namespace GitDiffMargin.ViewModel
 
                     return true;
                 }
-
             }
 
             return false;

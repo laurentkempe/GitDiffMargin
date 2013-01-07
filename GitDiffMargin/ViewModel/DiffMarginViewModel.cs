@@ -86,19 +86,32 @@ namespace GitDiffMargin.ViewModel
             return DiffViewModels.IndexOf(currentDiffViewModel) > 0;
         }
 
-        private void PreviousChange(DiffViewModel currentDiffViewModel)
-        {
-        }
-
         private bool NextChangeCanExecute(DiffViewModel currentDiffViewModel)
         {
             return DiffViewModels.IndexOf(currentDiffViewModel) < (DiffViewModels.Count - 1);
         }
 
-        private void NextChange(DiffViewModel currentDiffViewModel)
+        private void PreviousChange(DiffViewModel currentDiffViewModel)
         {
+            MoveToChange(currentDiffViewModel, -1);
         }
 
+        private void NextChange(DiffViewModel currentDiffViewModel)
+        {
+            MoveToChange(currentDiffViewModel, +1);
+        }
+
+        private void MoveToChange(DiffViewModel currentDiffViewModel, int indexModifier)
+        {
+            var diffViewModelIndex = DiffViewModels.IndexOf(currentDiffViewModel) + indexModifier;
+            var diffViewModel  = DiffViewModels[diffViewModelIndex];
+            var diffLine = _textView.TextSnapshot.GetLineFromLineNumber(diffViewModel.LineNumber);
+            currentDiffViewModel.ShowPopup = false;
+
+            _textView.VisualElement.Focus();
+            _textView.Caret.MoveTo(diffLine.Start);
+            _textView.Caret.EnsureVisible();
+        }
 
         private void RefreshDiffViewModelPositions()
         {
