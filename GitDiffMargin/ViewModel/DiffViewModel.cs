@@ -81,7 +81,7 @@ namespace GitDiffMargin.ViewModel
                 var topLine = _textView.GetTextViewLineContainingBufferPosition(hunkStartline.Start);
                 var bottomLine = _textView.GetTextViewLineContainingBufferPosition(hunkEndline.End);
 
-                if (topLine.VisibilityState == VisibilityState.FullyVisible && bottomLine.VisibilityState == VisibilityState.FullyVisible)
+                if (IsHunkFullyVisible(topLine, bottomLine))
                 {
                     return true;
                 }
@@ -110,7 +110,7 @@ namespace GitDiffMargin.ViewModel
                 {
                     if ((hunkEndLineNumber - hunkStartLineNumber) * _textView.LineHeight >= _textView.ViewportHeight)
                     {
-                        if (hunkEndLineNumber * _textView.LineHeight >= _textView.ViewportBottom)
+                        if ((hunkEndLineNumber + 1) * _textView.LineHeight >= _textView.ViewportBottom)
                         {
                             Top = 0;
                             Height = _textView.ViewportHeight;
@@ -121,6 +121,11 @@ namespace GitDiffMargin.ViewModel
             }
 
             return false;
+        }
+
+        private static bool IsHunkFullyVisible(IWpfTextViewLine topLine, IWpfTextViewLine bottomLine)
+        {
+            return topLine.VisibilityState == VisibilityState.FullyVisible && bottomLine.VisibilityState == VisibilityState.FullyVisible;
         }
 
         private Brush GetDiffBrush()
