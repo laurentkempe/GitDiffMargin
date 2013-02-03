@@ -103,8 +103,9 @@
       </ItemsControl.ItemsPanel>
       <ItemsControl.ItemContainerStyle>
         <Style TargetType="ContentPresenter" d:DataContext="{d:DesignInstance ViewModel:DiffViewModel}">
-          <Setter Property="Canvas.Top" Value="{Binding Top}" />
-          <Setter Property="Height" Value="{Binding Height}" />
+          <Setter Property="VerticalAlignment" Value="Top" />
+          <Setter Property="Canvas.Top" Value="{Binding Top, Mode=OneWay}" />
+          <Setter Property="Height" Value="{Binding Height, Mode=OneWay}" />
         </Style>
       </ItemsControl.ItemContainerStyle>
       <ItemsControl.ItemTemplate>
