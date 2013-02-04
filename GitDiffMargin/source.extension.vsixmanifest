@@ -9,8 +9,10 @@
     <Icon>GitDiffMargin-Thumb.png</Icon>
     <PreviewImage>GitDiffMargin-Preview.png</PreviewImage>
     <SupportedProducts>
-      <VisualStudio Version="10.0">
+      <VisualStudio Version="11.0">
         <Edition>Pro</Edition>
+        <Edition>Premium</Edition>
+        <Edition>Ultimate</Edition>
       </VisualStudio>
     </SupportedProducts>
     <SupportedFrameworkRuntimeEdition MinVersion="4.0" MaxVersion="4.0" />
