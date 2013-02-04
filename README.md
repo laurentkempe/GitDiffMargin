@@ -12,3 +12,5 @@ A Visual Studio 2012 extension to display Git Diff on the margin of the current 
 * Copy the old code into the clipboard
 
 You might see a little video on the [following page](http://www.flickr.com/photos/laurentkempe/8116990137/).
+
+Works with [Visual Studio Tools got Git](http://visualstudiogallery.msdn.microsoft.com/abafc7d6-dcaa-40f4-8a5e-d6724bdb980c)
