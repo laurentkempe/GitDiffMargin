@@ -158,7 +158,7 @@ index e91ba58..e2dbef0 100644
             var gitDiffParser = new GitDiffParser(EmptyGitDiff);
             
             //Act
-            var hunkRangeInfos = gitDiffParser.Parse().ToList();
+            var hunkRangeInfos = gitDiffParser.Parse(null).ToList();
 
             //Assert
             hunkRangeInfos.Count.ShouldBe(0);
@@ -171,7 +171,7 @@ index e91ba58..e2dbef0 100644
             var gitDiffParser = new GitDiffParser(FirstGitDiff);
             
             //Act
-            var hunkRanges = gitDiffParser.Parse().ToList();
+            var hunkRanges = gitDiffParser.Parse(null).ToList();
 
             //Assert
             hunkRanges[0].OriginalHunkRange.StartingLineNumber.ShouldBe(40);
@@ -187,7 +187,7 @@ index e91ba58..e2dbef0 100644
             var gitDiffParser = new GitDiffParser(ThirdGitDiff);
             
             //Act
-            var hunkRanges = gitDiffParser.Parse().ToList();
+            var hunkRanges = gitDiffParser.Parse(null).ToList();
 
             //Assert
             hunkRanges[0].OriginalHunkRange.StartingLineNumber.ShouldBe(0);
@@ -203,7 +203,7 @@ index e91ba58..e2dbef0 100644
             var gitDiffParser = new GitDiffParser(SecondGitDiff);
             
             //Act
-            var hunkRanges = gitDiffParser.Parse().ToList();
+            var hunkRanges = gitDiffParser.Parse(null).ToList();
 
             //Assert
             hunkRanges[0].OriginalHunkRange.StartingLineNumber.ShouldBe(67);

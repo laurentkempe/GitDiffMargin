@@ -38,7 +38,7 @@ namespace GitDiffMargin
                 {
                     textDocument = null;
                 }
-                var diff = textDocument != null ? _commands.GetGitDiffFor(textDocument.FilePath) : Enumerable.Empty<HunkRangeInfo>();
+                var diff = textDocument != null ? _commands.GetGitDiffFor(textDocument.FilePath, snapshot) : Enumerable.Empty<HunkRangeInfo>();
 
                 var result = new DiffParseResultEventArgs(snapshot, stopwatch.Elapsed, diff.ToList());
                 OnParseComplete(result);

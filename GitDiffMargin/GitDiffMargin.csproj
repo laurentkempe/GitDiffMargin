@@ -103,7 +103,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BackgroundParser.cs" />
+    <Compile Include="DiffAdditionEditorFormatDefinition.cs" />
+    <Compile Include="DiffModificationEditorFormatDefinition.cs" />
     <Compile Include="DiffParseResultEventArgs.cs" />
+    <Compile Include="DiffRemovedEditorFormatDefinition.cs" />
     <Compile Include="DiffUpdateBackgroundParser.cs" />
     <Compile Include="GitDiffMargin.cs" />
     <Compile Include="GitDiffMarginFactory.cs" />

@@ -5,6 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ViewModel="clr-namespace:GitDiffMargin.ViewModel"
              Cursor="Hand"
+             ClipToBounds="True"
              d:DataContext="{d:DesignInstance ViewModel:DiffMarginViewModel}"
              d:DesignHeight="300"
              d:DesignWidth="9"
@@ -70,18 +71,15 @@
       </Setter>
     </Style>
         <ControlTemplate x:Key="ChangeTemplate" d:DataContext="{d:DesignInstance ViewModel:DiffViewModel}">
-            <Border Width="9"
-                          BorderBrush="#E0FFE0"
-                          BorderThickness="0,1,1,1">
-                <Rectangle Fill="{Binding DiffBrush}">
-                    <Rectangle.ToolTip>
-                        <ToolTip Content="{Binding Coordinates, Mode=OneWay}" />
-                    </Rectangle.ToolTip>
-                </Rectangle>
-            </Border>
+            <Rectangle Width="{Binding Width, Mode=OneWay}" HorizontalAlignment="Left" Margin="{Binding Margin, Mode=OneWay}" Fill="{Binding DiffBrush}">
+                <Rectangle.ToolTip>
+                    <ToolTip Content="{Binding Coordinates, Mode=OneWay}" />
+                </Rectangle.ToolTip>
+            </Rectangle>
+
         </ControlTemplate>
         <ControlTemplate x:Key="DeletionTemplate" d:DataContext="{d:DesignInstance ViewModel:DiffViewModel}">
-            <Polygon Points="0,0 1,1 0,2 0,0" Fill="Gray" Width="9" Height="{Binding Height}" Stretch="Fill">
+            <Polygon Points="0,0 1,1 0,2 0,0" Fill="{Binding DiffBrush}" Width="9" Height="{Binding Height}" Stretch="Fill">
                 <Polygon.ToolTip>
                     <ToolTip Content="{Binding Coordinates, Mode=OneWay}" />
                 </Polygon.ToolTip>
@@ -95,7 +93,7 @@
     <ItemsControl Grid.Column="0"
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch"
-                  ItemsSource="{Binding DiffViewModels, Mode=TwoWay}">
+                  ItemsSource="{Binding DiffViewModels, Mode=OneWay}">
       <ItemsControl.ItemsPanel>
         <ItemsPanelTemplate>
           <Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />

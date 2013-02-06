@@ -7,18 +7,18 @@ namespace GitDiffMargin.Git
             if (hunkRange.Contains(","))
             {
                 var hunkParts = hunkRange.Split(',');
-                StartingLineNumber = long.Parse(hunkParts[0]) - 1;
-                NumberOfLines = long.Parse(hunkParts[1]);
+                StartingLineNumber = int.Parse(hunkParts[0]) - 1;
+                NumberOfLines = int.Parse(hunkParts[1]);
             }
             else
             {
-                StartingLineNumber = long.Parse(hunkRange) - 1;
+                StartingLineNumber = int.Parse(hunkRange) - 1;
                 NumberOfLines = 1;
             }
 
         }
 
-        public long StartingLineNumber { get; private set; }
-        public long NumberOfLines { get; private set; }
+        public int StartingLineNumber { get; private set; }
+        public int NumberOfLines { get; private set; }
     }
 }

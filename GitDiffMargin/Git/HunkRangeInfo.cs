@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.VisualStudio.Text;
 
 #endregion
 
@@ -10,10 +11,12 @@ namespace GitDiffMargin.Git
 {
     public class HunkRangeInfo
     {
+        private readonly ITextSnapshot _snapshot;
         private List<string> DiffLines { get; set; }
 
-        public HunkRangeInfo(HunkRange originaleHunkRange, HunkRange newHunkRange, IEnumerable<string> diffLines)
+        public HunkRangeInfo(HunkRange originaleHunkRange, HunkRange newHunkRange, IEnumerable<string> diffLines, ITextSnapshot snapshot)
         {
+            _snapshot = snapshot;
             OriginalHunkRange = originaleHunkRange;
             NewHunkRange = newHunkRange;
             DiffLines = diffLines.ToList();

@@ -116,7 +116,6 @@ namespace GitDiffMargin.ViewModel
                                                                            var diffResult = e as DiffParseResultEventArgs;
                                                                            if (diffResult == null) return;
 
-
                                                                            foreach (var diffViewModel in diffResult.Diff.Select(hunkRangeInfo => new DiffViewModel(hunkRangeInfo, _textView)))
                                                                            {
                                                                                DiffViewModels.Add(diffViewModel);
