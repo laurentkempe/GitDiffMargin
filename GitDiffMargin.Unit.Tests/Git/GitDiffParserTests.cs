@@ -174,8 +174,8 @@ index e91ba58..e2dbef0 100644
             var hunkRanges = gitDiffParser.Parse().ToList();
 
             //Assert
-            hunkRanges[0].OriginaleHunkRange.StartingLineNumber.ShouldBe(40);
-            hunkRanges[0].OriginaleHunkRange.NumberOfLines.ShouldBe(0);
+            hunkRanges[0].OriginalHunkRange.StartingLineNumber.ShouldBe(40);
+            hunkRanges[0].OriginalHunkRange.NumberOfLines.ShouldBe(0);
             hunkRanges[0].NewHunkRange.StartingLineNumber.ShouldBe(41);
             hunkRanges[0].NewHunkRange.NumberOfLines.ShouldBe(20);
         }
@@ -190,8 +190,8 @@ index e91ba58..e2dbef0 100644
             var hunkRanges = gitDiffParser.Parse().ToList();
 
             //Assert
-            hunkRanges[0].OriginaleHunkRange.StartingLineNumber.ShouldBe(0);
-            hunkRanges[0].OriginaleHunkRange.NumberOfLines.ShouldBe(1);
+            hunkRanges[0].OriginalHunkRange.StartingLineNumber.ShouldBe(0);
+            hunkRanges[0].OriginalHunkRange.NumberOfLines.ShouldBe(1);
             hunkRanges[0].NewHunkRange.StartingLineNumber.ShouldBe(0);
             hunkRanges[0].NewHunkRange.NumberOfLines.ShouldBe(1);
         }
@@ -206,18 +206,18 @@ index e91ba58..e2dbef0 100644
             var hunkRanges = gitDiffParser.Parse().ToList();
 
             //Assert
-            hunkRanges[0].OriginaleHunkRange.StartingLineNumber.ShouldBe(67);
-            hunkRanges[0].OriginaleHunkRange.NumberOfLines.ShouldBe(2);
+            hunkRanges[0].OriginalHunkRange.StartingLineNumber.ShouldBe(67);
+            hunkRanges[0].OriginalHunkRange.NumberOfLines.ShouldBe(2);
             hunkRanges[0].NewHunkRange.StartingLineNumber.ShouldBe(66);
             hunkRanges[0].NewHunkRange.NumberOfLines.ShouldBe(0);
 
-            hunkRanges[1].OriginaleHunkRange.StartingLineNumber.ShouldBe(169);
-            hunkRanges[1].OriginaleHunkRange.NumberOfLines.ShouldBe(0);
+            hunkRanges[1].OriginalHunkRange.StartingLineNumber.ShouldBe(169);
+            hunkRanges[1].OriginalHunkRange.NumberOfLines.ShouldBe(0);
             hunkRanges[1].NewHunkRange.StartingLineNumber.ShouldBe(168);
             hunkRanges[1].NewHunkRange.NumberOfLines.ShouldBe(27);
 
-            hunkRanges[2].OriginaleHunkRange.StartingLineNumber.ShouldBe(184);
-            hunkRanges[2].OriginaleHunkRange.NumberOfLines.ShouldBe(2);
+            hunkRanges[2].OriginalHunkRange.StartingLineNumber.ShouldBe(184);
+            hunkRanges[2].OriginalHunkRange.NumberOfLines.ShouldBe(2);
             hunkRanges[2].NewHunkRange.StartingLineNumber.ShouldBe(208);
             hunkRanges[2].NewHunkRange.NumberOfLines.ShouldBe(0);
         }

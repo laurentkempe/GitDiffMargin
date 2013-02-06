@@ -14,7 +14,7 @@ namespace GitDiffMargin.Git
 
         public HunkRangeInfo(HunkRange originaleHunkRange, HunkRange newHunkRange, IEnumerable<string> diffLines)
         {
-            OriginaleHunkRange = originaleHunkRange;
+            OriginalHunkRange = originaleHunkRange;
             NewHunkRange = newHunkRange;
             DiffLines = diffLines.ToList();
             
@@ -28,7 +28,7 @@ namespace GitDiffMargin.Git
             }
         }
 
-        public HunkRange OriginaleHunkRange { get; private set; }
+        public HunkRange OriginalHunkRange { get; private set; }
         public HunkRange NewHunkRange { get; private set; }
         public List<string> OriginalText { get; private set; }
 
