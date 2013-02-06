@@ -120,7 +120,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\DiffMarginViewModel.cs" />
     <Compile Include="ViewModel\DiffViewModel.cs" />
-    <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\GitDiffBarControl.xaml.cs">
       <DependentUpon>GitDiffBarControl.xaml</DependentUpon>
     </Compile>

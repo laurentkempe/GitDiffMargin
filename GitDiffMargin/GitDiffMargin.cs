@@ -50,7 +50,7 @@ namespace GitDiffMargin
             _gitDiffBarControl.Width = MarginWidth;
         }
 
-        public System.Windows.FrameworkElement VisualElement
+        public FrameworkElement VisualElement
         {
             get
             {
@@ -144,19 +144,21 @@ namespace GitDiffMargin
 
             if (properties.Contains(EditorFormatDefinition.BackgroundColorId))
             {
-                Color color = (Color)properties[EditorFormatDefinition.BackgroundColorId];
-                Brush brush = new SolidColorBrush(color);
+                var color = (Color)properties[EditorFormatDefinition.BackgroundColorId];
+                var brush = new SolidColorBrush(color);
                 if (brush.CanFreeze)
+                {
                     brush.Freeze();
-
+                }
                 return brush;
             }
-            else if (properties.Contains(EditorFormatDefinition.BackgroundBrushId))
+            if (properties.Contains(EditorFormatDefinition.BackgroundBrushId))
             {
-                Brush brush = (Brush)properties[EditorFormatDefinition.BackgroundBrushId];
+                var brush = (Brush)properties[EditorFormatDefinition.BackgroundBrushId];
                 if (brush.CanFreeze)
+                {
                     brush.Freeze();
-
+                }
                 return brush;
             }
 

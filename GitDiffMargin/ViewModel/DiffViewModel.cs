@@ -43,7 +43,7 @@ namespace GitDiffMargin.ViewModel
             IsDiffTextVisible = GetIsDiffTextVisible();
         }
 
-        public int LineNumber { get { return (int)_hunkRangeInfo.NewHunkRange.StartingLineNumber; } }
+        public int LineNumber { get { return _hunkRangeInfo.NewHunkRange.StartingLineNumber; } }
 
         private void SetDisplayProperties()
         {
@@ -71,113 +71,112 @@ namespace GitDiffMargin.ViewModel
             if (_reverted)
                 return;
 
-            ITextSnapshotLine startLine = _textView.TextSnapshot.GetLineFromLineNumber(_hunkRangeInfo.NewHunkRange.StartingLineNumber);
-            ITextSnapshotLine endLine = _textView.TextSnapshot.GetLineFromLineNumber(_hunkRangeInfo.NewHunkRange.StartingLineNumber + _hunkRangeInfo.NewHunkRange.NumberOfLines - 1);
-            if (startLine != null && endLine != null)
+            var startLine = _textView.TextSnapshot.GetLineFromLineNumber(_hunkRangeInfo.NewHunkRange.StartingLineNumber);
+            var endLine = _textView.TextSnapshot.GetLineFromLineNumber(_hunkRangeInfo.NewHunkRange.StartingLineNumber + _hunkRangeInfo.NewHunkRange.NumberOfLines - 1);
+            if (startLine == null || endLine == null) return;
+
+            var startLineView = _textView.GetTextViewLineContainingBufferPosition(startLine.Start);
+            var endLineView = _textView.GetTextViewLineContainingBufferPosition(endLine.Start);
+            if (startLineView == null || endLineView == null)
             {
-                IWpfTextViewLine startLineView = _textView.GetTextViewLineContainingBufferPosition(startLine.Start);
-                IWpfTextViewLine endLineView = _textView.GetTextViewLineContainingBufferPosition(endLine.Start);
-                if (startLineView == null || endLineView == null)
-                {
-                    IsVisible = false;
-                    return;
-                }
-
-                if (_textView.TextViewLines.LastVisibleLine.EndIncludingLineBreak < startLineView.Start
-                    || _textView.TextViewLines.FirstVisibleLine.Start > endLineView.EndIncludingLineBreak)
-                {
-                    IsVisible = false;
-                    return;
-                }
-
-                double startTop;
-                switch (startLineView.VisibilityState)
-                {
-                    case VisibilityState.FullyVisible:
-                        startTop = startLineView.Top - _textView.ViewportTop;
-                        break;
-
-                    case VisibilityState.Hidden:
-                        startTop = startLineView.Top - _textView.ViewportTop;
-                        break;
-
-                    case VisibilityState.PartiallyVisible:
-                        startTop = startLineView.Top - _textView.ViewportTop;
-                        break;
-
-                    case VisibilityState.Unattached:
-                        // if the closest line was past the end we would have already returned
-                        startTop = 0;
-                        break;
-
-                    default:
-                        // shouldn't be reachable, but definitely hide if this is the case
-                        IsVisible = false;
-                        return;
-                }
-
-                if (startTop >= _textView.ViewportHeight + _textView.LineHeight)
-                {
-                    // shouldn't be reachable, but definitely hide if this is the case
-                    IsVisible = false;
-                    return;
-                }
-
-                double stopBottom;
-                switch (endLineView.VisibilityState)
-                {
-                    case VisibilityState.FullyVisible:
-                        stopBottom = endLineView.Bottom - _textView.ViewportTop;
-                        break;
-
-                    case VisibilityState.Hidden:
-                        stopBottom = endLineView.Bottom - _textView.ViewportTop;
-                        break;
-
-                    case VisibilityState.PartiallyVisible:
-                        stopBottom = endLineView.Bottom - _textView.ViewportTop;
-                        break;
-
-                    case VisibilityState.Unattached:
-                        // if the closest line was before the start we would have already returned
-                        stopBottom = _textView.ViewportHeight;
-                        break;
-
-                    default:
-                        // shouldn't be reachable, but definitely hide if this is the case
-                        IsVisible = false;
-                        return;
-                }
-
-                if (stopBottom <= -_textView.LineHeight)
-                {
-                    // shouldn't be reachable, but definitely hide if this is the case
-                    IsVisible = false;
-                    return;
-                }
-
-                if (stopBottom <= startTop)
-                {
-                    if (_hunkRangeInfo.IsDeletion)
-                    {
-                        double center = (startTop + stopBottom) / 2.0;
-                        Top = center - (_textView.LineHeight / 2.0);
-                        Height = _textView.LineHeight;
-                        IsVisible = true;
-                    }
-                    else
-                    {
-                        // could be reachable if translation changes an addition to empty
-                        IsVisible = false;
-                    }
-
-                    return;
-                }
-
-                Top = startTop;
-                Height = stopBottom - startTop;
-                IsVisible = true;
+                IsVisible = false;
+                return;
             }
+
+            if (_textView.TextViewLines.LastVisibleLine.EndIncludingLineBreak < startLineView.Start
+                || _textView.TextViewLines.FirstVisibleLine.Start > endLineView.EndIncludingLineBreak)
+            {
+                IsVisible = false;
+                return;
+            }
+
+            double startTop;
+            switch (startLineView.VisibilityState)
+            {
+                case VisibilityState.FullyVisible:
+                    startTop = startLineView.Top - _textView.ViewportTop;
+                    break;
+
+                case VisibilityState.Hidden:
+                    startTop = startLineView.Top - _textView.ViewportTop;
+                    break;
+
+                case VisibilityState.PartiallyVisible:
+                    startTop = startLineView.Top - _textView.ViewportTop;
+                    break;
+
+                case VisibilityState.Unattached:
+                    // if the closest line was past the end we would have already returned
+                    startTop = 0;
+                    break;
+
+                default:
+                    // shouldn't be reachable, but definitely hide if this is the case
+                    IsVisible = false;
+                    return;
+            }
+
+            if (startTop >= _textView.ViewportHeight + _textView.LineHeight)
+            {
+                // shouldn't be reachable, but definitely hide if this is the case
+                IsVisible = false;
+                return;
+            }
+
+            double stopBottom;
+            switch (endLineView.VisibilityState)
+            {
+                case VisibilityState.FullyVisible:
+                    stopBottom = endLineView.Bottom - _textView.ViewportTop;
+                    break;
+
+                case VisibilityState.Hidden:
+                    stopBottom = endLineView.Bottom - _textView.ViewportTop;
+                    break;
+
+                case VisibilityState.PartiallyVisible:
+                    stopBottom = endLineView.Bottom - _textView.ViewportTop;
+                    break;
+
+                case VisibilityState.Unattached:
+                    // if the closest line was before the start we would have already returned
+                    stopBottom = _textView.ViewportHeight;
+                    break;
+
+                default:
+                    // shouldn't be reachable, but definitely hide if this is the case
+                    IsVisible = false;
+                    return;
+            }
+
+            if (stopBottom <= -_textView.LineHeight)
+            {
+                // shouldn't be reachable, but definitely hide if this is the case
+                IsVisible = false;
+                return;
+            }
+
+            if (stopBottom <= startTop)
+            {
+                if (_hunkRangeInfo.IsDeletion)
+                {
+                    var center = (startTop + stopBottom) / 2.0;
+                    Top = center - (_textView.LineHeight / 2.0);
+                    Height = _textView.LineHeight;
+                    IsVisible = true;
+                }
+                else
+                {
+                    // could be reachable if translation changes an addition to empty
+                    IsVisible = false;
+                }
+
+                return;
+            }
+
+            Top = startTop;
+            Height = stopBottom - startTop;
+            IsVisible = true;
         }
 
 

@@ -3,10 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:ViewModel="clr-namespace:GitDiffMargin.ViewModel"
+             xmlns:viewModel="clr-namespace:GitDiffMargin.ViewModel"
              Cursor="Hand"
              ClipToBounds="True"
-             d:DataContext="{d:DesignInstance ViewModel:DiffMarginViewModel}"
+             d:DataContext="{d:DesignInstance viewModel:DiffMarginViewModel}"
              d:DesignHeight="300"
              d:DesignWidth="9"
              mc:Ignorable="d">
@@ -70,7 +70,7 @@
         </Setter.Value>
       </Setter>
     </Style>
-        <ControlTemplate x:Key="ChangeTemplate" d:DataContext="{d:DesignInstance ViewModel:DiffViewModel}">
+        <ControlTemplate x:Key="ChangeTemplate" d:DataContext="{d:DesignInstance viewModel:DiffViewModel}">
             <Rectangle Width="{Binding Width, Mode=OneWay}" HorizontalAlignment="Left" Margin="{Binding Margin, Mode=OneWay}" Fill="{Binding DiffBrush}">
                 <Rectangle.ToolTip>
                     <ToolTip Content="{Binding Coordinates, Mode=OneWay}" />
@@ -78,7 +78,7 @@
             </Rectangle>
 
         </ControlTemplate>
-        <ControlTemplate x:Key="DeletionTemplate" d:DataContext="{d:DesignInstance ViewModel:DiffViewModel}">
+        <ControlTemplate x:Key="DeletionTemplate" d:DataContext="{d:DesignInstance viewModel:DiffViewModel}">
             <Polygon Points="0,0 1,1 0,2 0,0" Fill="{Binding DiffBrush}" Width="9" Height="{Binding Height}" Stretch="Fill">
                 <Polygon.ToolTip>
                     <ToolTip Content="{Binding Coordinates, Mode=OneWay}" />
@@ -100,7 +100,7 @@
         </ItemsPanelTemplate>
       </ItemsControl.ItemsPanel>
       <ItemsControl.ItemContainerStyle>
-        <Style TargetType="ContentPresenter" d:DataContext="{d:DesignInstance ViewModel:DiffViewModel}">
+        <Style TargetType="ContentPresenter" d:DataContext="{d:DesignInstance viewModel:DiffViewModel}">
           <Setter Property="VerticalAlignment" Value="Top" />
           <Setter Property="Canvas.Top" Value="{Binding Top, Mode=OneWay}" />
           <Setter Property="Height" Value="{Binding Height, Mode=OneWay}" />

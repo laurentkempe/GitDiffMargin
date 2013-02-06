@@ -26,9 +26,9 @@ namespace GitDiffMargin.Git
             var split = _gitDiff.Split('\n');
             //var split = _gitDiff.Split(new[] {Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries);
 
-            bool firstHunk = true;
+            var firstHunk = true;
 
-            string hunkLine = "";
+            var hunkLine = "";
             var diffs = new List<string>();
 
             var withoutHeader = split.SkipWhile(s => !s.StartsWith("@@"));

@@ -43,7 +43,6 @@ namespace GitDiffMargin
         private DateTimeOffset _lastEdit;
         private bool _dirty;
         private int _parsing;
-        private bool _disposed;
 
         public event EventHandler<ParseResultEventArgs> ParseComplete;
 
@@ -76,13 +75,7 @@ namespace GitDiffMargin
             }
         }
 
-        public bool Disposed
-        {
-            get
-            {
-                return _disposed;
-            }
-        }
+        public bool Disposed { get; private set; }
 
         public TimeSpan ReparseDelay
         {
@@ -93,7 +86,7 @@ namespace GitDiffMargin
 
             set
             {
-                TimeSpan originalDelay = _reparseDelay;
+                var originalDelay = _reparseDelay;
                 try
                 {
                     _reparseDelay = value;
@@ -135,7 +128,7 @@ namespace GitDiffMargin
 
         protected virtual void Dispose(bool disposing)
         {
-            _disposed = true;
+            Disposed = true;
         }
 
         protected abstract void ReParseImpl();
@@ -177,18 +170,16 @@ namespace GitDiffMargin
             if (DateTimeOffset.Now - _lastEdit < ReparseDelay)
                 return;
 
-            if (Interlocked.CompareExchange(ref _parsing, 1, 0) == 0)
+            if (Interlocked.CompareExchange(ref _parsing, 1, 0) != 0) return;
+            try
             {
-                try
-                {
-                    Task task = Task.Factory.StartNew(ReParse, CancellationToken.None, TaskCreationOptions.None, _taskScheduler);
-                    task.ContinueWith(_ => _parsing = 0);
-                }
-                catch
-                {
-                    _parsing = 0;
-                    throw;
-                }
+                var task = Task.Factory.StartNew(ReParse, CancellationToken.None, TaskCreationOptions.None, _taskScheduler);
+                task.ContinueWith(_ => _parsing = 0);
+            }
+            catch
+            {
+                _parsing = 0;
+                throw;
             }
         }
 

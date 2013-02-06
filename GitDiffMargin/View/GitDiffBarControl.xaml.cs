@@ -1,15 +1,9 @@
-﻿#region using
-
-using System.Windows.Controls;
-
-#endregion
-
-namespace GitDiffMargin.View
+﻿namespace GitDiffMargin.View
 {
     /// <summary>
     ///   Interaction logic for GitDiffBarControl.xaml
     /// </summary>
-    public partial class DiffMarginControl : UserControl
+    public partial class DiffMarginControl
     {
         public DiffMarginControl()
         {

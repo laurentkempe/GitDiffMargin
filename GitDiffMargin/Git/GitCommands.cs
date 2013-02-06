@@ -45,7 +45,7 @@ namespace GitDiffMargin.Git
             p.StartInfo.CreateNoWindow = true;
             p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             p.StartInfo.FileName = @"git.exe";
-            p.StartInfo.WorkingDirectory = Path.GetDirectoryName(filename);
+            p.StartInfo.WorkingDirectory = Path.GetDirectoryName(filename) ?? string.Empty;
             return p;
         }
     }
