@@ -9,9 +9,9 @@ namespace GitDiffMargin.View
     /// <summary>
     ///   Interaction logic for GitDiffBarControl.xaml
     /// </summary>
-    public partial class GitDiffBarControl : UserControl
+    public partial class DiffMarginControl : UserControl
     {
-        public GitDiffBarControl()
+        public DiffMarginControl()
         {
             InitializeComponent();
         }

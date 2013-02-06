@@ -1,73 +1,102 @@
 ﻿#region using
 
 using System;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using GitDiffMargin.Git;
 using GitDiffMargin.View;
 using GitDiffMargin.ViewModel;
+using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.Text.Editor.OptionsExtensionMethods;
 
 #endregion
 
 namespace GitDiffMargin
 {
-    /// <summary>
-    ///   A class detailing the margin's visual definition including both size and content.
-    /// </summary>
-    internal class GitDiffMargin : Canvas, IWpfTextViewMargin
+    public class GitDiffMargin : Canvas, IWpfTextViewMargin
     {
         public const string MarginName = "GitDiffMargin";
-        private bool _isDisposed = false;
-        private readonly IWpfTextView _textView;
-        private readonly GitDiffBarControl _gitDiffBarControl;
 
-        /// <summary>
-        ///   Creates a <see cref="GitDiffMargin" /> for a given <see cref="IWpfTextView" /> .
-        /// </summary>
-        /// <param name="textView"> The <see cref="IWpfTextView" /> to attach the margin to. </param>
-        public GitDiffMargin(IWpfTextView textView)
+        internal const double ChangeLeft = 2.5;
+        internal const double ChangeWidth = 5.0;
+        private const double MarginWidth = 10.0;
+
+        private readonly IWpfTextView _textView;
+        private readonly IEditorFormatMap _editorFormatMap;
+        private readonly DiffMarginControl _gitDiffBarControl;
+        private bool _isDisposed;
+
+        private Brush _additionBrush;
+        private Brush _modificationBrush;
+        private Brush _removedBrush;
+
+        public GitDiffMargin(IWpfTextView textView, ITextDocumentFactoryService textDocumentFactoryService, IEditorFormatMapService editorFormatMapService)
         {
             _textView = textView;
+            _editorFormatMap = editorFormatMapService.GetEditorFormatMap(textView);
 
-            _gitDiffBarControl = new GitDiffBarControl { DataContext = new DiffMarginViewModel(_textView, new GitCommands()) };
+            _editorFormatMap.FormatMappingChanged += HandleFormatMappingChanged;
+            _textView.Closed += (sender, e) => _editorFormatMap.FormatMappingChanged -= HandleFormatMappingChanged;
+            UpdateBrushes();
 
-            Children.Add(_gitDiffBarControl);
+            HandleOptionChanged(null, null);
+            _textView.Options.OptionChanged += HandleOptionChanged;
+
+            _gitDiffBarControl = new DiffMarginControl();
+            _gitDiffBarControl.DataContext = new DiffMarginViewModel(this, _textView, textDocumentFactoryService, new GitCommands());
+            _gitDiffBarControl.Width = MarginWidth;
         }
 
-        #region IWpfTextViewMargin Members
-
-        /// <summary>
-        ///   The <see cref="Sytem.Windows.FrameworkElement" /> that implements the visual representation of the margin.
-        /// </summary>
         public System.Windows.FrameworkElement VisualElement
         {
-            // Since this margin implements Canvas, this is the object which renders
-            // the margin.
             get
             {
                 ThrowIfDisposed();
-                return this;
+                return _gitDiffBarControl;
             }
         }
 
         public double MarginSize
         {
-            // Since this is a horizontal margin, its width will be bound to the width of the text view.
-            // Therefore, its size is its height.
             get
             {
                 ThrowIfDisposed();
-                return this.ActualHeight;
+                return _gitDiffBarControl.ActualWidth;
             }
         }
 
         public bool Enabled
         {
-            // The margin should always be enabled
             get
             {
-                ThrowIfDisposed();
-                return true;
+                return _textView.Options.IsSelectionMarginEnabled();
+            }
+        }
+
+        public Brush AdditionBrush
+        {
+            get
+            {
+                return _additionBrush ?? Brushes.Transparent;
+            }
+        }
+
+        public Brush ModificationBrush
+        {
+            get
+            {
+                return _modificationBrush ?? Brushes.Transparent;
+            }
+        }
+
+        public Brush RemovedBrush
+        {
+            get
+            {
+                return _removedBrush ?? Brushes.Transparent;
             }
         }
 
@@ -78,24 +107,66 @@ namespace GitDiffMargin
         /// <returns> An instance of GitDiffMargin or null </returns>
         public ITextViewMargin GetTextViewMargin(string marginName)
         {
-            return (marginName == GitDiffMargin.MarginName) ? (IWpfTextViewMargin) this : null;
+            return string.Equals(marginName, MarginName, StringComparison.OrdinalIgnoreCase) ? this : null;
         }
 
         public void Dispose()
         {
-            if (!_isDisposed)
+            GC.SuppressFinalize(this);
+            _isDisposed = true;
+        }
+
+        private void HandleFormatMappingChanged(object sender, FormatItemsEventArgs e)
+        {
+            if (e.ChangedItems.Contains(DiffFormatNames.Addition)
+                || e.ChangedItems.Contains(DiffFormatNames.Modification)
+                || e.ChangedItems.Contains(DiffFormatNames.Removed))
             {
-                GC.SuppressFinalize(this);
-                _isDisposed = true;
+                UpdateBrushes();
             }
         }
 
-        #endregion
+        private void HandleOptionChanged(object sender, EditorOptionChangedEventArgs e)
+        {
+        }
+
+        private void UpdateBrushes()
+        {
+            _additionBrush = GetBrush(_editorFormatMap.GetProperties(DiffFormatNames.Addition));
+            _modificationBrush = GetBrush(_editorFormatMap.GetProperties(DiffFormatNames.Modification));
+            _removedBrush = GetBrush(_editorFormatMap.GetProperties(DiffFormatNames.Removed));
+        }
+
+        private static Brush GetBrush(ResourceDictionary properties)
+        {
+            if (properties == null)
+                return Brushes.Transparent;
+
+            if (properties.Contains(EditorFormatDefinition.BackgroundColorId))
+            {
+                Color color = (Color)properties[EditorFormatDefinition.BackgroundColorId];
+                Brush brush = new SolidColorBrush(color);
+                if (brush.CanFreeze)
+                    brush.Freeze();
+
+                return brush;
+            }
+            else if (properties.Contains(EditorFormatDefinition.BackgroundBrushId))
+            {
+                Brush brush = (Brush)properties[EditorFormatDefinition.BackgroundBrushId];
+                if (brush.CanFreeze)
+                    brush.Freeze();
+
+                return brush;
+            }
+
+            return Brushes.Transparent;
+        }
 
         private void ThrowIfDisposed()
         {
             if (_isDisposed)
-                throw new ObjectDisposedException(MarginName);
+                throw new ObjectDisposedException(GetType().FullName);
         }
     }
 }

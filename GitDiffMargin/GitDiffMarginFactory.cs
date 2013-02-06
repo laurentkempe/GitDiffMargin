@@ -1,29 +1,32 @@
-﻿using System.ComponentModel.Composition;
-using Microsoft.VisualStudio.Shell;
+﻿#region using
+
+using System.ComponentModel.Composition;
+using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
 
+#endregion
+
 namespace GitDiffMargin
 {
-    #region GitDiffMargin Factory
-    /// <summary>
-    /// Export a <see cref="IWpfTextViewMarginProvider"/>, which returns an instance of the margin for the editor
-    /// to use.
-    /// </summary>
-    [Export(typeof(IWpfTextViewMarginProvider))]    
+    [Export(typeof (IWpfTextViewMarginProvider))]
     [Name(GitDiffMargin.MarginName)]
-    [Order(Before = PredefinedMarginNames.LineNumber)]
+    [Order(After = PredefinedMarginNames.Spacer)]
     [MarginContainer(PredefinedMarginNames.LeftSelection)]
     [ContentType("text")]
     [TextViewRole(PredefinedTextViewRoles.Interactive)]
     internal sealed class MarginFactory : IWpfTextViewMarginProvider
     {
+        [Import]
+        private ITextDocumentFactoryService TextDocumentFactoryService { get; set; }
+
+        [Import]
+        private IEditorFormatMapService EditorFormatMapService { get; set; }
+
         public IWpfTextViewMargin CreateMargin(IWpfTextViewHost textViewHost, IWpfTextViewMargin containerMargin)
         {
-            ActivityLog.LogInformation("GitDiffMargin", "GitDiffMargin plugin loaded");
-
-            return new GitDiffMargin(textViewHost.TextView);
+            return new GitDiffMargin(textViewHost.TextView, TextDocumentFactoryService, EditorFormatMapService);
         }
     }
-    #endregion
 }
