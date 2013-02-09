@@ -67,6 +67,12 @@ namespace GitDiffMargin.ViewModel
             get { return _nextChangeCommand ?? (_nextChangeCommand = new RelayCommand<DiffViewModel>(NextChange, NextChangeCanExecute)); }
         }
 
+        public override void Cleanup()
+        {
+            _parser.Dispose();
+            base.Cleanup();
+        }
+
         private bool PreviousChangeCanExecute(DiffViewModel currentDiffViewModel)
         {
             return DiffViewModels.IndexOf(currentDiffViewModel) > 0;
@@ -116,7 +122,7 @@ namespace GitDiffMargin.ViewModel
                                                                            var diffResult = e as DiffParseResultEventArgs;
                                                                            if (diffResult == null) return;
 
-                                                                           foreach (var diffViewModel in diffResult.Diff.Select(hunkRangeInfo => new DiffViewModel(hunkRangeInfo, _textView)))
+                                                                           foreach (var diffViewModel in diffResult.Diff.Select(hunkRangeInfo => new DiffViewModel(_margin, hunkRangeInfo, _textView)))
                                                                            {
                                                                                DiffViewModels.Add(diffViewModel);
                                                                            }

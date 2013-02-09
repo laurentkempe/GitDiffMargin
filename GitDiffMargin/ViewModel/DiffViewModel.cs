@@ -18,6 +18,7 @@ namespace GitDiffMargin.ViewModel
 {
     public class DiffViewModel : ViewModelBase
     {
+        private readonly GitDiffMargin _margin;
         private readonly HunkRangeInfo _hunkRangeInfo;
         private readonly IWpfTextView _textView;
         private bool _isDiffTextVisible;
@@ -27,23 +28,29 @@ namespace GitDiffMargin.ViewModel
         private ICommand _rollbackCommand;
         private ICommand _showPopUpCommand;
 
-        public DiffViewModel(HunkRangeInfo hunkRangeInfo, IWpfTextView textView)
+        public DiffViewModel(GitDiffMargin margin, HunkRangeInfo hunkRangeInfo, IWpfTextView textView)
         {
+            _margin = margin;
             _hunkRangeInfo = hunkRangeInfo;
             _textView = textView;
+
+            _margin.BrushesChanged += HandleBrushesChanged;
 
             ShowPopup = false;
 
             SetDisplayProperties();
 
-            DiffBrush = GetDiffBrush();
-            
             DiffText = GetDiffText();
 
             IsDiffTextVisible = GetIsDiffTextVisible();
         }
 
         public int LineNumber { get { return _hunkRangeInfo.NewHunkRange.StartingLineNumber; } }
+
+        private void HandleBrushesChanged(object sender, EventArgs e)
+        {
+            RaisePropertyChanged(() => DiffBrush);
+        }
 
         private void SetDisplayProperties()
         {
@@ -179,18 +186,6 @@ namespace GitDiffMargin.ViewModel
             IsVisible = true;
         }
 
-
-        private Brush GetDiffBrush()
-        {
-            var bc = new BrushConverter();
-            var diffBrush = _hunkRangeInfo.IsModification ? (Brush) bc.ConvertFrom("#0DC0FF") : (Brush) bc.ConvertFrom("#0DCE0E");
-            if (diffBrush != null)
-            {
-                diffBrush.Freeze();
-            }
-            return diffBrush;
-        }
-
         public void RefreshPosition()
         {
             SetDisplayProperties();
@@ -232,7 +227,18 @@ namespace GitDiffMargin.ViewModel
             }
         }
 
-        public Brush DiffBrush { get; private set; }
+        public Brush DiffBrush
+        {
+            get
+            {
+                if (_hunkRangeInfo.IsAddition)
+                    return _margin.AdditionBrush;
+                else if (_hunkRangeInfo.IsModification)
+                    return _margin.ModificationBrush;
+                else
+                    return _margin.RemovedBrush;
+            }
+        }
 
         public bool IsDeletion { get { return _hunkRangeInfo.IsDeletion;} }
 

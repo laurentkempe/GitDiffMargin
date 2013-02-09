@@ -42,13 +42,14 @@ namespace GitDiffMargin
             _textView.Closed += (sender, e) => _editorFormatMap.FormatMappingChanged -= HandleFormatMappingChanged;
             UpdateBrushes();
 
-            HandleOptionChanged(null, null);
             _textView.Options.OptionChanged += HandleOptionChanged;
 
             _gitDiffBarControl = new DiffMarginControl();
             _gitDiffBarControl.DataContext = new DiffMarginViewModel(this, _textView, textDocumentFactoryService, new GitCommands());
             _gitDiffBarControl.Width = MarginWidth;
         }
+
+        public event EventHandler BrushesChanged;
 
         public FrameworkElement VisualElement
         {
@@ -116,6 +117,13 @@ namespace GitDiffMargin
             _isDisposed = true;
         }
 
+        protected virtual void OnBrushesChanged(EventArgs e)
+        {
+            var t = BrushesChanged;
+            if (t != null)
+                t(this, e);
+        }
+
         private void HandleFormatMappingChanged(object sender, FormatItemsEventArgs e)
         {
             if (e.ChangedItems.Contains(DiffFormatNames.Addition)
@@ -128,6 +136,8 @@ namespace GitDiffMargin
 
         private void HandleOptionChanged(object sender, EditorOptionChangedEventArgs e)
         {
+            if (!_isDisposed && e.OptionId == GitDiffMarginTextViewOptions.DiffMarginName)
+                UpdateVisibility();
         }
 
         private void UpdateBrushes()
@@ -135,6 +145,13 @@ namespace GitDiffMargin
             _additionBrush = GetBrush(_editorFormatMap.GetProperties(DiffFormatNames.Addition));
             _modificationBrush = GetBrush(_editorFormatMap.GetProperties(DiffFormatNames.Modification));
             _removedBrush = GetBrush(_editorFormatMap.GetProperties(DiffFormatNames.Removed));
+            OnBrushesChanged(EventArgs.Empty);
+        }
+
+        private void UpdateVisibility()
+        {
+            ThrowIfDisposed();
+            _gitDiffBarControl.Visibility = Enabled ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private static Brush GetBrush(ResourceDictionary properties)
