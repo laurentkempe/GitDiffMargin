@@ -179,8 +179,8 @@
                       </Button>
                     </StackPanel>
                   </Border>
-                  <Border Background="White"
-                          BorderBrush="Black"
+                 <Border Background="{Binding Background, Mode=OneWay}"
+                          BorderBrush="{Binding Foreground, Mode=OneWay}"
                           BorderThickness="1,1,1,1"
                           Margin="0,-1,0,0"
                           Visibility="{Binding IsDiffTextVisible,
