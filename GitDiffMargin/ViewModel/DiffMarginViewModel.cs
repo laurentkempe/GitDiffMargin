@@ -22,7 +22,7 @@ namespace GitDiffMargin.ViewModel
         private RelayCommand<DiffViewModel> _previousChangeCommand;
         private RelayCommand<DiffViewModel> _nextChangeCommand;
 
-        public DiffMarginViewModel(GitDiffMargin margin, IWpfTextView textView, ITextDocumentFactoryService textDocumentFactoryService, IGitCommands gitCommands)
+        internal DiffMarginViewModel(GitDiffMargin margin, IWpfTextView textView, ITextDocumentFactoryService textDocumentFactoryService, IGitCommands gitCommands)
         {
             if (margin == null)
                 throw new ArgumentNullException("margin");

@@ -19,14 +19,17 @@ namespace GitDiffMargin
     internal sealed class MarginFactory : IWpfTextViewMarginProvider
     {
         [Import]
-        private ITextDocumentFactoryService TextDocumentFactoryService { get; set; }
+        internal ITextDocumentFactoryService TextDocumentFactoryService { get; private set; }
 
         [Import]
-        private IEditorFormatMapService EditorFormatMapService { get; set; }
+        internal IClassificationFormatMapService ClassificationFormatMapService { get; private set; }
+
+        [Import]
+        internal IEditorFormatMapService EditorFormatMapService { get; private set; }
 
         public IWpfTextViewMargin CreateMargin(IWpfTextViewHost textViewHost, IWpfTextViewMargin containerMargin)
         {
-            return new GitDiffMargin(textViewHost.TextView, TextDocumentFactoryService, EditorFormatMapService);
+            return new GitDiffMargin(textViewHost.TextView, this);
         }
     }
 }

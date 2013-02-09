@@ -7,7 +7,6 @@ using System.Windows.Media;
 using GitDiffMargin.Git;
 using GitDiffMargin.View;
 using GitDiffMargin.ViewModel;
-using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Editor.OptionsExtensionMethods;
@@ -16,7 +15,7 @@ using Microsoft.VisualStudio.Text.Editor.OptionsExtensionMethods;
 
 namespace GitDiffMargin
 {
-    public class GitDiffMargin : Canvas, IWpfTextViewMargin
+    internal class GitDiffMargin : Canvas, IWpfTextViewMargin
     {
         public const string MarginName = "GitDiffMargin";
 
@@ -25,7 +24,9 @@ namespace GitDiffMargin
         private const double MarginWidth = 10.0;
 
         private readonly IWpfTextView _textView;
+        private readonly IClassificationFormatMap _classificationFormatMap;
         private readonly IEditorFormatMap _editorFormatMap;
+        private DiffMarginViewModel _viewModel;
         private readonly DiffMarginControl _gitDiffBarControl;
         private bool _isDisposed;
 
@@ -33,10 +34,11 @@ namespace GitDiffMargin
         private Brush _modificationBrush;
         private Brush _removedBrush;
 
-        public GitDiffMargin(IWpfTextView textView, ITextDocumentFactoryService textDocumentFactoryService, IEditorFormatMapService editorFormatMapService)
+        internal GitDiffMargin(IWpfTextView textView, MarginFactory factory)
         {
             _textView = textView;
-            _editorFormatMap = editorFormatMapService.GetEditorFormatMap(textView);
+            _classificationFormatMap = factory.ClassificationFormatMapService.GetClassificationFormatMap(textView);
+            _editorFormatMap = factory.EditorFormatMapService.GetEditorFormatMap(textView);
 
             _editorFormatMap.FormatMappingChanged += HandleFormatMappingChanged;
             _textView.Closed += (sender, e) => _editorFormatMap.FormatMappingChanged -= HandleFormatMappingChanged;
@@ -45,7 +47,8 @@ namespace GitDiffMargin
             _textView.Options.OptionChanged += HandleOptionChanged;
 
             _gitDiffBarControl = new DiffMarginControl();
-            _gitDiffBarControl.DataContext = new DiffMarginViewModel(this, _textView, textDocumentFactoryService, new GitCommands());
+            _viewModel = new DiffMarginViewModel(this, _textView, factory.TextDocumentFactoryService, new GitCommands());
+            _gitDiffBarControl.DataContext = _viewModel;
             _gitDiffBarControl.Width = MarginWidth;
         }
 
@@ -60,6 +63,19 @@ namespace GitDiffMargin
             }
         }
 
+        public IClassificationFormatMap ClassificationFormatMap
+        {
+            get
+            {
+                return _classificationFormatMap;
+            }
+        }
+
+        public IWpfTextView TextView
+        {
+            get { return _textView; }
+        }
+        
         public double MarginSize
         {
             get
@@ -114,6 +130,7 @@ namespace GitDiffMargin
         public void Dispose()
         {
             GC.SuppressFinalize(this);
+            _viewModel.Cleanup();
             _isDisposed = true;
         }
 
