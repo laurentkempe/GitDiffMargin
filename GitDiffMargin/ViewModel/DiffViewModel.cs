@@ -232,11 +232,10 @@ namespace GitDiffMargin.ViewModel
             get
             {
                 if (_hunkRangeInfo.IsAddition)
+                {
                     return _margin.AdditionBrush;
-                else if (_hunkRangeInfo.IsModification)
-                    return _margin.ModificationBrush;
-                else
-                    return _margin.RemovedBrush;
+                }
+                return _hunkRangeInfo.IsModification ? _margin.ModificationBrush : _margin.RemovedBrush;
             }
         }
 
