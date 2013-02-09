@@ -10,6 +10,7 @@ A Visual Studio 2012 extension to display Git Diff on the margin of the current 
 * Undo the change
 * Show the diff in extenral tool
 * Copy the old code into the clipboard
+* Define the colors of the Addition, Modification and Deletion diff margin through Visual Studio Fonts and Colors options
 
 You might see a little video on the [following page](http://www.flickr.com/photos/laurentkempe/8116990137/).
 
