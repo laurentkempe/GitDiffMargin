@@ -168,7 +168,7 @@ namespace GitDiffMargin.ViewModel
                 if (_hunkRangeInfo.IsDeletion)
                 {
                     var center = (startTop + stopBottom) / 2.0;
-                    Top = center - (_textView.LineHeight / 2.0);
+                    Top = center - (_textView.LineHeight / 2.0) + _textView.LineHeight;
                     Height = _textView.LineHeight;
                     IsVisible = true;
                 }
@@ -436,7 +436,7 @@ namespace GitDiffMargin.ViewModel
                 Span newSpan;
                 if (_hunkRangeInfo.IsDeletion)
                 {
-                    var startLine = snapshot.GetLineFromLineNumber(_hunkRangeInfo.NewHunkRange.StartingLineNumber);
+                    var startLine = snapshot.GetLineFromLineNumber(_hunkRangeInfo.NewHunkRange.StartingLineNumber + 1);
                     newSpan = new Span(startLine.Start.Position, 0);
                 }
                 else
