@@ -25,10 +25,8 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Text;
-
-using ErrorHandler = Microsoft.VisualStudio.ErrorHandler;
-using Timer = System.Threading.Timer;
 
 namespace GitDiffMargin
 {
@@ -43,6 +41,7 @@ namespace GitDiffMargin
         private DateTimeOffset _lastEdit;
         private bool _dirty;
         private int _parsing;
+        private bool _disposed;
 
         public event EventHandler<ParseResultEventArgs> ParseComplete;
 
@@ -61,6 +60,8 @@ namespace GitDiffMargin
 
             _textBuffer.PostChanged += TextBufferPostChanged;
 
+
+
             _dirty = true;
             _reparseDelay = TimeSpan.FromMilliseconds(1500);
             _timer = new Timer(ParseTimerCallback, null, _reparseDelay, _reparseDelay);
@@ -75,7 +76,13 @@ namespace GitDiffMargin
             }
         }
 
-        public bool Disposed { get; private set; }
+        public bool Disposed
+        {
+            get
+            {
+                return _disposed;
+            }
+        }
 
         public TimeSpan ReparseDelay
         {
@@ -86,7 +93,7 @@ namespace GitDiffMargin
 
             set
             {
-                var originalDelay = _reparseDelay;
+                TimeSpan originalDelay = _reparseDelay;
                 try
                 {
                     _reparseDelay = value;
@@ -128,7 +135,13 @@ namespace GitDiffMargin
 
         protected virtual void Dispose(bool disposing)
         {
-            Disposed = true;
+            if (disposing)
+            {
+                _textBuffer.PostChanged -= TextBufferPostChanged;
+                _timer.Dispose();
+            }
+
+            _disposed = true;
         }
 
         protected abstract void ReParseImpl();
@@ -170,16 +183,18 @@ namespace GitDiffMargin
             if (DateTimeOffset.Now - _lastEdit < ReparseDelay)
                 return;
 
-            if (Interlocked.CompareExchange(ref _parsing, 1, 0) != 0) return;
-            try
+            if (Interlocked.CompareExchange(ref _parsing, 1, 0) == 0)
             {
-                var task = Task.Factory.StartNew(ReParse, CancellationToken.None, TaskCreationOptions.None, _taskScheduler);
-                task.ContinueWith(_ => _parsing = 0);
-            }
-            catch
-            {
-                _parsing = 0;
-                throw;
+                try
+                {
+                    Task task = Task.Factory.StartNew(ReParse, CancellationToken.None, TaskCreationOptions.None, _taskScheduler);
+                    task.ContinueWith(_ => _parsing = 0);
+                }
+                catch
+                {
+                    _parsing = 0;
+                    throw;
+                }
             }
         }
 
