@@ -417,6 +417,7 @@ namespace GitDiffMargin.ViewModel
         private void CopyOldText()
         {
             Clipboard.SetText(DiffText);
+            ShowPopup = false;
         }
 
         private bool RollbackCanExecute()
