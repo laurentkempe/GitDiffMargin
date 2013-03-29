@@ -10,12 +10,26 @@ namespace GitDiffMargin
     public class DiffUpdateBackgroundParser : BackgroundParser
     {
         private readonly IGitCommands _commands;
+        private ITextDocument _textDocument;
 
         public DiffUpdateBackgroundParser(ITextBuffer textBuffer, TaskScheduler taskScheduler, ITextDocumentFactoryService textDocumentFactoryService, IGitCommands commands)
             : base(textBuffer, taskScheduler, textDocumentFactoryService)
         {
             _commands = commands;
             ReparseDelay = TimeSpan.FromMilliseconds(500);
+
+            if (TextDocumentFactoryService.TryGetTextDocument(TextBuffer, out _textDocument))
+            {
+                _textDocument.FileActionOccurred += OnFileActionOccurred;
+            }
+        }
+
+        private void OnFileActionOccurred(object sender, TextDocumentFileActionEventArgs e)
+        {
+            if ((e.FileActionType & FileActionTypes.ContentSavedToDisk) != 0)
+            {
+                MarkDirty(true);
+            }
         }
 
         public override string Name
@@ -47,6 +61,16 @@ namespace GitDiffMargin
             {
                 MarkDirty(true);
                 throw;
+            }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            if (disposing)
+            {
+                _textDocument.FileActionOccurred -= OnFileActionOccurred;
             }
         }
     }
