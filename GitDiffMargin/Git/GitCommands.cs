@@ -36,6 +36,21 @@ namespace GitDiffMargin.Git
             p.Start();
         }
 
+        public bool IsGitRepository(string directory)
+        {
+            var p = GetProcess(directory);
+            p.StartInfo.Arguments = String.Format(@" rev-parse");
+
+            p.Start();
+            // Do not wait for the child process to exit before
+            // reading to the end of its redirected stream.
+            // p.WaitForExit();
+            // Read the output stream first and then wait.
+            p.WaitForExit();
+
+            return p.ExitCode == 0;
+        }
+
         private static Process GetProcess(string filename)
         {
             var p = new Process();

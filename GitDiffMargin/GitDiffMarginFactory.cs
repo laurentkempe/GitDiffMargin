@@ -1,6 +1,7 @@
 ﻿#region using
 
 using System.ComponentModel.Composition;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
@@ -26,6 +27,9 @@ namespace GitDiffMargin
 
         [Import]
         internal IEditorFormatMapService EditorFormatMapService { get; private set; }
+        
+        [Import]
+        internal SVsServiceProvider ServiceProvider { get; private set; }
 
         public IWpfTextViewMargin CreateMargin(IWpfTextViewHost textViewHost, IWpfTextViewMargin containerMargin)
         {
