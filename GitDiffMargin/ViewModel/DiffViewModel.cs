@@ -78,8 +78,11 @@ namespace GitDiffMargin.ViewModel
             if (_reverted)
                 return;
 
+            var hunkLineNumber = _hunkRangeInfo.NewHunkRange.StartingLineNumber + _hunkRangeInfo.NewHunkRange.NumberOfLines - 1;
             var startLine = _textView.TextSnapshot.GetLineFromLineNumber(_hunkRangeInfo.NewHunkRange.StartingLineNumber);
-            var endLine = _textView.TextSnapshot.GetLineFromLineNumber(_hunkRangeInfo.NewHunkRange.StartingLineNumber + _hunkRangeInfo.NewHunkRange.NumberOfLines - 1);
+            var endlineNumber = hunkLineNumber < _textView.TextSnapshot.LineCount - 1 ? hunkLineNumber : _textView.TextSnapshot.LineCount - 1;
+            var endLine = _textView.TextSnapshot.GetLineFromLineNumber(endlineNumber);
+
             if (startLine == null || endLine == null) return;
 
             var startLineView = _textView.GetTextViewLineContainingBufferPosition(startLine.Start);
