@@ -31,8 +31,6 @@ namespace GitDiffMargin.Git
             var p = GetProcess(filename);
             p.StartInfo.Arguments = String.Format(@" difftool -y {0}", filename);
 
-            ActivityLog.LogInformation("GitDiffMargin", "Command:" + p.StartInfo.Arguments);
-
             p.Start();
         }
 
