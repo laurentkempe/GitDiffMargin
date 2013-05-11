@@ -10,11 +10,11 @@ namespace GitDiffMargin.Unit.Tests.Git
     public class HunkRangeTests
     {
         [Test]
-        public void HunkRange_HunkOriginalFile_ExpectHunkOriginalFile()
+        public void HunkRange_HunkOriginalFile_ExpectHunkOriginalFile(int contextLines)
         {
             //Arrange
             //Act
-            var hunkRange = new HunkRange(@"41,0");
+            var hunkRange = new HunkRange(@"41,0", contextLines);
 
             //Assert
             hunkRange.StartingLineNumber.ShouldBe(40);
@@ -22,11 +22,11 @@ namespace GitDiffMargin.Unit.Tests.Git
         }
 
         [Test]
-        public void HunkRange_ValidHunk_ExpectHunkNewFile()
+        public void HunkRange_ValidHunk_ExpectHunkNewFile(int contextLines)
         {
             //Arrange
             //Act
-            var hunkRange = new HunkRange(@"42,20");
+            var hunkRange = new HunkRange(@"42,20", contextLines);
 
             //Assert
             hunkRange.StartingLineNumber.ShouldBe(41);
@@ -34,10 +34,10 @@ namespace GitDiffMargin.Unit.Tests.Git
         }
 
         [Test]
-        public void NumberOfLines_HunkWithoutLineNumber_ExpectDefaultTo1LineNumber()
+        public void NumberOfLines_HunkWithoutLineNumber_ExpectDefaultTo1LineNumber(int contextLines)
         {
             //Arrange
-            var hunkRange = new HunkRange(@"-18");
+            var hunkRange = new HunkRange(@"-18", contextLines);
 
             //Act
             var numberOfLines = hunkRange.NumberOfLines;
@@ -47,10 +47,10 @@ namespace GitDiffMargin.Unit.Tests.Git
         }
 
         [Test]
-        public void StartingLineNumber_HunkWithoutLineNumber_ExpectLineNumber()
+        public void StartingLineNumber_HunkWithoutLineNumber_ExpectLineNumber(int contextLines)
         {
             //Arrange
-            var hunkRange = new HunkRange(@"18");
+            var hunkRange = new HunkRange(@"18", contextLines);
 
             //Act
             var startingLineNumber = hunkRange.StartingLineNumber;

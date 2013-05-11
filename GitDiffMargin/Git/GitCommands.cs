@@ -2,28 +2,38 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using Microsoft.VisualStudio.Shell;
+using LibGit2Sharp;
 using Microsoft.VisualStudio.Text;
 
 namespace GitDiffMargin.Git
 {
     public class GitCommands : IGitCommands
     {
+        private const int ContextLines = 3;
+
         public IEnumerable<HunkRangeInfo> GetGitDiffFor(string filename, ITextSnapshot snapshot)
         {
-            var p = GetProcess(filename);
-            p.StartInfo.Arguments = String.Format(@" diff --unified=0 {0}", filename);
+            var discoveredPath = Repository.Discover(Path.GetFullPath(filename));
 
-            p.Start();
-            // Do not wait for the child process to exit before
-            // reading to the end of its redirected stream.
-            // p.WaitForExit();
-            // Read the output stream first and then wait.
-            var output = p.StandardOutput.ReadToEnd();
-            p.WaitForExit();
+            using (var repo = new Repository(discoveredPath))
+            {
+                var treeChanges = repo.Diff.Compare(new List<string> {filename});
+                var gitDiffParser = new GitDiffParser(treeChanges.Patch, ContextLines);
+                var hunkRangeInfos = gitDiffParser.Parse(snapshot);
+                return hunkRangeInfos;
+            }
 
-            var gitDiffParser = new GitDiffParser(output);
-            return gitDiffParser.Parse(snapshot);
+            //var p = GetProcess(filename);
+            //p.StartInfo.Arguments = String.Format(@" diff --unified=0 {0}", filename);
+
+            //p.Start();
+            //// Do not wait for the child process to exit before
+            //// reading to the end of its redirected stream.
+            //// p.WaitForExit();
+            //// Read the output stream first and then wait.
+            //var output = p.StandardOutput.ReadToEnd();
+            //p.WaitForExit();
+
         }
 
         public void StartExternalDiff(string filename)

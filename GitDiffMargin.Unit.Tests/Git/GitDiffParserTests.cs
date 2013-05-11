@@ -155,7 +155,7 @@ index e91ba58..e2dbef0 100644
         public void Parse_EmptyGitDiff_Expect0HunkRangeInfos()
         {
             //Arrange
-            var gitDiffParser = new GitDiffParser(EmptyGitDiff);
+            var gitDiffParser = new GitDiffParser(EmptyGitDiff, 0);
             
             //Act
             var hunkRangeInfos = gitDiffParser.Parse(null).ToList();
@@ -168,7 +168,7 @@ index e91ba58..e2dbef0 100644
         public void Parse_WithOneHunk_ExpectHunkRanges()
         {
             //Arrange
-            var gitDiffParser = new GitDiffParser(FirstGitDiff);
+            var gitDiffParser = new GitDiffParser(FirstGitDiff, 0);
             
             //Act
             var hunkRanges = gitDiffParser.Parse(null).ToList();
@@ -184,7 +184,7 @@ index e91ba58..e2dbef0 100644
         public void Parse_WithOneHunkWithoutLineCount_ExpectHunkRanges()
         {
             //Arrange
-            var gitDiffParser = new GitDiffParser(ThirdGitDiff);
+            var gitDiffParser = new GitDiffParser(ThirdGitDiff, 0);
             
             //Act
             var hunkRanges = gitDiffParser.Parse(null).ToList();
@@ -200,7 +200,7 @@ index e91ba58..e2dbef0 100644
         public void Parse_WithThreeHunk_ExpectHunkRanges()
         {
             //Arrange
-            var gitDiffParser = new GitDiffParser(SecondGitDiff);
+            var gitDiffParser = new GitDiffParser(SecondGitDiff, 0);
             
             //Act
             var hunkRanges = gitDiffParser.Parse(null).ToList();
@@ -226,7 +226,7 @@ index e91ba58..e2dbef0 100644
         public void GetUnifiedFormatHunkLine_WithOneHunk_ExpectHunkLine()
         {
             //Arrange
-            var gitDiffParser = new GitDiffParser(FirstGitDiff);
+            var gitDiffParser = new GitDiffParser(FirstGitDiff, 0);
             
             //Act
             var unifiedFormatHunk = gitDiffParser.GetUnifiedFormatHunkLines().ToList();
@@ -239,7 +239,7 @@ index e91ba58..e2dbef0 100644
         public void GetUnifiedFormatHunkLine_DeleteDiff_ExpectedHunkLine()
         {
             //Arrange
-            var gitDiffParser = new GitDiffParser(DiffOfADeleteOfThreeLines);
+            var gitDiffParser = new GitDiffParser(DiffOfADeleteOfThreeLines, 0);
 
             //Act
             var unifiedFormatHunk = gitDiffParser.GetUnifiedFormatHunkLines().ToList();
@@ -252,7 +252,7 @@ index e91ba58..e2dbef0 100644
         public void GetUnifiedFormatHunkLine_WithTwoHunk_ExpectHunkLine()
         {
             //Arrange
-            var gitDiffParser = new GitDiffParser(SecondGitDiff);
+            var gitDiffParser = new GitDiffParser(SecondGitDiff, 0);
             
             //Act
             List<Tuple<string, IEnumerable<string>>> unifiedFormatHunk = gitDiffParser.GetUnifiedFormatHunkLines().ToList();
@@ -267,7 +267,7 @@ index e91ba58..e2dbef0 100644
         public void GetHunkOriginalFile_WithOneHunk_ExpectHunkOriginalFile()
         {
             //Arrange
-            var gitDiffParser = new GitDiffParser(FirstGitDiff);
+            var gitDiffParser = new GitDiffParser(FirstGitDiff, 0);
             
             //Act
             string hunkOriginalFile = gitDiffParser.GetHunkNewFile(gitDiffParser.GetUnifiedFormatHunkLines().First().Item1);
@@ -280,7 +280,7 @@ index e91ba58..e2dbef0 100644
         public void GetHunkNewFile_WithOneHunk_ExpectHunkNewFile()
         {
             //Arrange
-            var gitDiffParser = new GitDiffParser(FirstGitDiff);
+            var gitDiffParser = new GitDiffParser(FirstGitDiff, 0);
             
             //Act
             string hunkOriginalFile = gitDiffParser.GetHunkOriginalFile(gitDiffParser.GetUnifiedFormatHunkLines().First().Item1);
@@ -293,7 +293,7 @@ index e91ba58..e2dbef0 100644
         public void GetHunkOriginalFile_DeleteDiff_ExpectHunkOriginalFile()
         {
             //Arrange
-            var gitDiffParser = new GitDiffParser(DiffOfADeleteOfThreeLines);
+            var gitDiffParser = new GitDiffParser(DiffOfADeleteOfThreeLines, 0);
 
             //Act
             var hunkOriginalFile = gitDiffParser.GetHunkNewFile(gitDiffParser.GetUnifiedFormatHunkLines().First().Item1);
@@ -306,7 +306,7 @@ index e91ba58..e2dbef0 100644
         public void GetHunkNewFile_DeleteDiff_ExpectHunkNewFile()
         {
             //Arrange
-            var gitDiffParser = new GitDiffParser(DiffOfADeleteOfThreeLines);
+            var gitDiffParser = new GitDiffParser(DiffOfADeleteOfThreeLines, 0);
 
             //Act
             var hunkOriginalFile = gitDiffParser.GetHunkOriginalFile(gitDiffParser.GetUnifiedFormatHunkLines().First().Item1);
