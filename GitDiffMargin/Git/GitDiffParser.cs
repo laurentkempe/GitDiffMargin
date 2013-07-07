@@ -33,7 +33,7 @@ namespace GitDiffMargin.Git
             var splitHunks = SplitHunks(withoutHeader).ToList();
 
             return splitHunks.Any() ? 
-                splitHunks.Select(splitHunk => new Tuple<string, IEnumerable<string>>(splitHunk[0], splitHunk.Skip(4).TakeWhile((s, i) => i < (splitHunk.Count - 3 - 5)))) : 
+                splitHunks.Select(splitHunk => new Tuple<string, IEnumerable<string>>(splitHunk[0], splitHunk.Skip(1).TakeWhile((s, i) => i < splitHunk.Count))) : 
                 Enumerable.Empty<Tuple<string, IEnumerable<string>>>();
         }
 
