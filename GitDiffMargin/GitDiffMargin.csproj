@@ -134,6 +134,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\packages\LibGit2Sharp.0.12.0.0\NativeBinaries\x86\git2-9d9fff3.dll">
+      <Link>git2-9d9fff3.dll</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="GitDiffMargin-Preview.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
