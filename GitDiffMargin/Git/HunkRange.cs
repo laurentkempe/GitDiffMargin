@@ -7,7 +7,7 @@ namespace GitDiffMargin.Git
             if (hunkRange.Contains(","))
             {
                 var hunkParts = hunkRange.Split(',');
-                StartingLineNumber = int.Parse(hunkParts[0]) - 1 + contextLines;
+                StartingLineNumber = int.Parse(hunkParts[0]) -1 + contextLines;
                 NumberOfLines = int.Parse(hunkParts[1]) - (2 * contextLines);
             }
             else
