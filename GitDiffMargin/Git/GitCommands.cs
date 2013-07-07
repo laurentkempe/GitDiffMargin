@@ -9,7 +9,7 @@ namespace GitDiffMargin.Git
 {
     public class GitCommands : IGitCommands
     {
-        private const int ContextLines = 3;
+        private const int ContextLines = 0;
 
         public IEnumerable<HunkRangeInfo> GetGitDiffFor(string filename, ITextSnapshot snapshot)
         {
@@ -17,23 +17,11 @@ namespace GitDiffMargin.Git
 
             using (var repo = new Repository(discoveredPath))
             {
-                var treeChanges = repo.Diff.Compare(new List<string> {filename});
+                var treeChanges = repo.Diff.Compare(new List<string> { filename }, compareOptions: new CompareOptions { ContextLines = ContextLines, InterhunkLines = 0 });
                 var gitDiffParser = new GitDiffParser(treeChanges.Patch, ContextLines);
                 var hunkRangeInfos = gitDiffParser.Parse(snapshot);
                 return hunkRangeInfos;
             }
-
-            //var p = GetProcess(filename);
-            //p.StartInfo.Arguments = String.Format(@" diff --unified=0 {0}", filename);
-
-            //p.Start();
-            //// Do not wait for the child process to exit before
-            //// reading to the end of its redirected stream.
-            //// p.WaitForExit();
-            //// Read the output stream first and then wait.
-            //var output = p.StandardOutput.ReadToEnd();
-            //p.WaitForExit();
-
         }
 
         public void StartExternalDiff(string filename)
@@ -46,17 +34,8 @@ namespace GitDiffMargin.Git
 
         public bool IsGitRepository(string directory)
         {
-            var p = GetProcess(directory);
-            p.StartInfo.Arguments = String.Format(@" rev-parse");
-
-            p.Start();
-            // Do not wait for the child process to exit before
-            // reading to the end of its redirected stream.
-            // p.WaitForExit();
-            // Read the output stream first and then wait.
-            p.WaitForExit();
-
-            return p.ExitCode == 0;
+            var discoveredPath = Repository.Discover(Path.GetFullPath(directory));
+            return Repository.IsValid(Path.GetFullPath(discoveredPath));
         }
 
         private static Process GetProcess(string filename)
