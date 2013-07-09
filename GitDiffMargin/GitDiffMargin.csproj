@@ -147,6 +147,10 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="..\LICENSE.md">
+      <Link>LICENSE.md</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
