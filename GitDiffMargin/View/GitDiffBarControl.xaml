@@ -71,19 +71,10 @@
       </Setter>
     </Style>
         <ControlTemplate x:Key="ChangeTemplate" d:DataContext="{d:DesignInstance viewModel:DiffViewModel}">
-            <Rectangle Width="{Binding Width, Mode=OneWay}" HorizontalAlignment="Left" Margin="{Binding Margin, Mode=OneWay}" Fill="{Binding DiffBrush}">
-                <Rectangle.ToolTip>
-                    <ToolTip Content="{Binding Coordinates, Mode=OneWay}" />
-                </Rectangle.ToolTip>
-            </Rectangle>
-
+            <Rectangle Width="{Binding Width, Mode=OneWay}" HorizontalAlignment="Left" Margin="{Binding Margin, Mode=OneWay}" Fill="{Binding DiffBrush}" />
         </ControlTemplate>
         <ControlTemplate x:Key="DeletionTemplate" d:DataContext="{d:DesignInstance viewModel:DiffViewModel}">
-            <Polygon Points="0,0 1,1 0,2 0,0" Fill="{Binding DiffBrush}" Width="9" Height="{Binding Height}" Stretch="Fill">
-                <Polygon.ToolTip>
-                    <ToolTip Content="{Binding Coordinates, Mode=OneWay}" />
-                </Polygon.ToolTip>
-            </Polygon>
+            <Polygon Points="0,0 1,1 0,2 0,0" Fill="{Binding DiffBrush}" Width="9" Height="{Binding Height}" Stretch="Fill" />
         </ControlTemplate>
     </UserControl.Resources>
   <Grid>

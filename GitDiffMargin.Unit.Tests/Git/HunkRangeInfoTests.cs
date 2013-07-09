@@ -14,11 +14,18 @@ namespace GitDiffMargin.Unit.Tests.Git
     [TestFixture]
     public class HunkRangeInfoTests
     {
+        public HunkRangeInfoTests(int contextLines)
+        {
+            _contextLines = contextLines;
+        }
+
+        private readonly int _contextLines = 0;
+
         [Test]
         public void IsAddition_AllDiffLinesWithStartsWithPlusSign_ExpectedTrue()
         {
             //Arrange
-            var hunkRangeInfo = new HunkRangeInfo(new HunkRange("-41,0"), new HunkRange("+42,20"), new List<string> { "+ ", "+ " }.ToArray(), null);
+            var hunkRangeInfo = new HunkRangeInfo(new HunkRange("-41,0", _contextLines), new HunkRange("+42,20", _contextLines), new List<string> { "+ ", "+ " }.ToArray(), null);
 
             //Act
             bool isAddition = hunkRangeInfo.IsAddition;
@@ -31,7 +38,7 @@ namespace GitDiffMargin.Unit.Tests.Git
         public void IsAddition_NotAllDiffLinesStartsWithPlusSign_ExpectedFalse()
         {
             //Arrange
-            var hunkRangeInfo = new HunkRangeInfo(new HunkRange("-41,0"), new HunkRange("+42,20"), new List<string> { "+ ", "- " }.ToArray(), null);
+            var hunkRangeInfo = new HunkRangeInfo(new HunkRange("-41,0", _contextLines), new HunkRange("+42,20", _contextLines), new List<string> { "+ ", "- " }.ToArray(), null);
 
             //Act
             bool isAddition = hunkRangeInfo.IsAddition;
@@ -44,7 +51,7 @@ namespace GitDiffMargin.Unit.Tests.Git
         public void IsModification_DiffLinesStartsWithPlusSignAndWithMinus_ExpectedTrue()
         {
             //Arrange
-            var hunkRangeInfo = new HunkRangeInfo(new HunkRange("-41,0"), new HunkRange("+42,20"), new List<string> { "+ ", "- " }.ToArray(), null);
+            var hunkRangeInfo = new HunkRangeInfo(new HunkRange("-41,0", _contextLines), new HunkRange("+42,20", _contextLines), new List<string> { "+ ", "- " }.ToArray(), null);
 
             //Act
             bool isModification = hunkRangeInfo.IsModification;
@@ -57,7 +64,7 @@ namespace GitDiffMargin.Unit.Tests.Git
         public void OriginalText_1NewLineAnd1OriginalLine_ExpectedOriginalText()
         {
             //Arrange
-            var hunkRangeInfo = new HunkRangeInfo(new HunkRange("-41,0"), new HunkRange("+42,20"), new List<string> { "+New Text", "-Original Text" }.ToArray(), null);
+            var hunkRangeInfo = new HunkRangeInfo(new HunkRange("-41,0", _contextLines), new HunkRange("+42,20", _contextLines), new List<string> { "+New Text", "-Original Text" }.ToArray(), null);
 
             //Act
             string originalText = hunkRangeInfo.OriginalText[0];
@@ -70,7 +77,7 @@ namespace GitDiffMargin.Unit.Tests.Git
         public void OriginalText_1NewLineAnd1OriginalLineWithLeadingSpaces_ExpectedOriginalText()
         {
             //Arrange
-            var hunkRangeInfo = new HunkRangeInfo(new HunkRange("-41,0"), new HunkRange("+42,20"), new List<string> { "+ New Text", "-    Original Text" }.ToArray(), null);
+            var hunkRangeInfo = new HunkRangeInfo(new HunkRange("-41,0", _contextLines), new HunkRange("+42,20", _contextLines), new List<string> { "+ New Text", "-    Original Text" }.ToArray(), null);
 
             //Act
             string originalText = hunkRangeInfo.OriginalText[0];
@@ -83,7 +90,7 @@ namespace GitDiffMargin.Unit.Tests.Git
         public void OriginalText_1NewLineAnd1OriginalLineWithLeadingSpacesAndInvertedOrder_ExpectedOriginalText()
         {
             //Arrange
-            var hunkRangeInfo = new HunkRangeInfo(new HunkRange("-18"), new HunkRange("+18"), new List<string> { "-            it++; // this is just a comment", "+            it--;" }.ToArray(), null);
+            var hunkRangeInfo = new HunkRangeInfo(new HunkRange("-18", _contextLines), new HunkRange("+18", _contextLines), new List<string> { "-            it++; // this is just a comment", "+            it--;" }.ToArray(), null);
 
             //Act
             var originalText = hunkRangeInfo.OriginalText;
@@ -96,7 +103,7 @@ namespace GitDiffMargin.Unit.Tests.Git
         public void IsDeletion_3DeletedLines_ExpectTrue()
         {
             //Arrange
-            var hunkRangeInfo = new HunkRangeInfo(new HunkRange("-7,3"), new HunkRange("+6,0"), new List<string> { "-using Microsoft.VisualStudio.Shell;", "-using Microsoft.VisualStudio.Text;", "-using Microsoft.VisualStudio.Text.Editor;" }.ToArray(), null);
+            var hunkRangeInfo = new HunkRangeInfo(new HunkRange("-7,3", _contextLines), new HunkRange("+6,0", _contextLines), new List<string> { "-using Microsoft.VisualStudio.Shell;", "-using Microsoft.VisualStudio.Text;", "-using Microsoft.VisualStudio.Text.Editor;" }.ToArray(), null);
 
             //Act
             var isDeletion = hunkRangeInfo.IsDeletion;
