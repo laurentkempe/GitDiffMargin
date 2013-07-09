@@ -2,64 +2,62 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using Microsoft.VisualStudio.Shell;
+using LibGit2Sharp;
 using Microsoft.VisualStudio.Text;
 
 namespace GitDiffMargin.Git
 {
     public class GitCommands : IGitCommands
     {
+        private const int ContextLines = 0;
+
         public IEnumerable<HunkRangeInfo> GetGitDiffFor(string filename, ITextSnapshot snapshot)
         {
-            var p = GetProcess(filename);
-            p.StartInfo.Arguments = String.Format(@" diff --unified=0 {0}", filename);
+            var discoveredPath = Repository.Discover(Path.GetFullPath(filename));
 
-            p.Start();
-            // Do not wait for the child process to exit before
-            // reading to the end of its redirected stream.
-            // p.WaitForExit();
-            // Read the output stream first and then wait.
-            var output = p.StandardOutput.ReadToEnd();
-            p.WaitForExit();
-
-            var gitDiffParser = new GitDiffParser(output);
-            return gitDiffParser.Parse(snapshot);
+            using (var repo = new Repository(discoveredPath))
+            {
+                var treeChanges = repo.Diff.Compare(new List<string> { filename }, compareOptions: new CompareOptions { ContextLines = ContextLines, InterhunkLines = 0 });
+                var gitDiffParser = new GitDiffParser(treeChanges.Patch, ContextLines);
+                var hunkRangeInfos = gitDiffParser.Parse(snapshot);
+                return hunkRangeInfos;
+            }
         }
 
         public void StartExternalDiff(string filename)
         {
-            var p = GetProcess(filename);
-            p.StartInfo.Arguments = String.Format(@" difftool -y {0}", filename);
+            var discoveredPath = Repository.Discover(Path.GetFullPath(filename));
 
-            p.Start();
+            using (var repo = new Repository(discoveredPath))
+            {
+                var diffGuiTool = repo.Config.Get<string>("diff.guitool");
+
+                if (diffGuiTool == null) return;
+
+                var diffCmd = repo.Config.Get<string>("difftool." + diffGuiTool.Value + ".path");
+
+                var indexEntry = repo.Index[filename.Replace(repo.Info.WorkingDirectory, "")];
+                var blob = repo.Lookup<Blob>(indexEntry.Id);
+
+                var tempFileName = Path.GetTempFileName();
+                File.WriteAllBytes(tempFileName, blob.Content);
+                    
+                var process = new Process
+                {
+                    StartInfo =
+                    {
+                        FileName = diffCmd.Value,
+                        Arguments = String.Format("{0} {1}", tempFileName, filename)
+                    }
+                };
+                process.Start();
+            }
         }
 
         public bool IsGitRepository(string directory)
         {
-            var p = GetProcess(directory);
-            p.StartInfo.Arguments = String.Format(@" rev-parse");
-
-            p.Start();
-            // Do not wait for the child process to exit before
-            // reading to the end of its redirected stream.
-            // p.WaitForExit();
-            // Read the output stream first and then wait.
-            p.WaitForExit();
-
-            return p.ExitCode == 0;
-        }
-
-        private static Process GetProcess(string filename)
-        {
-            var p = new Process();
-            // Redirect the output stream of the child process.
-            p.StartInfo.UseShellExecute = false;
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.CreateNoWindow = true;
-            p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            p.StartInfo.FileName = @"git.exe";
-            p.StartInfo.WorkingDirectory = Path.GetDirectoryName(filename) ?? string.Empty;
-            return p;
+            var discoveredPath = Repository.Discover(Path.GetFullPath(directory));
+            return Repository.IsValid(Path.GetFullPath(discoveredPath));
         }
     }
 }

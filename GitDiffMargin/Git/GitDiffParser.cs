@@ -8,17 +8,19 @@ namespace GitDiffMargin.Git
     public class GitDiffParser
     {
         private readonly string _gitDiff;
+        private readonly int _contextLines;
 
-        public GitDiffParser(string gitDiff)
+        public GitDiffParser(string gitDiff, int contextLines)
         {
             _gitDiff = gitDiff;
+            _contextLines = contextLines;
         }
 
         public IEnumerable<HunkRangeInfo> Parse(ITextSnapshot snapshot)
         {
             return from hunkLine in GetUnifiedFormatHunkLines() 
                    where !string.IsNullOrEmpty(hunkLine.Item1)
-                   select new HunkRangeInfo(new HunkRange(GetHunkOriginalFile(hunkLine.Item1)), new HunkRange(GetHunkNewFile(hunkLine.Item1)), hunkLine.Item2, snapshot);
+                   select new HunkRangeInfo(new HunkRange(GetHunkOriginalFile(hunkLine.Item1), _contextLines), new HunkRange(GetHunkNewFile(hunkLine.Item1), _contextLines), hunkLine.Item2, snapshot);
         }
 
         public IEnumerable<Tuple<string, IEnumerable<string>>> GetUnifiedFormatHunkLines()
@@ -26,36 +28,45 @@ namespace GitDiffMargin.Git
             var split = _gitDiff.Split('\n');
             //var split = _gitDiff.Split(new[] {Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries);
 
+            var withoutHeader = split.SkipWhile(s => !s.StartsWith("@@")).ToList();
+
+            var splitHunks = SplitHunks(withoutHeader).ToList();
+
+            return splitHunks.Any() ? 
+                splitHunks.Select(splitHunk => new Tuple<string, IEnumerable<string>>(splitHunk[0], splitHunk.Skip(1).TakeWhile((s, i) => i < splitHunk.Count))) : 
+                Enumerable.Empty<Tuple<string, IEnumerable<string>>>();
+        }
+
+        private static IEnumerable<List<string>> SplitHunks(List<string> lines)
+        {
+            if (!lines.Any()) yield break;
+
             var firstHunk = true;
+            var hunks = new List<string>();
 
-            var hunkLine = "";
-            var diffs = new List<string>();
-
-            var withoutHeader = split.SkipWhile(s => !s.StartsWith("@@"));
-
-            foreach (var line in withoutHeader)
+            foreach (var line in lines)
             {
                 if (line.StartsWith("@@"))
                 {
                     if (firstHunk)
                     {
-                        hunkLine = line.Trim();
+                        hunks.Add(line.Trim());
                         firstHunk = false;
                     }
                     else
                     {
-                        yield return new Tuple<string, IEnumerable<string>>(hunkLine, diffs);
-                        hunkLine = line.Trim();
-                        diffs.Clear();
+                        yield return new List<string>(hunks);
+                        hunks.Clear();
+                        hunks.Add(line.Trim());
                     }
                 }
                 else
                 {
-                    diffs.Add((line));
+                    hunks.Add(line);
                 }
             }
 
-            yield return new Tuple<string, IEnumerable<string>>(hunkLine, diffs);
+            yield return new List<string>(hunks);
         }
 
         public string GetHunkOriginalFile(string hunkLine)

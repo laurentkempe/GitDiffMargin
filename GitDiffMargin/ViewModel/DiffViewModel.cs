@@ -55,7 +55,6 @@ namespace GitDiffMargin.ViewModel
         private void SetDisplayProperties()
         {
             UpdateDimensions();
-            Coordinates = string.Format("Top:{0}, Height:{1}, New number of Lines: {2}, StartingLineNumber: {3}", Top, Height, _hunkRangeInfo.NewHunkRange.NumberOfLines, _hunkRangeInfo.NewHunkRange.StartingLineNumber);
         }
 
         private bool GetIsDiffTextVisible()
@@ -352,8 +351,6 @@ namespace GitDiffMargin.ViewModel
                 RaisePropertyChanged(() => ShowPopup);
             }
         }
-
-        public string Coordinates { get; private set; }
 
         public string DiffText { get; private set; }
 
