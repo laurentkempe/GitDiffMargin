@@ -30,20 +30,17 @@ namespace GitDiffMargin
             {
                 _textDocument.FileActionOccurred += OnFileActionOccurred;
 
-                if (!string.IsNullOrWhiteSpace(dte.Solution.FullName))
+                if (_commands.IsGitRepository(dte.Solution.FullName))
                 {
-                    if (_commands.IsGitRepository(dte.Solution.FullName))
-                    {
-                        var solutionDirectory = Path.GetDirectoryName(dte.Solution.FullName);
+                    var solutionDirectory = Path.GetDirectoryName(dte.Solution.FullName);
 
-                        _watcher = new FileSystemWatcher(solutionDirectory);
-                        _watcher.IncludeSubdirectories = true;
-                        _watcher.Changed += HandleFileSystemChanged;
-                        _watcher.Created += HandleFileSystemChanged;
-                        _watcher.Deleted += HandleFileSystemChanged;
-                        _watcher.Renamed += HandleFileSystemChanged;
-                        _watcher.EnableRaisingEvents = true;
-                    }
+                    _watcher = new FileSystemWatcher(solutionDirectory);
+                    _watcher.IncludeSubdirectories = true;
+                    _watcher.Changed += HandleFileSystemChanged;
+                    _watcher.Created += HandleFileSystemChanged;
+                    _watcher.Deleted += HandleFileSystemChanged;
+                    _watcher.Renamed += HandleFileSystemChanged;
+                    _watcher.EnableRaisingEvents = true;
                 }
             }
         }
