@@ -39,18 +39,12 @@ namespace GitDiffMargin.ViewModel
             DiffViewModels = new ObservableCollection<DiffViewModel>();
 
             _textView.LayoutChanged += OnLayoutChanged;
-            _textView.ViewportHeightChanged += OnViewportHeightChanged;
 
             _parser = new DiffUpdateBackgroundParser(textView.TextBuffer, TaskScheduler.Default, textDocumentFactoryService, serviceProvider, gitCommands);
             _parser.ParseComplete += HandleParseComplete;
             _parser.RequestParse(false);
         }
-
-        private void OnViewportHeightChanged(object sender, EventArgs e)
-        {
-            RefreshDiffViewModelPositions();
-        }
-
+       
         private void OnLayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
         {
             RefreshDiffViewModelPositions();
