@@ -77,15 +77,47 @@ namespace GitDiffMargin.ViewModel
             if (_reverted || _textView.IsClosed)
                 return;
 
-            var hunkLineNumber = _hunkRangeInfo.NewHunkRange.StartingLineNumber + _hunkRangeInfo.NewHunkRange.NumberOfLines - 1;
-            var startLine = _textView.TextSnapshot.GetLineFromLineNumber(_hunkRangeInfo.NewHunkRange.StartingLineNumber);
-            var endlineNumber = hunkLineNumber < _textView.TextSnapshot.LineCount - 1 ? hunkLineNumber : _textView.TextSnapshot.LineCount - 1;
-            var endLine = _textView.TextSnapshot.GetLineFromLineNumber(endlineNumber);
+            var snapshot = _textView.TextBuffer.CurrentSnapshot;
+
+            var startLineNumber = _hunkRangeInfo.NewHunkRange.StartingLineNumber;
+            var endLineNumber = startLineNumber + _hunkRangeInfo.NewHunkRange.NumberOfLines - 1;
+            if (startLineNumber < 0
+                || startLineNumber >= snapshot.LineCount
+                || endLineNumber < 0
+                || endLineNumber >= snapshot.LineCount)
+            {
+                IsVisible = false;
+                return;
+            }
+
+            var startLine = snapshot.GetLineFromLineNumber(startLineNumber);
+            var endLine = snapshot.GetLineFromLineNumber(endLineNumber);
 
             if (startLine == null || endLine == null) return;
 
+
+            if (endLine.LineNumber < startLine.LineNumber)
+            {
+                var span = new SnapshotSpan(endLine.Start, startLine.End);
+                if (!_textView.TextViewLines.FormattedSpan.IntersectsWith(span))
+                {
+                    IsVisible = false;
+                    return;
+                }
+            }
+            else
+            {
+                var span = new SnapshotSpan(startLine.Start, endLine.End);
+                if (!_textView.TextViewLines.FormattedSpan.IntersectsWith(span))
+                {
+                    IsVisible = false;
+                    return;
+                }
+            }
+
             var startLineView = _textView.GetTextViewLineContainingBufferPosition(startLine.Start);
             var endLineView = _textView.GetTextViewLineContainingBufferPosition(endLine.Start);
+
             if (startLineView == null || endLineView == null)
             {
                 IsVisible = false;
@@ -169,8 +201,8 @@ namespace GitDiffMargin.ViewModel
             {
                 if (_hunkRangeInfo.IsDeletion)
                 {
-                    var center = (startTop + stopBottom) / 2.0;
-                    Top = center - (_textView.LineHeight / 2.0) + _textView.LineHeight;
+                    double center = (startTop + stopBottom) / 2.0;
+                    Top = center - (_textView.LineHeight / 2.0);
                     Height = _textView.LineHeight;
                     IsVisible = true;
                 }
