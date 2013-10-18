@@ -74,7 +74,7 @@ namespace GitDiffMargin.ViewModel
 
         private void UpdateDimensions()
         {
-            if (_reverted)
+            if (_reverted || _textView.IsClosed)
                 return;
 
             var hunkLineNumber = _hunkRangeInfo.NewHunkRange.StartingLineNumber + _hunkRangeInfo.NewHunkRange.NumberOfLines - 1;
