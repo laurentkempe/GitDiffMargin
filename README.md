@@ -1,6 +1,6 @@
 # Git Diff Margin
 
-A Visual Studio 2012 extension to display Git Diff on the margin of the current file.
+A Visual Studio 2013/2012 extension to display Git Diff on the margin of the current file.
 
 * Quickly view all current file changes on the left margin: blue rectangle for modification, green rectangle for new lines and grey triangle for deletion
 * Navigate to previous/next change on the file
@@ -9,7 +9,7 @@ A Visual Studio 2012 extension to display Git Diff on the margin of the current 
 * Copy the old code into the clipboard
 * Copy a part of the old code by selecting it in the popup
 * Define the colors of the Addition, Modification and Deletion diff margin through Visual Studio Fonts and Colors options
-* Support Visual Studio 2012 Dark, Light and Blue Theme
+* Support Visual Studio 2013/2012 Dark, Light and Blue Theme
 * Support the zoom
 
 Perfect companion of [Visual Studio Tools for Git](http://visualstudiogallery.msdn.microsoft.com/abafc7d6-dcaa-40f4-8a5e-d6724bdb980c)
