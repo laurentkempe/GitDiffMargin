@@ -202,7 +202,7 @@ namespace GitDiffMargin.ViewModel
                 if (_hunkRangeInfo.IsDeletion)
                 {
                     double center = (startTop + stopBottom) / 2.0;
-                    Top = center - (_textView.LineHeight / 2.0);
+                    Top = (center - (_textView.LineHeight / 2.0)) + _textView.LineHeight;
                     Height = _textView.LineHeight;
                     IsVisible = true;
                 }
@@ -460,7 +460,7 @@ namespace GitDiffMargin.ViewModel
         private void Rollback()
         {
             var snapshot = _textView.TextSnapshot;
-
+            
             if (snapshot != snapshot.TextBuffer.CurrentSnapshot)
                 return;
 
