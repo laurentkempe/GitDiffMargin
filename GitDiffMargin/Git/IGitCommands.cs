@@ -9,7 +9,7 @@ namespace GitDiffMargin.Git
 {
     public interface IGitCommands
     {
-        IEnumerable<HunkRangeInfo> GetGitDiffFor(string filename, ITextSnapshot snapshot);
+        IEnumerable<HunkRangeInfo> GetGitDiffFor(string filename);
         void StartExternalDiff(string filename);
         bool IsGitRepository(string directory);
     }

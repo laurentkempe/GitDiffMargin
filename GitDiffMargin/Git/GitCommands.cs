@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using LibGit2Sharp;
-using Microsoft.VisualStudio.Text;
 
 namespace GitDiffMargin.Git
 {
@@ -11,7 +10,7 @@ namespace GitDiffMargin.Git
     {
         private const int ContextLines = 0;
 
-        public IEnumerable<HunkRangeInfo> GetGitDiffFor(string filename, ITextSnapshot snapshot)
+        public IEnumerable<HunkRangeInfo> GetGitDiffFor(string filename)
         {
             var discoveredPath = Repository.Discover(Path.GetFullPath(filename));
 
@@ -19,7 +18,7 @@ namespace GitDiffMargin.Git
             {
                 var treeChanges = repo.Diff.Compare(new List<string> { filename }, compareOptions: new CompareOptions { ContextLines = ContextLines, InterhunkLines = 0 });
                 var gitDiffParser = new GitDiffParser(treeChanges.Patch, ContextLines);
-                var hunkRangeInfos = gitDiffParser.Parse(snapshot);
+                var hunkRangeInfos = gitDiffParser.Parse();
                 return hunkRangeInfos;
             }
         }

@@ -162,7 +162,7 @@ index 6f4c525..a42139b 100644
             var gitDiffParser = new GitDiffParser(DiffFromLibGit, 0);
             
             //Act
-            var hunkRangeInfos = gitDiffParser.Parse(null).ToList();
+            var hunkRangeInfos = gitDiffParser.Parse().ToList();
 
             //Assert
             hunkRangeInfos.Count.ShouldBe(5);
@@ -175,7 +175,7 @@ index 6f4c525..a42139b 100644
             var gitDiffParser = new GitDiffParser(DiffFromLibGit, 0);
             
             //Act
-            var hunkRangeInfos = gitDiffParser.Parse(null).ToList();
+            var hunkRangeInfos = gitDiffParser.Parse().ToList();
 
             //Assert
             hunkRangeInfos[0].IsDeletion.ShouldBe(true);
@@ -190,7 +190,7 @@ index 6f4c525..a42139b 100644
             var gitDiffParser = new GitDiffParser(DiffFromLibGit, 0);
             
             //Act
-            var hunkRangeInfos = gitDiffParser.Parse(null).ToList();
+            var hunkRangeInfos = gitDiffParser.Parse().ToList();
 
             //Assert
             hunkRangeInfos[1].IsDeletion.ShouldBe(false);
@@ -205,7 +205,7 @@ index 6f4c525..a42139b 100644
             var gitDiffParser = new GitDiffParser(DiffFromLibGit, 0);
             
             //Act
-            var hunkRangeInfos = gitDiffParser.Parse(null).ToList();
+            var hunkRangeInfos = gitDiffParser.Parse().ToList();
 
             //Assert
             hunkRangeInfos[1].OriginalText.ShouldBe(new List<string> {"    class Class1"});
@@ -218,7 +218,7 @@ index 6f4c525..a42139b 100644
             var gitDiffParser = new GitDiffParser(DiffFromLibGit, 0);
             
             //Act
-            var hunkRangeInfos = gitDiffParser.Parse(null).ToList();
+            var hunkRangeInfos = gitDiffParser.Parse().ToList();
 
             //Assert
             hunkRangeInfos[2].IsDeletion.ShouldBe(false);
@@ -233,7 +233,7 @@ index 6f4c525..a42139b 100644
             var gitDiffParser = new GitDiffParser(DiffFromLibGit, 0);
             
             //Act
-            var hunkRangeInfos = gitDiffParser.Parse(null).ToList();
+            var hunkRangeInfos = gitDiffParser.Parse().ToList();
 
             //Assert
             hunkRangeInfos[3].IsDeletion.ShouldBe(true);
@@ -248,7 +248,7 @@ index 6f4c525..a42139b 100644
             var gitDiffParser = new GitDiffParser(DiffFromLibGit, 0);
             
             //Act
-            var hunkRangeInfos = gitDiffParser.Parse(null).ToList();
+            var hunkRangeInfos = gitDiffParser.Parse().ToList();
 
             //Assert
             hunkRangeInfos[4].IsDeletion.ShouldBe(false);
@@ -263,7 +263,7 @@ index 6f4c525..a42139b 100644
             var gitDiffParser = new GitDiffParser(EmptyGitDiff, 0);
             
             //Act
-            var hunkRangeInfos = gitDiffParser.Parse(null).ToList();
+            var hunkRangeInfos = gitDiffParser.Parse().ToList();
 
             //Assert
             hunkRangeInfos.Count.ShouldBe(0);
@@ -276,7 +276,7 @@ index 6f4c525..a42139b 100644
             var gitDiffParser = new GitDiffParser(FirstGitDiff, 0);
             
             //Act
-            var hunkRanges = gitDiffParser.Parse(null).ToList();
+            var hunkRanges = gitDiffParser.Parse().ToList();
 
             //Assert
             hunkRanges[0].OriginalHunkRange.StartingLineNumber.ShouldBe(40);
@@ -292,7 +292,7 @@ index 6f4c525..a42139b 100644
             var gitDiffParser = new GitDiffParser(ThirdGitDiff, 0);
             
             //Act
-            var hunkRanges = gitDiffParser.Parse(null).ToList();
+            var hunkRanges = gitDiffParser.Parse().ToList();
 
             //Assert
             hunkRanges[0].OriginalHunkRange.StartingLineNumber.ShouldBe(0);
@@ -308,7 +308,7 @@ index 6f4c525..a42139b 100644
             var gitDiffParser = new GitDiffParser(SecondGitDiff, 0);
             
             //Act
-            var hunkRanges = gitDiffParser.Parse(null).ToList();
+            var hunkRanges = gitDiffParser.Parse().ToList();
 
             //Assert
             hunkRanges[0].OriginalHunkRange.StartingLineNumber.ShouldBe(67);

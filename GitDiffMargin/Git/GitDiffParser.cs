@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.Text;
 
 namespace GitDiffMargin.Git
 {
@@ -16,11 +15,11 @@ namespace GitDiffMargin.Git
             _contextLines = contextLines;
         }
 
-        public IEnumerable<HunkRangeInfo> Parse(ITextSnapshot snapshot)
+        public IEnumerable<HunkRangeInfo> Parse()
         {
             return from hunkLine in GetUnifiedFormatHunkLines() 
                    where !string.IsNullOrEmpty(hunkLine.Item1)
-                   select new HunkRangeInfo(new HunkRange(GetHunkOriginalFile(hunkLine.Item1), _contextLines), new HunkRange(GetHunkNewFile(hunkLine.Item1), _contextLines), hunkLine.Item2, snapshot);
+                   select new HunkRangeInfo(new HunkRange(GetHunkOriginalFile(hunkLine.Item1), _contextLines), new HunkRange(GetHunkNewFile(hunkLine.Item1), _contextLines), hunkLine.Item2);
         }
 
         public IEnumerable<Tuple<string, IEnumerable<string>>> GetUnifiedFormatHunkLines()

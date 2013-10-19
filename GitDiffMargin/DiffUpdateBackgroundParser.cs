@@ -16,33 +16,27 @@ namespace GitDiffMargin
     {
         private readonly FileSystemWatcher _watcher;
         private readonly IGitCommands _commands;
-        private readonly ITextDocument _textDocument;
+        private readonly DTE _dte;
 
         public DiffUpdateBackgroundParser(ITextBuffer textBuffer, TaskScheduler taskScheduler, ITextDocumentFactoryService textDocumentFactoryService, SVsServiceProvider serviceProvider, IGitCommands commands)
             : base(textBuffer, taskScheduler, textDocumentFactoryService)
         {
-             var dte = (DTE)serviceProvider.GetService(typeof(DTE));
+             _dte = (DTE)serviceProvider.GetService(typeof(DTE));
 
             _commands = commands;
             ReparseDelay = TimeSpan.FromMilliseconds(500);
 
-            if (TextDocumentFactoryService.TryGetTextDocument(TextBuffer, out _textDocument))
-            {
-                _textDocument.FileActionOccurred += OnFileActionOccurred;
+            if (!_commands.IsGitRepository(_dte.Solution.FullName)) return;
 
-                if (_commands.IsGitRepository(dte.Solution.FullName))
-                {
-                    var solutionDirectory = Path.GetDirectoryName(dte.Solution.FullName);
+            var solutionDirectory = Path.GetDirectoryName(_dte.Solution.FullName);
 
-                    _watcher = new FileSystemWatcher(solutionDirectory);
-                    _watcher.IncludeSubdirectories = true;
-                    _watcher.Changed += HandleFileSystemChanged;
-                    _watcher.Created += HandleFileSystemChanged;
-                    _watcher.Deleted += HandleFileSystemChanged;
-                    _watcher.Renamed += HandleFileSystemChanged;
-                    _watcher.EnableRaisingEvents = true;
-                }
-            }
+            _watcher = new FileSystemWatcher(solutionDirectory);
+            _watcher.IncludeSubdirectories = true;
+            _watcher.Changed += HandleFileSystemChanged;
+            _watcher.Created += HandleFileSystemChanged;
+            _watcher.Deleted += HandleFileSystemChanged;
+            _watcher.Renamed += HandleFileSystemChanged;
+            _watcher.EnableRaisingEvents = true;
         }
         
         private void HandleFileSystemChanged(object sender, FileSystemEventArgs e)
@@ -62,14 +56,6 @@ namespace GitDiffMargin
             MarkDirty(true);
         }
 
-        private void OnFileActionOccurred(object sender, TextDocumentFileActionEventArgs e)
-        {
-            if ((e.FileActionType & FileActionTypes.ContentSavedToDisk) != 0)
-            {
-                MarkDirty(true);
-            }
-        }
-
         public override string Name
         {
             get
@@ -85,14 +71,10 @@ namespace GitDiffMargin
                 var stopwatch = Stopwatch.StartNew();
 
                 var snapshot = TextBuffer.CurrentSnapshot;
-                ITextDocument textDocument;
-                if (!TextDocumentFactoryService.TryGetTextDocument(TextBuffer, out textDocument))
-                {
-                    textDocument = null;
-                }
-                var diff = textDocument != null ? _commands.GetGitDiffFor(textDocument.FilePath, snapshot) : Enumerable.Empty<HunkRangeInfo>();
+                var fullName = _dte.ActiveDocument.ActiveWindow.Document.FullName;
 
-                var result = new DiffParseResultEventArgs(snapshot, stopwatch.Elapsed, diff.ToList());
+                var diffs = _commands.GetGitDiffFor(fullName).ToList();
+                var result = new DiffParseResultEventArgs(snapshot, stopwatch.Elapsed, diffs);
                 OnParseComplete(result);
             }
             catch (InvalidOperationException)
@@ -108,8 +90,6 @@ namespace GitDiffMargin
 
             if (disposing)
             {
-                _textDocument.FileActionOccurred -= OnFileActionOccurred;
-
                 if (_watcher != null)
                 {
                     _watcher.Dispose();
