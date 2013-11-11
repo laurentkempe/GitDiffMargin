@@ -12,5 +12,6 @@ namespace GitDiffMargin.Git
         IEnumerable<HunkRangeInfo> GetGitDiffFor(string filename);
         void StartExternalDiff(string filename);
         bool IsGitRepository(string directory);
+        string GetGitRepository(string filePath);
     }
 }

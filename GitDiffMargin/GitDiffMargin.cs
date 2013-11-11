@@ -47,7 +47,7 @@ namespace GitDiffMargin
             _textView.Options.OptionChanged += HandleOptionChanged;
 
             _gitDiffBarControl = new DiffMarginControl();
-            _viewModel = new DiffMarginViewModel(this, _textView, factory.TextDocumentFactoryService, factory.ServiceProvider, new GitCommands());
+            _viewModel = new DiffMarginViewModel(this, _textView, factory.TextDocumentFactoryService, new GitCommands());
             _gitDiffBarControl.DataContext = _viewModel;
             _gitDiffBarControl.Width = MarginWidth;
         }

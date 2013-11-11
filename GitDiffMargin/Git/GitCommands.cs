@@ -62,5 +62,15 @@ namespace GitDiffMargin.Git
             if (string.IsNullOrWhiteSpace(fullPath)) return false;
             return Repository.IsValid(fullPath);
         }
+
+        public string GetGitRepository(string filePath)
+        {
+            if (string.IsNullOrWhiteSpace(filePath)) return null;
+            var discoveredPath = Repository.Discover(Path.GetFullPath(filePath));
+            if (string.IsNullOrWhiteSpace(discoveredPath)) return null;
+            var fullPath = Path.GetFullPath(discoveredPath);
+            var directoryInfo = Directory.GetParent(fullPath).Parent;
+            return directoryInfo != null ? directoryInfo.FullName : null;
+        }
     }
 }

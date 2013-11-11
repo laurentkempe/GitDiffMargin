@@ -16,7 +16,7 @@ namespace GitDiffMargin
     [Order(Before = PredefinedMarginNames.LineNumber)]
     [MarginContainer(PredefinedMarginNames.LeftSelection)]
     [ContentType("text")]
-    [TextViewRole(PredefinedTextViewRoles.Interactive)]
+    [TextViewRole(PredefinedTextViewRoles.Editable)]
     internal sealed class MarginFactory : IWpfTextViewMarginProvider
     {
         [Import]
@@ -28,9 +28,6 @@ namespace GitDiffMargin
         [Import]
         internal IEditorFormatMapService EditorFormatMapService { get; private set; }
         
-        [Import]
-        internal SVsServiceProvider ServiceProvider { get; private set; }
-
         public IWpfTextViewMargin CreateMargin(IWpfTextViewHost textViewHost, IWpfTextViewMargin containerMargin)
         {
             return new GitDiffMargin(textViewHost.TextView, this);

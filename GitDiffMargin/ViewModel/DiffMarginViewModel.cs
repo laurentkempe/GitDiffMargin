@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GitDiffMargin.Git;
-using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 
@@ -23,7 +22,7 @@ namespace GitDiffMargin.ViewModel
         private RelayCommand<DiffViewModel> _previousChangeCommand;
         private RelayCommand<DiffViewModel> _nextChangeCommand;
 
-        internal DiffMarginViewModel(GitDiffMargin margin, IWpfTextView textView, ITextDocumentFactoryService textDocumentFactoryService, SVsServiceProvider serviceProvider, IGitCommands gitCommands)
+        internal DiffMarginViewModel(GitDiffMargin margin, IWpfTextView textView, ITextDocumentFactoryService textDocumentFactoryService, IGitCommands gitCommands)
         {
             if (margin == null)
                 throw new ArgumentNullException("margin");
@@ -40,7 +39,7 @@ namespace GitDiffMargin.ViewModel
 
             _textView.LayoutChanged += OnLayoutChanged;
 
-            _parser = new DiffUpdateBackgroundParser(textView.TextBuffer, TaskScheduler.Default, textDocumentFactoryService, serviceProvider, gitCommands);
+            _parser = new DiffUpdateBackgroundParser(textView.TextBuffer, textView.TextDataModel.DocumentBuffer, TaskScheduler.Default, textDocumentFactoryService, gitCommands);
             _parser.ParseComplete += HandleParseComplete;
             _parser.RequestParse(false);
         }

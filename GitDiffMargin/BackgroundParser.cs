@@ -32,7 +32,7 @@ namespace GitDiffMargin
 {
     public abstract class BackgroundParser : IDisposable
     {
-        private readonly ITextBuffer _textBuffer;
+        private readonly WeakReference<ITextBuffer> _textBuffer;
         private readonly TaskScheduler _taskScheduler;
         private readonly ITextDocumentFactoryService _textDocumentFactoryService;
         private readonly Timer _timer;
@@ -54,13 +54,11 @@ namespace GitDiffMargin
             if (textDocumentFactoryService == null)
                 throw new ArgumentNullException("textDocumentFactoryService");
 
-            _textBuffer = textBuffer;
+            _textBuffer = new WeakReference<ITextBuffer>(textBuffer);
             _taskScheduler = taskScheduler;
             _textDocumentFactoryService = textDocumentFactoryService;
 
-            _textBuffer.PostChanged += TextBufferPostChanged;
-
-
+            textBuffer.PostChanged += TextBufferPostChanged;
 
             _dirty = true;
             _reparseDelay = TimeSpan.FromMilliseconds(1500);
@@ -72,7 +70,7 @@ namespace GitDiffMargin
         {
             get
             {
-                return _textBuffer;
+                return _textBuffer.Target;
             }
         }
 
@@ -137,7 +135,10 @@ namespace GitDiffMargin
         {
             if (disposing)
             {
-                _textBuffer.PostChanged -= TextBufferPostChanged;
+                ITextBuffer textBuffer = TextBuffer;
+                if (textBuffer != null)
+                    textBuffer.PostChanged -= TextBufferPostChanged;
+
                 _timer.Dispose();
             }
 
@@ -158,8 +159,8 @@ namespace GitDiffMargin
 
         protected void MarkDirty(bool resetTimer)
         {
-            _dirty = true;
-            _lastEdit = DateTimeOffset.Now;
+            this._dirty = true;
+            this._lastEdit = DateTimeOffset.Now;
 
             if (resetTimer)
                 _timer.Change(_reparseDelay, _reparseDelay);
@@ -172,6 +173,12 @@ namespace GitDiffMargin
 
         private void ParseTimerCallback(object state)
         {
+            if (TextBuffer == null)
+            {
+                Dispose();
+                return;
+            }
+
             TryReparse(_dirty);
         }
 
