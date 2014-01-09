@@ -22,6 +22,7 @@ namespace GitDiffMargin.ViewModel
         private readonly GitDiffMargin _margin;
         private readonly HunkRangeInfo _hunkRangeInfo;
         private readonly IWpfTextView _textView;
+        private readonly IGitCommands _gitCommands;
         private bool _isDiffTextVisible;
         private bool _showPopup;
         private bool _reverted;
@@ -29,11 +30,12 @@ namespace GitDiffMargin.ViewModel
         private ICommand _rollbackCommand;
         private ICommand _showPopUpCommand;
 
-        internal DiffViewModel(GitDiffMargin margin, HunkRangeInfo hunkRangeInfo, IWpfTextView textView)
+        internal DiffViewModel(GitDiffMargin margin, HunkRangeInfo hunkRangeInfo, IWpfTextView textView, IGitCommands gitCommands)
         {
             _margin = margin;
             _hunkRangeInfo = hunkRangeInfo;
             _textView = textView;
+            _gitCommands = gitCommands;
             _margin.BrushesChanged += HandleBrushesChanged;
 
             ShowPopup = false;
@@ -425,10 +427,7 @@ namespace GitDiffMargin.ViewModel
             ITextDocument document;
             _textView.TextDataModel.DocumentBuffer.Properties.TryGetProperty(typeof(ITextDocument), out document);
 
-            if (document == null || string.IsNullOrEmpty(document.FilePath)) return;
-            
-            var gitCommands = new GitCommands();
-            gitCommands.StartExternalDiff(document.FilePath);
+            _gitCommands.StartExternalDiff(document);
         }
 
         public ICommand CopyOldTextCommand

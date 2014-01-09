@@ -18,6 +18,7 @@ namespace GitDiffMargin.ViewModel
     {
         private readonly GitDiffMargin _margin;
         private readonly IWpfTextView _textView;
+        private readonly IGitCommands _gitCommands;
         private readonly DiffUpdateBackgroundParser _parser;
         private RelayCommand<DiffViewModel> _previousChangeCommand;
         private RelayCommand<DiffViewModel> _nextChangeCommand;
@@ -35,6 +36,7 @@ namespace GitDiffMargin.ViewModel
 
             _margin = margin;
             _textView = textView;
+            _gitCommands = gitCommands;
             DiffViewModels = new ObservableCollection<DiffViewModel>();
 
             _textView.LayoutChanged += OnLayoutChanged;
@@ -111,12 +113,16 @@ namespace GitDiffMargin.ViewModel
         {
             _margin.VisualElement.Dispatcher.BeginInvoke((Action) (() =>
                                                                        {
+                                                                           //todo do not clear if it the same collection returned
+
+                                                                           if (DiffViewModels.Any(dvm => dvm.ShowPopup)) return;
+
                                                                            DiffViewModels.Clear();
 
                                                                            var diffResult = e as DiffParseResultEventArgs;
                                                                            if (diffResult == null) return;
-
-                                                                           foreach (var diffViewModel in diffResult.Diff.Select(hunkRangeInfo => new DiffViewModel(_margin, hunkRangeInfo, _textView)))
+                                                                           
+                                                                           foreach (var diffViewModel in diffResult.Diff.Select(hunkRangeInfo => new DiffViewModel(_margin, hunkRangeInfo, _textView, _gitCommands)))
                                                                            {
                                                                                DiffViewModels.Add(diffViewModel);
                                                                            }

@@ -119,6 +119,7 @@
     <Compile Include="DiffParseResultEventArgs.cs" />
     <Compile Include="DiffRemovedEditorFormatDefinition.cs" />
     <Compile Include="DiffUpdateBackgroundParser.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="GitDiffMargin.cs" />
     <Compile Include="GitDiffMarginFactory.cs" />
     <Compile Include="GitDiffMarginTextViewOptions.cs" />

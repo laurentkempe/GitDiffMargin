@@ -86,12 +86,9 @@ namespace GitDiffMargin
 
                 var snapshot = TextBuffer.CurrentSnapshot;
                 ITextDocument textDocument;
-                if (!TextDocumentFactoryService.TryGetTextDocument(_documentBuffer, out textDocument))
-                {
-                    textDocument = null;
-                }
-                var diff = textDocument != null ? _commands.GetGitDiffFor(textDocument.FilePath) : Enumerable.Empty<HunkRangeInfo>();
+                if (!TextDocumentFactoryService.TryGetTextDocument(_documentBuffer, out textDocument)) return;
 
+                var diff = _commands.GetGitDiffFor(textDocument, snapshot);
                 var result = new DiffParseResultEventArgs(snapshot, stopwatch.Elapsed, diff.ToList());
                 OnParseComplete(result);
             }

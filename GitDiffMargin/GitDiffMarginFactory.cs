@@ -27,6 +27,9 @@ namespace GitDiffMargin
 
         [Import]
         internal IEditorFormatMapService EditorFormatMapService { get; private set; }
+
+        [Import]
+        internal SVsServiceProvider ServiceProvider { get; private set; }
         
         public IWpfTextViewMargin CreateMargin(IWpfTextViewHost textViewHost, IWpfTextViewMargin containerMargin)
         {
