@@ -419,7 +419,7 @@ namespace GitDiffMargin.ViewModel
 
         private bool ShowDifferenceCanExecute()
         {
-            return _hunkRangeInfo.IsModification;
+            return _hunkRangeInfo.IsModification || _hunkRangeInfo.IsDeletion || _hunkRangeInfo.IsAddition;
         }
 
         private void ShowDifference()
