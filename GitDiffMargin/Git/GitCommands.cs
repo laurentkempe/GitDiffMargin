@@ -65,13 +65,13 @@ namespace GitDiffMargin.Git
 
         private byte[] AdaptCrlf(IRepository repo, byte[] content, ITextDocument textDocument)
         {
-            var autocrlf = repo.Config.Get<bool>("core.autocrlf");
-
             var docu = _dte.Documents.AllDocuments().FirstOrDefault(doc => doc.FullName == textDocument.FilePath);
 
             if (docu != null && docu.Language == "HTML") return content;
 
-            if (autocrlf == null || !autocrlf.Value) return content;
+            var autocrlf = repo.Config.Get<string>("core.autocrlf");
+
+            if (autocrlf == null || autocrlf.Value != "true") return content;
 
             var contentText = Encoding.UTF8.GetString(content);
             content = Encoding.UTF8.GetBytes(contentText.Replace("\r\n", "\n"));
