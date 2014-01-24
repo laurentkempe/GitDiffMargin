@@ -23,9 +23,6 @@ namespace GitDiffMargin.Git
 
         public IEnumerable<HunkRangeInfo> GetGitDiffFor(ITextDocument textDocument, ITextSnapshot snapshot)
         {
-            var content = GetCompleteContent(textDocument, snapshot);
-            if (content == null) yield break;
-
             var filename = textDocument.FilePath;
             var discoveredPath = Repository.Discover(Path.GetFullPath(filename));
 
@@ -35,7 +32,10 @@ namespace GitDiffMargin.Git
             {
                 var retrieveStatus = repo.Index.RetrieveStatus(filename);
                 if (retrieveStatus == FileStatus.Untracked || retrieveStatus == FileStatus.Added) yield break;
-                
+
+                var content = GetCompleteContent(textDocument, snapshot);
+                if (content == null) yield break;
+
                 content = AdaptCrlf(repo, content, textDocument);
 
                 using (var currentContent = new MemoryStream(content))
@@ -81,8 +81,9 @@ namespace GitDiffMargin.Git
         private static byte[] GetCompleteContent(ITextDocument textDocument, ITextSnapshot snapshot)
         {
             var currentText = snapshot.GetText();
-            var content = textDocument.Encoding.GetBytes(currentText); 
-            
+
+            var content = textDocument.Encoding.GetBytes(currentText);
+
             var preamble = textDocument.Encoding.GetPreamble();
             if (preamble.Length <= 0) return null;
 

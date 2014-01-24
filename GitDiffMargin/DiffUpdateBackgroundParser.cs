@@ -34,7 +34,8 @@ namespace GitDiffMargin
 
                     if (!string.IsNullOrWhiteSpace(solutionDirectory))
                     {
-                        _watcher = new FileSystemWatcher(solutionDirectory) {IncludeSubdirectories = true};
+                        var gitDirectory = Path.Combine(solutionDirectory, ".git");
+                        _watcher = new FileSystemWatcher(gitDirectory);
                         _watcher.Changed += HandleFileSystemChanged;
                         _watcher.Created += HandleFileSystemChanged;
                         _watcher.Deleted += HandleFileSystemChanged;
