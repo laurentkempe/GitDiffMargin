@@ -33,3 +33,5 @@ You might see a little video on the [following page](http://www.flickr.com/photo
 ## Credits
 
 Thanks to Sam Harwell [@sharwell](https://github.com/sharwell) for all the improvements!
+
+Thanks to Rick Sladkey [@ricksladkey](https://github.com/ricksladkey) for the fixes!
