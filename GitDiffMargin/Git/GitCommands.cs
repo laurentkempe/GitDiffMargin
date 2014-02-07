@@ -123,7 +123,7 @@ namespace GitDiffMargin.Git
                 var blob = repo.Lookup<Blob>(indexEntry.Id);
 
                 var tempFileName = Path.GetTempFileName();
-                File.WriteAllBytes(tempFileName, blob.Content);
+                File.WriteAllText(tempFileName, blob.GetContentText());
                     
                 var process = new Process
                 {
