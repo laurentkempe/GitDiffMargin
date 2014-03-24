@@ -88,7 +88,7 @@ namespace GitDiffMargin.Git
             var content = textDocument.Encoding.GetBytes(currentText);
 
             var preamble = textDocument.Encoding.GetPreamble();
-            if (preamble.Length <= 0) return null;
+            if (preamble.Length == 0) return content;
 
             var completeContent = new byte[preamble.Length + content.Length];
             Buffer.BlockCopy(preamble, 0, completeContent, 0, preamble.Length);
