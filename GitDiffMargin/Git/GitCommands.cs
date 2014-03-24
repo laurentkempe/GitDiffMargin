@@ -48,10 +48,13 @@ namespace GitDiffMargin.Git
                     var relativeFilepath = filename.Replace(directoryInfo.FullName + "\\", string.Empty);
 
                     var from = TreeDefinition.From(repo.Head.Tip.Tree);
-                    var treeDefinition = from.Add(relativeFilepath, newBlob, Mode.NonExecutableFile);
-                    var to = repo.ObjectDatabase.CreateTree(treeDefinition);
-                    
-                    var treeChanges = repo.Diff.Compare(repo.Head.Tip.Tree, to, compareOptions: new CompareOptions { ContextLines = ContextLines, InterhunkLines = 0 });
+
+                    if (!repo.ObjectDatabase.Contains(@from[relativeFilepath].TargetId)) yield break;
+
+                    var blob = repo.Lookup<Blob>(@from[relativeFilepath].TargetId);
+
+                    var treeChanges = repo.Diff.Compare(blob, newBlob, new CompareOptions { ContextLines = ContextLines, InterhunkLines = 0 });
+
                     var gitDiffParser = new GitDiffParser(treeChanges.Patch, ContextLines);
                     var hunkRangeInfos = gitDiffParser.Parse();
 
