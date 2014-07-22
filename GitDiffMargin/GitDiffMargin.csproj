@@ -118,8 +118,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\DiffMarginViewModel.cs" />
     <Compile Include="ViewModel\DiffViewModel.cs" />
-    <Compile Include="View\GitDiffBarControl.xaml.cs">
-      <DependentUpon>GitDiffBarControl.xaml</DependentUpon>
+    <Compile Include="View\EditorDiffMarginControl.xaml.cs">
+      <DependentUpon>EditorDiffMarginControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="WeakReference.cs" />
   </ItemGroup>
@@ -164,7 +164,7 @@
     <Resource Include="Resources\PreviousArrow.png" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="View\GitDiffBarControl.xaml">
+    <Page Include="View\EditorDiffMarginControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <Generator>MSBuild:Compile</Generator>

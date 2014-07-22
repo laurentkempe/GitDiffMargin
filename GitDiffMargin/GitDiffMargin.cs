@@ -27,7 +27,7 @@ namespace GitDiffMargin
         private readonly IClassificationFormatMap _classificationFormatMap;
         private readonly IEditorFormatMap _editorFormatMap;
         private DiffMarginViewModel _viewModel;
-        private readonly DiffMarginControl _gitDiffBarControl;
+        private readonly EditorDiffMarginControl _editorDiffMarginControl;
         private bool _isDisposed;
 
         private Brush _additionBrush;
@@ -46,10 +46,10 @@ namespace GitDiffMargin
 
             _textView.Options.OptionChanged += HandleOptionChanged;
 
-            _gitDiffBarControl = new DiffMarginControl();
+            _editorDiffMarginControl = new EditorDiffMarginControl();
             _viewModel = new DiffMarginViewModel(this, _textView, factory.TextDocumentFactoryService, new GitCommands(factory.ServiceProvider));
-            _gitDiffBarControl.DataContext = _viewModel;
-            _gitDiffBarControl.Width = MarginWidth;
+            _editorDiffMarginControl.DataContext = _viewModel;
+            _editorDiffMarginControl.Width = MarginWidth;
         }
 
         public event EventHandler BrushesChanged;
@@ -59,7 +59,7 @@ namespace GitDiffMargin
             get
             {
                 ThrowIfDisposed();
-                return _gitDiffBarControl;
+                return _editorDiffMarginControl;
             }
         }
 
@@ -81,7 +81,7 @@ namespace GitDiffMargin
             get
             {
                 ThrowIfDisposed();
-                return _gitDiffBarControl.ActualWidth;
+                return _editorDiffMarginControl.ActualWidth;
             }
         }
 
@@ -168,7 +168,7 @@ namespace GitDiffMargin
         private void UpdateVisibility()
         {
             ThrowIfDisposed();
-            _gitDiffBarControl.Visibility = Enabled ? Visibility.Visible : Visibility.Collapsed;
+            _editorDiffMarginControl.Visibility = Enabled ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private static Brush GetBrush(ResourceDictionary properties)
