@@ -12,12 +12,12 @@ using Microsoft.VisualStudio.Utilities;
 namespace GitDiffMargin
 {
     [Export(typeof (IWpfTextViewMarginProvider))]
-    [Name(GitDiffMargin.MarginName)]
+    [Name(EditorDiffMargin.MarginNameConst)]
     [Order(Before = PredefinedMarginNames.LineNumber)]
     [MarginContainer(PredefinedMarginNames.LeftSelection)]
     [ContentType("text")]
     [TextViewRole(PredefinedTextViewRoles.Editable)]
-    internal sealed class MarginFactory : IWpfTextViewMarginProvider
+    public sealed class EditorMarginFactory : IWpfTextViewMarginProvider
     {
         [Import]
         internal ITextDocumentFactoryService TextDocumentFactoryService { get; private set; }
@@ -33,7 +33,7 @@ namespace GitDiffMargin
         
         public IWpfTextViewMargin CreateMargin(IWpfTextViewHost textViewHost, IWpfTextViewMargin containerMargin)
         {
-            return new GitDiffMargin(textViewHost.TextView, this);
+            return new EditorDiffMargin(textViewHost.TextView, this);
         }
     }
 }

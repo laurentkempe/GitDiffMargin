@@ -70,10 +70,10 @@
         </Setter.Value>
       </Setter>
     </Style>
-        <ControlTemplate x:Key="ChangeTemplate" d:DataContext="{d:DesignInstance viewModel:DiffViewModel}">
+        <ControlTemplate x:Key="ChangeTemplate" d:DataContext="{d:DesignInstance viewModel:EditorDiffViewModel}">
             <Rectangle Width="{Binding Width, Mode=OneWay}" HorizontalAlignment="Left" Margin="{Binding Margin, Mode=OneWay}" Fill="{Binding DiffBrush}" />
         </ControlTemplate>
-        <ControlTemplate x:Key="DeletionTemplate" d:DataContext="{d:DesignInstance viewModel:DiffViewModel}">
+        <ControlTemplate x:Key="DeletionTemplate" d:DataContext="{d:DesignInstance viewModel:EditorDiffViewModel}">
             <Polygon Points="0,0 1,1 0,2 0,0" Fill="{Binding DiffBrush}" Width="9" Height="{Binding Height}" Stretch="Fill" />
         </ControlTemplate>
     </UserControl.Resources>
@@ -91,7 +91,7 @@
         </ItemsPanelTemplate>
       </ItemsControl.ItemsPanel>
       <ItemsControl.ItemContainerStyle>
-        <Style TargetType="ContentPresenter" d:DataContext="{d:DesignInstance viewModel:DiffViewModel}">
+        <Style TargetType="ContentPresenter" d:DataContext="{d:DesignInstance viewModel:EditorDiffViewModel}">
           <Setter Property="VerticalAlignment" Value="Top" />
           <Setter Property="Canvas.Top" Value="{Binding Top, Mode=OneWay}" />
           <Setter Property="Height" Value="{Binding Height, Mode=OneWay}" />
