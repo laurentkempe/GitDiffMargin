@@ -115,9 +115,12 @@
     <Compile Include="Git\HunkRange.cs" />
     <Compile Include="Git\HunkRangeInfo.cs" />
     <Compile Include="Git\IGitCommands.cs" />
+    <Compile Include="MarginCore.cs" />
+    <Compile Include="MarginFactoryBase.cs" />
     <Compile Include="ParseResultEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\DiffMarginViewModel.cs" />
+    <Compile Include="ViewModel\DiffViewModel.cs" />
     <Compile Include="ViewModel\EditorDiffViewModel.cs" />
     <Compile Include="View\EditorDiffMarginControl.xaml.cs">
       <DependentUpon>EditorDiffMarginControl.xaml</DependentUpon>

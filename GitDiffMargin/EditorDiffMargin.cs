@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.Text.Editor;
 
 namespace GitDiffMargin
 {
-    public sealed class EditorDiffMargin : DiffMarginBase
+    internal sealed class EditorDiffMargin : DiffMarginBase
     {
         private const double MarginWidth = 10.0;
 
@@ -19,25 +19,13 @@ namespace GitDiffMargin
             get { return MarginNameConst; }
         }
 
-        public override double ChangeLeft
+        internal EditorDiffMargin(IWpfTextView textView, MarginCore marginCore)
+            : base(textView, marginCore)
         {
-            get { return 2.5; }
-        }
-
-        public override double ChangeWidth
-        {
-            get { return 5.0; }
-        }
-
-        internal EditorDiffMargin(IWpfTextView textView, EditorMarginFactory factory)
-            : base (textView, factory)
-        {
-            _classificationFormatMap = factory.ClassificationFormatMapService.GetClassificationFormatMap(textView);
-
-            _userControl = new EditorDiffMarginControl();
-            _viewModel = new DiffMarginViewModel(this, textView, factory);
-            _userControl.DataContext = _viewModel;
-            _userControl.Width = MarginWidth;
+            UserControl = new EditorDiffMarginControl();
+            ViewModel = new DiffMarginViewModel(this, textView, marginCore);
+            UserControl.DataContext = ViewModel;
+            UserControl.Width = MarginWidth;
         }
     }
 }

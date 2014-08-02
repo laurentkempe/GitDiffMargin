@@ -1,9 +1,6 @@
 ﻿#region using
 
 using System.ComponentModel.Composition;
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Text;
-using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
 
@@ -17,23 +14,12 @@ namespace GitDiffMargin
     [MarginContainer(PredefinedMarginNames.LeftSelection)]
     [ContentType("text")]
     [TextViewRole(PredefinedTextViewRoles.Editable)]
-    public sealed class EditorMarginFactory : IWpfTextViewMarginProvider
+    internal sealed class EditorMarginFactory : MarginFactoryBase
     {
-        [Import]
-        internal ITextDocumentFactoryService TextDocumentFactoryService { get; private set; }
-
-        [Import]
-        internal IClassificationFormatMapService ClassificationFormatMapService { get; private set; }
-
-        [Import]
-        internal IEditorFormatMapService EditorFormatMapService { get; private set; }
-
-        [Import]
-        internal SVsServiceProvider ServiceProvider { get; private set; }
-        
-        public IWpfTextViewMargin CreateMargin(IWpfTextViewHost textViewHost, IWpfTextViewMargin containerMargin)
+        public override IWpfTextViewMargin CreateMargin(IWpfTextViewHost textViewHost, IWpfTextViewMargin containerMargin)
         {
-            return new EditorDiffMargin(textViewHost.TextView, this);
+            var marginCore = GetMarginCore(textViewHost);
+            return new EditorDiffMargin(textViewHost.TextView, marginCore);
         }
     }
 }

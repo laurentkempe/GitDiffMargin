@@ -6,78 +6,80 @@ using System.Linq;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using GitDiffMargin.Git;
 using Microsoft.VisualStudio.Text.Editor;
 
 #endregion
 
 namespace GitDiffMargin.ViewModel
 {
-    public class DiffMarginViewModel : ViewModelBase
+    internal class DiffMarginViewModel : ViewModelBase
     {
-        private readonly EditorDiffMargin _margin;
+        private readonly DiffMarginBase _margin;
         private readonly IWpfTextView _textView;
-        private readonly IGitCommands _gitCommands;
+        private readonly MarginCore _marginCore;
         private readonly DiffUpdateBackgroundParser _parser;
-        private RelayCommand<EditorDiffViewModel> _previousChangeCommand;
-        private RelayCommand<EditorDiffViewModel> _nextChangeCommand;
+        private RelayCommand<DiffViewModel> _previousChangeCommand;
+        private RelayCommand<DiffViewModel> _nextChangeCommand;
 
-        internal DiffMarginViewModel(EditorDiffMargin margin, IWpfTextView textView, EditorMarginFactory factory)
+        internal DiffMarginViewModel(DiffMarginBase margin, IWpfTextView textView, MarginCore marginCore)
         {
             if (margin == null)
                 throw new ArgumentNullException("margin");
             if (textView == null)
                 throw new ArgumentNullException("textView");
+            if (marginCore == null)
+                throw new ArgumentNullException("marginCore");
 
             _margin = margin;
-            _gitCommands = new GitCommands(factory.ServiceProvider);
-            DiffViewModels = new ObservableCollection<EditorDiffViewModel>();
-
             _textView = textView;
+            _marginCore = marginCore;
 
-            _parser = new DiffUpdateBackgroundParser(textView.TextBuffer, textView.TextDataModel.DocumentBuffer, TaskScheduler.Default, factory.TextDocumentFactoryService, _gitCommands);
+            DiffViewModels = new ObservableCollection<DiffViewModel>();
+
+            _parser = new DiffUpdateBackgroundParser(textView.TextBuffer, textView.TextDataModel.DocumentBuffer, TaskScheduler.Default, _marginCore.TextDocumentFactoryService, _marginCore.GitCommands);
             _parser.ParseComplete += HandleParseComplete;
             _parser.RequestParse(false);
         }
        
-        public ObservableCollection<EditorDiffViewModel> DiffViewModels { get; private set; }
+        public ObservableCollection<DiffViewModel> DiffViewModels { get; private set; }
 
-        public RelayCommand<EditorDiffViewModel> PreviousChangeCommand
+        public RelayCommand<DiffViewModel> PreviousChangeCommand
         {
-            get { return _previousChangeCommand ?? (_previousChangeCommand = new RelayCommand<EditorDiffViewModel>(PreviousChange, PreviousChangeCanExecute)); }
+            get { return _previousChangeCommand ?? (_previousChangeCommand = new RelayCommand<DiffViewModel>(PreviousChange, PreviousChangeCanExecute)); }
         }
 
-        public RelayCommand<EditorDiffViewModel> NextChangeCommand
+        public RelayCommand<DiffViewModel> NextChangeCommand
         {
-            get { return _nextChangeCommand ?? (_nextChangeCommand = new RelayCommand<EditorDiffViewModel>(NextChange, NextChangeCanExecute)); }
+            get { return _nextChangeCommand ?? (_nextChangeCommand = new RelayCommand<DiffViewModel>(NextChange, NextChangeCanExecute)); }
         }
 
-        private bool PreviousChangeCanExecute(EditorDiffViewModel currentEditorDiffViewModel)
+        private bool PreviousChangeCanExecute(DiffViewModel currentEditorDiffViewModel)
         {
             return DiffViewModels.IndexOf(currentEditorDiffViewModel) > 0;
         }
 
-        private bool NextChangeCanExecute(EditorDiffViewModel currentEditorDiffViewModel)
+        private bool NextChangeCanExecute(DiffViewModel currentEditorDiffViewModel)
         {
             return DiffViewModels.IndexOf(currentEditorDiffViewModel) < (DiffViewModels.Count - 1);
         }
 
-        private void PreviousChange(EditorDiffViewModel currentEditorDiffViewModel)
+        private void PreviousChange(DiffViewModel currentEditorDiffViewModel)
         {
             MoveToChange(currentEditorDiffViewModel, -1);
         }
 
-        private void NextChange(EditorDiffViewModel currentEditorDiffViewModel)
+        private void NextChange(DiffViewModel currentEditorDiffViewModel)
         {
             MoveToChange(currentEditorDiffViewModel, +1);
         }
 
-        private void MoveToChange(EditorDiffViewModel currentEditorDiffViewModel, int indexModifier)
+        private void MoveToChange(DiffViewModel currentDiffViewModel, int indexModifier)
         {
-            var diffViewModelIndex = DiffViewModels.IndexOf(currentEditorDiffViewModel) + indexModifier;
+            var diffViewModelIndex = DiffViewModels.IndexOf(currentDiffViewModel) + indexModifier;
             var diffViewModel  = DiffViewModels[diffViewModelIndex];
             var diffLine = _textView.TextSnapshot.GetLineFromLineNumber(diffViewModel.LineNumber);
-            currentEditorDiffViewModel.ShowPopup = false;
+            //todo uncomment this because it is sued for the editor margin
+            //currentDiffViewModel.ShowPopup = false;
 
             _textView.VisualElement.Focus();
             _textView.Caret.MoveTo(diffLine.Start);
@@ -104,14 +106,15 @@ namespace GitDiffMargin.ViewModel
                                                                        {
                                                                            //todo do not clear if it the same collection returned
 
-                                                                           if (DiffViewModels.Any(dvm => dvm.ShowPopup)) return;
+                                                                           //todo uncomment this because it is sued for the editor margin
+                                                                           //if (DiffViewModels.Any(dvm => dvm.ShowPopup)) return;
 
                                                                            DiffViewModels.Clear();
 
                                                                            var diffResult = e as DiffParseResultEventArgs;
                                                                            if (diffResult == null) return;
-                                                                           
-                                                                           foreach (var diffViewModel in diffResult.Diff.Select(hunkRangeInfo => new EditorDiffViewModel(_margin, hunkRangeInfo, _textView, _gitCommands)))
+
+                                                                           foreach (var diffViewModel in diffResult.Diff.Select(hunkRangeInfo => new EditorDiffViewModel(hunkRangeInfo, _textView, _marginCore)))
                                                                            {
                                                                                DiffViewModels.Add(diffViewModel);
                                                                            }

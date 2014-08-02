@@ -4,10 +4,8 @@ using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GitDiffMargin.Git;
-using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using System.Linq;
@@ -17,81 +15,10 @@ using Microsoft.VisualStudio.Text.Formatting;
 
 namespace GitDiffMargin.ViewModel
 {
-    public abstract class DiffViewModel : ViewModelBase
-    {
-        private double _height;
-        private double _top;
-        protected HunkRangeInfo HunkRangeInfo;
-        protected DiffMarginBase EditorDiffMargin;
-
-        protected DiffViewModel(HunkRangeInfo hunkRangeInfo, DiffMarginBase editorDiffMargin)
-        {
-            HunkRangeInfo = hunkRangeInfo;
-            EditorDiffMargin = editorDiffMargin;
-        }
-
-        public double Height
-        {
-            get { return _height; }
-            set
-            {
-                _height = value;
-                RaisePropertyChanged(() => Height);
-            }
-        }
-
-        public double Top
-        {
-            get { return _top; }
-            protected set
-            {
-                _top = value;
-                RaisePropertyChanged(() => Top);
-            }
-        }
-
-        public double Width
-        {
-            get
-            {
-                return EditorDiffMargin.ChangeWidth;
-            }
-        }
-
-        public Thickness Margin
-        {
-            get
-            {
-                return new Thickness(EditorDiffMargin.ChangeLeft, 0, 0, 0);
-            }
-        }
-
-        public bool IsDeletion { get { return HunkRangeInfo.IsDeletion;} }
-
-        public Brush DiffBrush
-        {
-            get
-            {
-                if (HunkRangeInfo.IsAddition)
-                {
-                    return EditorDiffMargin.AdditionBrush;
-                }
-                return HunkRangeInfo.IsModification ? EditorDiffMargin.ModificationBrush : EditorDiffMargin.RemovedBrush;
-            }
-        }
-
-        public void RefreshPosition()
-        {
-            UpdateDimensions();
-        }
-        
-        protected abstract void UpdateDimensions();
-    }
-
-    public class EditorDiffViewModel : DiffViewModel
+    internal class EditorDiffViewModel : DiffViewModel
     {
         private readonly IWpfTextView _textView;
-        private readonly IGitCommands _gitCommands;
+        private readonly MarginCore _marginCore;
         private bool _isDiffTextVisible;
         private bool _showPopup;
         private bool _reverted;
@@ -99,14 +26,14 @@ namespace GitDiffMargin.ViewModel
         private ICommand _rollbackCommand;
         private ICommand _showPopUpCommand;
 
-        internal EditorDiffViewModel(EditorDiffMargin editorDiffMargin, HunkRangeInfo hunkRangeInfo, IWpfTextView textView, IGitCommands gitCommands)
-            : base(hunkRangeInfo, editorDiffMargin)
+        internal EditorDiffViewModel(HunkRangeInfo hunkRangeInfo, IWpfTextView textView, MarginCore marginCore)
+            : base(hunkRangeInfo, marginCore)
         {
-            EditorDiffMargin = editorDiffMargin;
             HunkRangeInfo = hunkRangeInfo;
             _textView = textView;
-            _gitCommands = gitCommands;
-            EditorDiffMargin.BrushesChanged += HandleBrushesChanged;
+            _marginCore = marginCore;
+
+            _marginCore.BrushesChanged += HandleBrushesChanged;
 
             ShowPopup = false;
 
@@ -116,8 +43,6 @@ namespace GitDiffMargin.ViewModel
 
             IsDiffTextVisible = GetIsDiffTextVisible();
         }
-
-        public int LineNumber { get { return HunkRangeInfo.NewHunkRange.StartingLineNumber; } }
 
         private void HandleBrushesChanged(object sender, EventArgs e)
         {
@@ -289,34 +214,19 @@ namespace GitDiffMargin.ViewModel
 
         public FontFamily FontFamily
         {
-            get
-            {
-                if (EditorDiffMargin.ClassificationFormatMap.DefaultTextProperties.TypefaceEmpty)
-                    return new FontFamily("Consolas");
-
-                return EditorDiffMargin.ClassificationFormatMap.DefaultTextProperties.Typeface.FontFamily;
-            }
+            get { return _marginCore.FontFamily; }
         }
 
         public FontStretch FontStretch
         {
-            get
-            {
-                if (EditorDiffMargin.ClassificationFormatMap.DefaultTextProperties.TypefaceEmpty)
-                    return FontStretches.Normal;
-
-                return EditorDiffMargin.ClassificationFormatMap.DefaultTextProperties.Typeface.Stretch;
-            }
+            get { return _marginCore.FontStretch; }
         }
 
         public FontStyle FontStyle
         {
             get
             {
-                if (EditorDiffMargin.ClassificationFormatMap.DefaultTextProperties.TypefaceEmpty)
-                    return FontStyles.Normal;
-
-                return EditorDiffMargin.ClassificationFormatMap.DefaultTextProperties.Typeface.Style;
+                return _marginCore.FontStyle;
             }
         }
 
@@ -324,10 +234,7 @@ namespace GitDiffMargin.ViewModel
         {
             get
             {
-                if (EditorDiffMargin.ClassificationFormatMap.DefaultTextProperties.TypefaceEmpty)
-                    return FontWeights.Normal;
-
-                return EditorDiffMargin.ClassificationFormatMap.DefaultTextProperties.Typeface.Weight;
+                return _marginCore.FontWeight;
             }
         }
 
@@ -335,10 +242,7 @@ namespace GitDiffMargin.ViewModel
         {
             get
             {
-                if (EditorDiffMargin.ClassificationFormatMap.DefaultTextProperties.FontRenderingEmSizeEmpty)
-                    return 12.0;
-
-                return EditorDiffMargin.ClassificationFormatMap.DefaultTextProperties.FontRenderingEmSize;
+                return _marginCore.FontSize;
             }
         }
 
@@ -362,10 +266,7 @@ namespace GitDiffMargin.ViewModel
         {
             get
             {
-                if (EditorDiffMargin.ClassificationFormatMap.DefaultTextProperties.BackgroundBrushEmpty)
-                    return _textView.Background;
-
-                return EditorDiffMargin.ClassificationFormatMap.DefaultTextProperties.BackgroundBrush;
+                return _marginCore.Background;
             }
         }
 
@@ -373,10 +274,7 @@ namespace GitDiffMargin.ViewModel
         {
             get
             {
-                if (EditorDiffMargin.ClassificationFormatMap.DefaultTextProperties.ForegroundBrushEmpty)
-                    return (Brush)Application.Current.Resources[VsBrushes.ToolWindowTextKey];
-
-                return EditorDiffMargin.ClassificationFormatMap.DefaultTextProperties.ForegroundBrush;
+                return _marginCore.Foreground;
             }
         }
 
@@ -435,7 +333,7 @@ namespace GitDiffMargin.ViewModel
             ITextDocument document;
             _textView.TextDataModel.DocumentBuffer.Properties.TryGetProperty(typeof(ITextDocument), out document);
 
-            _gitCommands.StartExternalDiff(document);
+            _marginCore.GitCommands.StartExternalDiff(document);
         }
 
         public ICommand CopyOldTextCommand

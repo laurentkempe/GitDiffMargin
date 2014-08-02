@@ -99,7 +99,8 @@
       </ItemsControl.ItemContainerStyle>
       <ItemsControl.ItemTemplate>
         <DataTemplate>
-            <Grid Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                  d:DataContext="{d:DesignInstance viewModel:EditorDiffViewModel}">
               <Button Name="diffControl" Command="{Binding ShowPopUpCommand}">
                   <Button.Style>
                       <Style TargetType="{x:Type Button}">
