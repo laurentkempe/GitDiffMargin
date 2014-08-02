@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.Text.Editor;
 
 namespace GitDiffMargin
 {
-    internal abstract class MarginFactoryBase : IWpfTextViewMarginProvider
+    internal abstract class DiffMarginFactoryBase : IWpfTextViewMarginProvider
     {
         [Import]
         internal ITextDocumentFactoryService TextDocumentFactoryService { get; private set; }
