@@ -19,7 +19,7 @@ namespace GitDiffMargin
             get { return MarginNameConst; }
         }
 
-        internal EditorDiffMargin(IWpfTextView textView, MarginCore marginCore)
+        internal EditorDiffMargin(IWpfTextView textView, IMarginCore marginCore)
             : base(textView, marginCore)
         {
             UserControl = new EditorDiffMarginControl();

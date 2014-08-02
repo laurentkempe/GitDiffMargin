@@ -10,9 +10,9 @@ namespace GitDiffMargin.ViewModel
         private double _height;
         private double _top;
         protected HunkRangeInfo HunkRangeInfo;
-        private readonly MarginCore _marginCore;
+        private readonly IMarginCore _marginCore;
 
-        protected DiffViewModel(HunkRangeInfo hunkRangeInfo, MarginCore marginCore)
+        protected DiffViewModel(HunkRangeInfo hunkRangeInfo, IMarginCore marginCore)
         {
             HunkRangeInfo = hunkRangeInfo;
             _marginCore = marginCore;

@@ -115,6 +115,7 @@
     <Compile Include="Git\HunkRange.cs" />
     <Compile Include="Git\HunkRangeInfo.cs" />
     <Compile Include="Git\IGitCommands.cs" />
+    <Compile Include="IMarginCore.cs" />
     <Compile Include="MarginCore.cs" />
     <Compile Include="MarginFactoryBase.cs" />
     <Compile Include="ParseResultEventArgs.cs" />

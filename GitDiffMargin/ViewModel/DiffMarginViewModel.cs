@@ -16,12 +16,12 @@ namespace GitDiffMargin.ViewModel
     {
         private readonly DiffMarginBase _margin;
         private readonly IWpfTextView _textView;
-        private readonly MarginCore _marginCore;
+        private readonly IMarginCore _marginCore;
         private readonly DiffUpdateBackgroundParser _parser;
         private RelayCommand<DiffViewModel> _previousChangeCommand;
         private RelayCommand<DiffViewModel> _nextChangeCommand;
 
-        internal DiffMarginViewModel(DiffMarginBase margin, IWpfTextView textView, MarginCore marginCore)
+        internal DiffMarginViewModel(DiffMarginBase margin, IWpfTextView textView, IMarginCore marginCore)
         {
             if (margin == null)
                 throw new ArgumentNullException("margin");

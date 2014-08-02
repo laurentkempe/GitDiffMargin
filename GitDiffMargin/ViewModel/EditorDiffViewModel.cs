@@ -18,7 +18,7 @@ namespace GitDiffMargin.ViewModel
     internal class EditorDiffViewModel : DiffViewModel
     {
         private readonly IWpfTextView _textView;
-        private readonly MarginCore _marginCore;
+        private readonly IMarginCore _marginCore;
         private bool _isDiffTextVisible;
         private bool _showPopup;
         private bool _reverted;
@@ -26,7 +26,7 @@ namespace GitDiffMargin.ViewModel
         private ICommand _rollbackCommand;
         private ICommand _showPopUpCommand;
 
-        internal EditorDiffViewModel(HunkRangeInfo hunkRangeInfo, IWpfTextView textView, MarginCore marginCore)
+        internal EditorDiffViewModel(HunkRangeInfo hunkRangeInfo, IWpfTextView textView, IMarginCore marginCore)
             : base(hunkRangeInfo, marginCore)
         {
             HunkRangeInfo = hunkRangeInfo;

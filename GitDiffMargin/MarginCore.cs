@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.Text.Editor;
 
 namespace GitDiffMargin
 {
-    internal class MarginCore
+    internal class MarginCore : IMarginCore
     {
         private readonly IWpfTextView _textView;
         private readonly ITextDocumentFactoryService _textDocumentFactoryService;

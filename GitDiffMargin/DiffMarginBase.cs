@@ -11,14 +11,14 @@ namespace GitDiffMargin
     internal abstract class DiffMarginBase : Canvas, IWpfTextViewMargin
     {
         private readonly ITextView _textView;
-        private readonly MarginCore _marginCore;
+        private readonly IMarginCore _marginCore;
         private bool _isDisposed;
         protected DiffMarginViewModel ViewModel;
         protected UserControl UserControl;
 
         protected abstract string MarginName { get; }
 
-        protected DiffMarginBase(ITextView textView, MarginCore marginCore)
+        protected DiffMarginBase(ITextView textView, IMarginCore marginCore)
         {
             _textView = textView;
             _marginCore = marginCore;
