@@ -120,7 +120,7 @@
     <Compile Include="MarginFactoryBase.cs" />
     <Compile Include="ParseResultEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ViewModel\DiffMarginViewModel.cs" />
+    <Compile Include="ViewModel\EditorDiffMarginViewModel.cs" />
     <Compile Include="ViewModel\DiffViewModel.cs" />
     <Compile Include="ViewModel\EditorDiffViewModel.cs" />
     <Compile Include="View\EditorDiffMarginControl.xaml.cs">

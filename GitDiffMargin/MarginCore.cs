@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using GitDiffMargin.Git;
@@ -11,48 +13,46 @@ using Microsoft.VisualStudio.Text.Formatting;
 
 namespace GitDiffMargin
 {
-    internal class MarginCore : IMarginCore
+    internal class MarginCore : IMarginCore, IDisposable
     {
         private readonly IWpfTextView _textView;
-        private readonly ITextDocumentFactoryService _textDocumentFactoryService;
-        private readonly IEditorFormatMapService _editorFormatMapService;
 
         private readonly IClassificationFormatMap _classificationFormatMap;
         private readonly IEditorFormatMap _editorFormatMap;
+
+        private readonly DiffUpdateBackgroundParser _parser;
 
         private Brush _additionBrush;
         private Brush _modificationBrush;
         private Brush _removedBrush;
 
+        private bool _isDisposed;
+
         public MarginCore(IWpfTextView textView, ITextDocumentFactoryService textDocumentFactoryService, IClassificationFormatMapService classificationFormatMapService, SVsServiceProvider serviceProvider, IEditorFormatMapService editorFormatMapService)
         {
             _textView = textView;
-            _textDocumentFactoryService = textDocumentFactoryService;
-            _editorFormatMapService = editorFormatMapService;
 
             _classificationFormatMap = classificationFormatMapService.GetClassificationFormatMap(textView);
 
-            _editorFormatMap = _editorFormatMapService.GetEditorFormatMap(textView);
+            _editorFormatMap = editorFormatMapService.GetEditorFormatMap(textView);
             _editorFormatMap.FormatMappingChanged += HandleFormatMappingChanged;
 
-            _textView.Closed += (sender, e) => _editorFormatMap.FormatMappingChanged -= HandleFormatMappingChanged;
-
             GitCommands = new GitCommands(serviceProvider);
+
+            _parser = new DiffUpdateBackgroundParser(textView.TextBuffer, textView.TextDataModel.DocumentBuffer, TaskScheduler.Default, textDocumentFactoryService, GitCommands);
+            _parser.ParseComplete += HandleParseComplete;
+            _parser.RequestParse(false);
+
+            _textView.Closed += (sender, e) =>
+            {
+                _editorFormatMap.FormatMappingChanged -= HandleFormatMappingChanged;
+                _parser.ParseComplete -= HandleParseComplete;
+            };
 
             UpdateBrushes();
         }
 
         public GitCommands GitCommands { get; private set; }
-
-        public ITextDocumentFactoryService TextDocumentFactoryService
-        {
-            get { return _textDocumentFactoryService; }
-        }
-
-        public IEditorFormatMapService EditorFormatMapService
-        {
-            get { return _editorFormatMapService; }
-        }
 
         public FontFamily FontFamily
         {
@@ -168,6 +168,8 @@ namespace GitDiffMargin
         
         public event EventHandler BrushesChanged;
 
+        public event EventHandler<IEnumerable<HunkRangeInfo>> HunksChanged;
+
         public void MoveToChange(int lineNumber)
         {
             var diffLine = _textView.TextSnapshot.GetLineFromLineNumber(lineNumber);
@@ -177,7 +179,7 @@ namespace GitDiffMargin
             _textView.Caret.EnsureVisible();
         }
 
-        public void CheckBeginInvokeOnUI(Action action)
+        private void CheckBeginInvokeOnUi(Action action)
         {
             if (_textView.VisualElement.Dispatcher.CheckAccess())
             {
@@ -442,6 +444,31 @@ namespace GitDiffMargin
             ITextDocument document;
             _textView.TextDataModel.DocumentBuffer.Properties.TryGetProperty(typeof(ITextDocument), out document);
             return document;
+        }
+
+        private void HandleParseComplete(object sender, ParseResultEventArgs e)
+        {
+            var diffResult = e as DiffParseResultEventArgs;
+            if (diffResult == null) return;
+
+            CheckBeginInvokeOnUi(() => OnHunksChanged(diffResult.Diff));
+        }
+
+        private void OnHunksChanged(IEnumerable<HunkRangeInfo> hunkRangeInfos)
+        {
+            var t = HunksChanged;
+            if (t != null)
+                t(this, hunkRangeInfos);
+        }
+
+        public void Dispose()
+        {
+            if (_isDisposed)
+                return;
+
+            _isDisposed = true;
+
+            _parser.Dispose();
         }
     }
 }

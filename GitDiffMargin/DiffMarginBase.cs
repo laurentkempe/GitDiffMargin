@@ -13,7 +13,7 @@ namespace GitDiffMargin
         private readonly ITextView _textView;
         private readonly IMarginCore _marginCore;
         private bool _isDisposed;
-        protected DiffMarginViewModel ViewModel;
+        protected EditorDiffMarginViewModel ViewModel;
         protected UserControl UserControl;
 
         protected abstract string MarginName { get; }
@@ -54,7 +54,6 @@ namespace GitDiffMargin
         public void Dispose()
         {
             GC.SuppressFinalize(this);
-            ViewModel.Cleanup();
             _isDisposed = true;
         }
 

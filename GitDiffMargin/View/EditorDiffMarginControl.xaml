@@ -6,7 +6,7 @@
              xmlns:viewModel="clr-namespace:GitDiffMargin.ViewModel"
              Cursor="Hand"
              ClipToBounds="True"
-             d:DataContext="{d:DesignInstance viewModel:DiffMarginViewModel}"
+             d:DataContext="{d:DesignInstance viewModel:EditorDiffMarginViewModel}"
              d:DesignHeight="300"
              d:DesignWidth="9"
              mc:Ignorable="d">

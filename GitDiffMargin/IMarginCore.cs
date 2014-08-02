@@ -1,18 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
 using GitDiffMargin.Git;
 using GitDiffMargin.ViewModel;
 using Microsoft.VisualStudio.Text;
-using Microsoft.VisualStudio.Text.Classification;
 
 namespace GitDiffMargin
 {
     internal interface IMarginCore
     {
+        event EventHandler BrushesChanged;
+
+        event EventHandler<IEnumerable<HunkRangeInfo>> HunksChanged;
+
         GitCommands GitCommands { get; }
-        ITextDocumentFactoryService TextDocumentFactoryService { get; }
-        IEditorFormatMapService EditorFormatMapService { get; }
         FontFamily FontFamily { get; }
         FontStretch FontStretch { get; }
         FontStyle FontStyle { get; }
@@ -25,10 +27,7 @@ namespace GitDiffMargin
         Brush RemovedBrush { get; }
         double EditorChangeLeft { get; }
         double EditorChangeWidth { get; }
-
-        event EventHandler BrushesChanged;
         void MoveToChange(int lineNumber);
-        void CheckBeginInvokeOnUI(Action action);
         void UpdateEditorDimensions(EditorDiffViewModel editorDiffViewModel, HunkRangeInfo hunkRangeInfo);
         bool RollBack(HunkRangeInfo hunkRangeInfo);
         ITextDocument GetTextDocument();
