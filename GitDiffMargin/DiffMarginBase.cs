@@ -10,7 +10,7 @@ namespace GitDiffMargin
 {
     internal abstract class DiffMarginBase : Canvas, IWpfTextViewMargin
     {
-        private readonly ITextView _textView;
+        protected readonly ITextView TextView;
         private readonly IMarginCore _marginCore;
         private bool _isDisposed;
         protected EditorDiffMarginViewModel ViewModel;
@@ -20,10 +20,10 @@ namespace GitDiffMargin
 
         protected DiffMarginBase(ITextView textView, IMarginCore marginCore)
         {
-            _textView = textView;
+            TextView = textView;
             _marginCore = marginCore;
-            _textView.Options.OptionChanged += HandleOptionChanged;
-            _textView.LayoutChanged += OnLayoutChanged;
+            TextView.Options.OptionChanged += HandleOptionChanged;
+            TextView.LayoutChanged += OnLayoutChanged;
         }
 
         public Brush AdditionBrush
@@ -75,7 +75,7 @@ namespace GitDiffMargin
         {
             get
             {
-                return _textView.Options.IsSelectionMarginEnabled();
+                return TextView.Options.IsSelectionMarginEnabled();
             }
         }
 

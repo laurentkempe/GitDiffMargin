@@ -15,6 +15,7 @@ namespace GitDiffMargin.ViewModel
     internal class EditorDiffViewModel : DiffViewModel
     {
         private readonly IMarginCore _marginCore;
+        private readonly Action<EditorDiffViewModel, HunkRangeInfo> _updateDiffDimensions;
         private bool _isDiffTextVisible;
         private bool _showPopup;
         private bool _reverted;
@@ -22,11 +23,12 @@ namespace GitDiffMargin.ViewModel
         private ICommand _rollbackCommand;
         private ICommand _showPopUpCommand;
 
-        internal EditorDiffViewModel(HunkRangeInfo hunkRangeInfo, IMarginCore marginCore)
+        internal EditorDiffViewModel(HunkRangeInfo hunkRangeInfo, IMarginCore marginCore, Action<EditorDiffViewModel, HunkRangeInfo> updateDiffDimensions)
             : base(hunkRangeInfo, marginCore)
         {
             HunkRangeInfo = hunkRangeInfo;
             _marginCore = marginCore;
+            _updateDiffDimensions = updateDiffDimensions;
 
             _marginCore.BrushesChanged += HandleBrushesChanged;
 
@@ -63,7 +65,7 @@ namespace GitDiffMargin.ViewModel
         {
             if (_reverted) return;
 
-            _marginCore.UpdateEditorDimensions(this, HunkRangeInfo);
+            _updateDiffDimensions(this, HunkRangeInfo);
         }
 
         public FontFamily FontFamily

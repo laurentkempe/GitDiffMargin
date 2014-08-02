@@ -28,7 +28,6 @@ namespace GitDiffMargin
         double EditorChangeLeft { get; }
         double EditorChangeWidth { get; }
         void MoveToChange(int lineNumber);
-        void UpdateEditorDimensions(EditorDiffViewModel editorDiffViewModel, HunkRangeInfo hunkRangeInfo);
         bool RollBack(HunkRangeInfo hunkRangeInfo);
         ITextDocument GetTextDocument();
     }

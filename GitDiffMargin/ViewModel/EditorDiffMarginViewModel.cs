@@ -15,15 +15,17 @@ namespace GitDiffMargin.ViewModel
     internal class EditorDiffMarginViewModel : ViewModelBase
     {
         private readonly IMarginCore _marginCore;
+        private readonly Action<EditorDiffViewModel, HunkRangeInfo> _updateDiffDimensions;
         private RelayCommand<DiffViewModel> _previousChangeCommand;
         private RelayCommand<DiffViewModel> _nextChangeCommand;
 
-        internal EditorDiffMarginViewModel(IMarginCore marginCore)
+        internal EditorDiffMarginViewModel(IMarginCore marginCore, Action<EditorDiffViewModel, HunkRangeInfo> updateDiffDimensions)
         {
             if (marginCore == null)
                 throw new ArgumentNullException("marginCore");
 
             _marginCore = marginCore;
+            _updateDiffDimensions = updateDiffDimensions;
 
             _marginCore.HunksChanged += HandleHunksChanged;
 
@@ -88,7 +90,7 @@ namespace GitDiffMargin.ViewModel
 
             DiffViewModels.Clear();
 
-            foreach (var diffViewModel in hunkRangeInfos.Select(hunkRangeInfo => new EditorDiffViewModel(hunkRangeInfo, _marginCore)))
+            foreach (var diffViewModel in hunkRangeInfos.Select(hunkRangeInfo => new EditorDiffViewModel(hunkRangeInfo, _marginCore, _updateDiffDimensions)))
             {
                 DiffViewModels.Add(diffViewModel);
             }
