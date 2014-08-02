@@ -31,7 +31,7 @@ namespace GitDiffMargin.ViewModel
         public double Top
         {
             get { return _top; }
-            protected set
+            set
             {
                 _top = value;
                 RaisePropertyChanged(() => Top);

@@ -23,7 +23,7 @@ namespace GitDiffMargin
             : base(textView, marginCore)
         {
             UserControl = new EditorDiffMarginControl();
-            ViewModel = new DiffMarginViewModel(this, textView, marginCore);
+            ViewModel = new DiffMarginViewModel(textView, marginCore);
             UserControl.DataContext = ViewModel;
             UserControl.Width = MarginWidth;
         }

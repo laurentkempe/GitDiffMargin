@@ -14,24 +14,16 @@ namespace GitDiffMargin.ViewModel
 {
     internal class DiffMarginViewModel : ViewModelBase
     {
-        private readonly DiffMarginBase _margin;
-        private readonly IWpfTextView _textView;
         private readonly IMarginCore _marginCore;
         private readonly DiffUpdateBackgroundParser _parser;
         private RelayCommand<DiffViewModel> _previousChangeCommand;
         private RelayCommand<DiffViewModel> _nextChangeCommand;
 
-        internal DiffMarginViewModel(DiffMarginBase margin, IWpfTextView textView, IMarginCore marginCore)
+        internal DiffMarginViewModel(IWpfTextView textView, IMarginCore marginCore)
         {
-            if (margin == null)
-                throw new ArgumentNullException("margin");
-            if (textView == null)
-                throw new ArgumentNullException("textView");
             if (marginCore == null)
                 throw new ArgumentNullException("marginCore");
 
-            _margin = margin;
-            _textView = textView;
             _marginCore = marginCore;
 
             DiffViewModels = new ObservableCollection<DiffViewModel>();
@@ -77,13 +69,11 @@ namespace GitDiffMargin.ViewModel
         {
             var diffViewModelIndex = DiffViewModels.IndexOf(currentDiffViewModel) + indexModifier;
             var diffViewModel  = DiffViewModels[diffViewModelIndex];
-            var diffLine = _textView.TextSnapshot.GetLineFromLineNumber(diffViewModel.LineNumber);
+
+            _marginCore.MoveToChange(diffViewModel.LineNumber);    
+
             //todo uncomment this because it is sued for the editor margin
             //currentDiffViewModel.ShowPopup = false;
-
-            _textView.VisualElement.Focus();
-            _textView.Caret.MoveTo(diffLine.Start);
-            _textView.Caret.EnsureVisible();
         }
 
         public void RefreshDiffViewModelPositions()
@@ -102,23 +92,23 @@ namespace GitDiffMargin.ViewModel
 
         private void HandleParseComplete(object sender, ParseResultEventArgs e)
         {
-            _textView.VisualElement.Dispatcher.BeginInvoke((Action) (() =>
-                                                                       {
-                                                                           //todo do not clear if it the same collection returned
+            _marginCore.CheckBeginInvokeOnUI(() =>
+            {
+                //todo do not clear if it the same collection returned
 
-                                                                           //todo uncomment this because it is sued for the editor margin
-                                                                           //if (DiffViewModels.Any(dvm => dvm.ShowPopup)) return;
+                //todo uncomment this because it is sued for the editor margin
+                //if (DiffViewModels.Any(dvm => dvm.ShowPopup)) return;
 
-                                                                           DiffViewModels.Clear();
+                DiffViewModels.Clear();
 
-                                                                           var diffResult = e as DiffParseResultEventArgs;
-                                                                           if (diffResult == null) return;
+                var diffResult = e as DiffParseResultEventArgs;
+                if (diffResult == null) return;
 
-                                                                           foreach (var diffViewModel in diffResult.Diff.Select(hunkRangeInfo => new EditorDiffViewModel(hunkRangeInfo, _textView, _marginCore)))
-                                                                           {
-                                                                               DiffViewModels.Add(diffViewModel);
-                                                                           }
-                                                                       }));
+                foreach (var diffViewModel in diffResult.Diff.Select(hunkRangeInfo => new EditorDiffViewModel(hunkRangeInfo, _marginCore)))
+                {
+                    DiffViewModels.Add(diffViewModel);
+                }
+            });
         }
     }
 }

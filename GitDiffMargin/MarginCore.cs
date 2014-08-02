@@ -2,10 +2,12 @@
 using System.Windows;
 using System.Windows.Media;
 using GitDiffMargin.Git;
+using GitDiffMargin.ViewModel;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.Text.Formatting;
 
 namespace GitDiffMargin
 {
@@ -163,9 +165,29 @@ namespace GitDiffMargin
         {
             get { return 5.0; }
         }
-
-
+        
         public event EventHandler BrushesChanged;
+
+        public void MoveToChange(int lineNumber)
+        {
+            var diffLine = _textView.TextSnapshot.GetLineFromLineNumber(lineNumber);
+
+            _textView.VisualElement.Focus();
+            _textView.Caret.MoveTo(diffLine.Start);
+            _textView.Caret.EnsureVisible();
+        }
+
+        public void CheckBeginInvokeOnUI(Action action)
+        {
+            if (_textView.VisualElement.Dispatcher.CheckAccess())
+            {
+                action();
+            }
+            else
+            {
+                _textView.VisualElement.Dispatcher.BeginInvoke(action);
+            } 
+        }
 
         private void HandleFormatMappingChanged(object sender, FormatItemsEventArgs e)
         {
@@ -218,6 +240,208 @@ namespace GitDiffMargin
             }
 
             return Brushes.Transparent;
+        }
+
+        public void UpdateEditorDimensions(EditorDiffViewModel editorDiffViewModel, HunkRangeInfo hunkRangeInfo)
+        {
+            if (_textView.IsClosed)
+                return;
+
+            var snapshot = _textView.TextBuffer.CurrentSnapshot;
+
+            var startLineNumber = hunkRangeInfo.NewHunkRange.StartingLineNumber;
+            var endLineNumber = startLineNumber + hunkRangeInfo.NewHunkRange.NumberOfLines - 1;
+            if (startLineNumber < 0
+                || startLineNumber >= snapshot.LineCount
+                || endLineNumber < 0
+                || endLineNumber >= snapshot.LineCount)
+            {
+                editorDiffViewModel.IsVisible = false;
+                return;
+            }
+
+            var startLine = snapshot.GetLineFromLineNumber(startLineNumber);
+            var endLine = snapshot.GetLineFromLineNumber(endLineNumber);
+
+            if (startLine == null || endLine == null) return;
+
+
+            if (endLine.LineNumber < startLine.LineNumber)
+            {
+                var span = new SnapshotSpan(endLine.Start, startLine.End);
+                if (!_textView.TextViewLines.FormattedSpan.IntersectsWith(span))
+                {
+                    editorDiffViewModel.IsVisible = false;
+                    return;
+                }
+            }
+            else
+            {
+                var span = new SnapshotSpan(startLine.Start, endLine.End);
+                if (!_textView.TextViewLines.FormattedSpan.IntersectsWith(span))
+                {
+                    editorDiffViewModel.IsVisible = false;
+                    return;
+                }
+            }
+
+            var startLineView = _textView.GetTextViewLineContainingBufferPosition(startLine.Start);
+            var endLineView = _textView.GetTextViewLineContainingBufferPosition(endLine.Start);
+
+            if (startLineView == null || endLineView == null)
+            {
+                editorDiffViewModel.IsVisible = false;
+                return;
+            }
+
+            if (_textView.TextViewLines.LastVisibleLine.EndIncludingLineBreak < startLineView.Start
+                || _textView.TextViewLines.FirstVisibleLine.Start > endLineView.EndIncludingLineBreak)
+            {
+                editorDiffViewModel.IsVisible = false;
+                return;
+            }
+
+            double startTop;
+            switch (startLineView.VisibilityState)
+            {
+                case VisibilityState.FullyVisible:
+                    startTop = startLineView.Top - _textView.ViewportTop;
+                    break;
+
+                case VisibilityState.Hidden:
+                    startTop = startLineView.Top - _textView.ViewportTop;
+                    break;
+
+                case VisibilityState.PartiallyVisible:
+                    startTop = startLineView.Top - _textView.ViewportTop;
+                    break;
+
+                case VisibilityState.Unattached:
+                    // if the closest line was past the end we would have already returned
+                    startTop = 0;
+                    break;
+
+                default:
+                    // shouldn't be reachable, but definitely hide if this is the case
+                    editorDiffViewModel.IsVisible = false;
+                    return;
+            }
+
+            if (startTop >= _textView.ViewportHeight + _textView.LineHeight)
+            {
+                // shouldn't be reachable, but definitely hide if this is the case
+                editorDiffViewModel.IsVisible = false;
+                return;
+            }
+
+            double stopBottom;
+            switch (endLineView.VisibilityState)
+            {
+                case VisibilityState.FullyVisible:
+                    stopBottom = endLineView.Bottom - _textView.ViewportTop;
+                    break;
+
+                case VisibilityState.Hidden:
+                    stopBottom = endLineView.Bottom - _textView.ViewportTop;
+                    break;
+
+                case VisibilityState.PartiallyVisible:
+                    stopBottom = endLineView.Bottom - _textView.ViewportTop;
+                    break;
+
+                case VisibilityState.Unattached:
+                    // if the closest line was before the start we would have already returned
+                    stopBottom = _textView.ViewportHeight;
+                    break;
+
+                default:
+                    // shouldn't be reachable, but definitely hide if this is the case
+                    editorDiffViewModel.IsVisible = false;
+                    return;
+            }
+
+            if (stopBottom <= -_textView.LineHeight)
+            {
+                // shouldn't be reachable, but definitely hide if this is the case
+                editorDiffViewModel.IsVisible = false;
+                return;
+            }
+
+            if (stopBottom <= startTop)
+            {
+                if (hunkRangeInfo.IsDeletion)
+                {
+                    double center = (startTop + stopBottom)/2.0;
+                    editorDiffViewModel.Top = (center - (_textView.LineHeight/2.0)) + _textView.LineHeight;
+                    editorDiffViewModel.Height = _textView.LineHeight;
+                    editorDiffViewModel.IsVisible = true;
+                }
+                else
+                {
+                    // could be reachable if translation changes an addition to empty
+                    editorDiffViewModel.IsVisible = false;
+                }
+
+                return;
+            }
+
+            editorDiffViewModel.Top = startTop;
+            editorDiffViewModel.Height = stopBottom - startTop;
+            editorDiffViewModel.IsVisible = true;
+        }
+
+        public bool RollBack(HunkRangeInfo hunkRangeInfo)
+        {
+            var snapshot = _textView.TextSnapshot;
+
+            if (snapshot != snapshot.TextBuffer.CurrentSnapshot)
+                return false;
+
+            using (var edit = snapshot.TextBuffer.CreateEdit())
+            {
+                Span newSpan;
+                if (hunkRangeInfo.IsDeletion)
+                {
+                    var startLine = snapshot.GetLineFromLineNumber(hunkRangeInfo.NewHunkRange.StartingLineNumber + 1);
+                    newSpan = new Span(startLine.Start.Position, 0);
+                }
+                else
+                {
+                    var startLine = snapshot.GetLineFromLineNumber(hunkRangeInfo.NewHunkRange.StartingLineNumber);
+                    var endLine = snapshot.GetLineFromLineNumber(hunkRangeInfo.NewHunkRange.StartingLineNumber + hunkRangeInfo.NewHunkRange.NumberOfLines - 1);
+                    newSpan = Span.FromBounds(startLine.Start.Position, endLine.EndIncludingLineBreak.Position);
+                }
+
+                if (hunkRangeInfo.IsAddition)
+                {
+                    var startLine = snapshot.GetLineFromLineNumber(hunkRangeInfo.NewHunkRange.StartingLineNumber);
+                    var endLine = snapshot.GetLineFromLineNumber(hunkRangeInfo.NewHunkRange.StartingLineNumber + hunkRangeInfo.NewHunkRange.NumberOfLines - 1);
+                    edit.Delete(Span.FromBounds(startLine.Start.Position, endLine.EndIncludingLineBreak.Position));
+                }
+                else
+                {
+                    var lineBreak = snapshot.GetLineFromLineNumber(0).GetLineBreakText();
+                    if (String.IsNullOrEmpty(lineBreak))
+                        lineBreak = Environment.NewLine;
+
+                    var originalText = String.Join(lineBreak, hunkRangeInfo.OriginalText);
+                    if (hunkRangeInfo.NewHunkRange.StartingLineNumber + hunkRangeInfo.NewHunkRange.NumberOfLines != snapshot.LineCount)
+                        originalText += lineBreak;
+
+                    edit.Replace(newSpan, originalText);
+                }
+
+                edit.Apply();
+
+                return true;
+            }
+        }
+
+        public ITextDocument GetTextDocument()
+        {
+            ITextDocument document;
+            _textView.TextDataModel.DocumentBuffer.Properties.TryGetProperty(typeof(ITextDocument), out document);
+            return document;
         }
     }
 }

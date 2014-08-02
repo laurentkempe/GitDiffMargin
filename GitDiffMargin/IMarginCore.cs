@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Media;
 using GitDiffMargin.Git;
+using GitDiffMargin.ViewModel;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 
@@ -26,5 +27,10 @@ namespace GitDiffMargin
         double EditorChangeWidth { get; }
 
         event EventHandler BrushesChanged;
+        void MoveToChange(int lineNumber);
+        void CheckBeginInvokeOnUI(Action action);
+        void UpdateEditorDimensions(EditorDiffViewModel editorDiffViewModel, HunkRangeInfo hunkRangeInfo);
+        bool RollBack(HunkRangeInfo hunkRangeInfo);
+        ITextDocument GetTextDocument();
     }
 }
