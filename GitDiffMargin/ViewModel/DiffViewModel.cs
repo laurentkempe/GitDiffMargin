@@ -1,3 +1,4 @@
+using System;
 using System.Windows;
 using System.Windows.Media;         
 using GalaSoft.MvvmLight;
@@ -9,13 +10,18 @@ namespace GitDiffMargin.ViewModel
     {
         private double _height;
         private double _top;
-        protected HunkRangeInfo HunkRangeInfo;
-        private readonly IMarginCore _marginCore;
+        protected readonly HunkRangeInfo HunkRangeInfo;
+        protected readonly IMarginCore MarginCore;
+        private readonly Action<DiffViewModel, HunkRangeInfo> _updateDiffDimensions;
+        private bool _isVisible;
 
-        protected DiffViewModel(HunkRangeInfo hunkRangeInfo, IMarginCore marginCore)
+        protected DiffViewModel(HunkRangeInfo hunkRangeInfo, IMarginCore marginCore, Action<DiffViewModel, HunkRangeInfo> updateDiffDimensions)
         {
             HunkRangeInfo = hunkRangeInfo;
-            _marginCore = marginCore;
+            MarginCore = marginCore;
+            _updateDiffDimensions = updateDiffDimensions;
+
+            MarginCore.BrushesChanged += HandleBrushesChanged;
         }
 
         public double Height
@@ -42,7 +48,7 @@ namespace GitDiffMargin.ViewModel
         {
             get
             {
-                return _marginCore.EditorChangeWidth;
+                return MarginCore.EditorChangeWidth;
             }
         }
 
@@ -50,7 +56,7 @@ namespace GitDiffMargin.ViewModel
         {
             get
             {
-                return new Thickness(_marginCore.EditorChangeLeft, 0, 0, 0);
+                return new Thickness(MarginCore.EditorChangeLeft, 0, 0, 0);
             }
         }
 
@@ -62,19 +68,34 @@ namespace GitDiffMargin.ViewModel
             {
                 if (HunkRangeInfo.IsAddition)
                 {
-                    return _marginCore.AdditionBrush;
+                    return MarginCore.AdditionBrush;
                 }
-                return HunkRangeInfo.IsModification ? _marginCore.ModificationBrush : _marginCore.RemovedBrush;
+                return HunkRangeInfo.IsModification ? MarginCore.ModificationBrush : MarginCore.RemovedBrush;
             }
         }
 
         public int LineNumber { get { return HunkRangeInfo.NewHunkRange.StartingLineNumber; } }
 
+        public virtual bool IsVisible
+        {
+            get { return _isVisible; }
+            set { _isVisible = value;
+                RaisePropertyChanged(() => IsVisible);}
+        }
+
         public void RefreshPosition()
         {
             UpdateDimensions();
         }
-        
-        protected abstract void UpdateDimensions();
+
+        private void HandleBrushesChanged(object sender, EventArgs e)
+        {
+            RaisePropertyChanged(() => DiffBrush);
+        }
+
+        protected virtual void UpdateDimensions()
+        {
+            _updateDiffDimensions(this, HunkRangeInfo);
+        }
     }
 }

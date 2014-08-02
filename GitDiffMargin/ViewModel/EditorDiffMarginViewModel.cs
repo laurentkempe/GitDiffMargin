@@ -12,14 +12,14 @@ using GitDiffMargin.Git;
 
 namespace GitDiffMargin.ViewModel
 {
-    internal class EditorDiffMarginViewModel : ViewModelBase
+    internal class EditorDiffMarginViewModel : DiffMarginViewModelBase
     {
         private readonly IMarginCore _marginCore;
-        private readonly Action<EditorDiffViewModel, HunkRangeInfo> _updateDiffDimensions;
+        private readonly Action<DiffViewModel, HunkRangeInfo> _updateDiffDimensions;
         private RelayCommand<DiffViewModel> _previousChangeCommand;
         private RelayCommand<DiffViewModel> _nextChangeCommand;
 
-        internal EditorDiffMarginViewModel(IMarginCore marginCore, Action<EditorDiffViewModel, HunkRangeInfo> updateDiffDimensions)
+        internal EditorDiffMarginViewModel(IMarginCore marginCore, Action<DiffViewModel, HunkRangeInfo> updateDiffDimensions)
         {
             if (marginCore == null)
                 throw new ArgumentNullException("marginCore");
@@ -28,11 +28,7 @@ namespace GitDiffMargin.ViewModel
             _updateDiffDimensions = updateDiffDimensions;
 
             _marginCore.HunksChanged += HandleHunksChanged;
-
-            DiffViewModels = new ObservableCollection<DiffViewModel>();
         }
-
-        public ObservableCollection<DiffViewModel> DiffViewModels { get; private set; }
 
         public RelayCommand<DiffViewModel> PreviousChangeCommand
         {
@@ -42,14 +38,6 @@ namespace GitDiffMargin.ViewModel
         public RelayCommand<DiffViewModel> NextChangeCommand
         {
             get { return _nextChangeCommand ?? (_nextChangeCommand = new RelayCommand<DiffViewModel>(NextChange, NextChangeCanExecute)); }
-        }
-
-        public void RefreshDiffViewModelPositions()
-        {
-            foreach (var diffViewModel in DiffViewModels)
-            {
-                diffViewModel.RefreshPosition();
-            }
         }
 
         private bool PreviousChangeCanExecute(DiffViewModel currentEditorDiffViewModel)
@@ -83,7 +71,7 @@ namespace GitDiffMargin.ViewModel
             //currentDiffViewModel.ShowPopup = false;
         }
 
-        private void HandleHunksChanged(object sender, IEnumerable<HunkRangeInfo> hunkRangeInfos)
+        protected override void HandleHunksChanged(object sender, IEnumerable<HunkRangeInfo> hunkRangeInfos)
         {
             //todo uncomment this because it is sued for the editor margin
             //if (DiffViewModels.Any(dvm => dvm.ShowPopup)) return;

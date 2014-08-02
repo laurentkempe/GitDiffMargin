@@ -13,7 +13,7 @@ namespace GitDiffMargin
         protected readonly ITextView TextView;
         private readonly IMarginCore _marginCore;
         private bool _isDisposed;
-        protected EditorDiffMarginViewModel ViewModel;
+        protected DiffMarginViewModelBase ViewModel;
         protected UserControl UserControl;
 
         protected abstract string MarginName { get; }

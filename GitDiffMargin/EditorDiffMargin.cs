@@ -25,13 +25,12 @@ namespace GitDiffMargin
         internal EditorDiffMargin(IWpfTextView textView, IMarginCore marginCore)
             : base(textView, marginCore)
         {
-            UserControl = new EditorDiffMarginControl();
             ViewModel = new EditorDiffMarginViewModel(marginCore, UpdateDiffDimensions);
-            UserControl.DataContext = ViewModel;
-            UserControl.Width = MarginWidth;
+
+            UserControl = new EditorDiffMarginControl {DataContext = ViewModel, Width = MarginWidth};
         }
 
-        private void UpdateDiffDimensions(EditorDiffViewModel editorDiffViewModel, HunkRangeInfo hunkRangeInfo)
+        private void UpdateDiffDimensions(DiffViewModel diffViewModel, HunkRangeInfo hunkRangeInfo)
         {
             if (TextView.IsClosed)
                 return;
@@ -45,7 +44,7 @@ namespace GitDiffMargin
                 || endLineNumber < 0
                 || endLineNumber >= snapshot.LineCount)
             {
-                editorDiffViewModel.IsVisible = false;
+                diffViewModel.IsVisible = false;
                 return;
             }
 
@@ -60,7 +59,7 @@ namespace GitDiffMargin
                 var span = new SnapshotSpan(endLine.Start, startLine.End);
                 if (!TextView.TextViewLines.FormattedSpan.IntersectsWith(span))
                 {
-                    editorDiffViewModel.IsVisible = false;
+                    diffViewModel.IsVisible = false;
                     return;
                 }
             }
@@ -69,7 +68,7 @@ namespace GitDiffMargin
                 var span = new SnapshotSpan(startLine.Start, endLine.End);
                 if (!TextView.TextViewLines.FormattedSpan.IntersectsWith(span))
                 {
-                    editorDiffViewModel.IsVisible = false;
+                    diffViewModel.IsVisible = false;
                     return;
                 }
             }
@@ -79,14 +78,14 @@ namespace GitDiffMargin
 
             if (startLineView == null || endLineView == null)
             {
-                editorDiffViewModel.IsVisible = false;
+                diffViewModel.IsVisible = false;
                 return;
             }
 
             if (TextView.TextViewLines.LastVisibleLine.EndIncludingLineBreak < startLineView.Start
                 || TextView.TextViewLines.FirstVisibleLine.Start > endLineView.EndIncludingLineBreak)
             {
-                editorDiffViewModel.IsVisible = false;
+                diffViewModel.IsVisible = false;
                 return;
             }
 
@@ -112,14 +111,14 @@ namespace GitDiffMargin
 
                 default:
                     // shouldn't be reachable, but definitely hide if this is the case
-                    editorDiffViewModel.IsVisible = false;
+                    diffViewModel.IsVisible = false;
                     return;
             }
 
             if (startTop >= TextView.ViewportHeight + TextView.LineHeight)
             {
                 // shouldn't be reachable, but definitely hide if this is the case
-                editorDiffViewModel.IsVisible = false;
+                diffViewModel.IsVisible = false;
                 return;
             }
 
@@ -145,14 +144,14 @@ namespace GitDiffMargin
 
                 default:
                     // shouldn't be reachable, but definitely hide if this is the case
-                    editorDiffViewModel.IsVisible = false;
+                    diffViewModel.IsVisible = false;
                     return;
             }
 
             if (stopBottom <= -TextView.LineHeight)
             {
                 // shouldn't be reachable, but definitely hide if this is the case
-                editorDiffViewModel.IsVisible = false;
+                diffViewModel.IsVisible = false;
                 return;
             }
 
@@ -161,23 +160,22 @@ namespace GitDiffMargin
                 if (hunkRangeInfo.IsDeletion)
                 {
                     double center = (startTop + stopBottom) / 2.0;
-                    editorDiffViewModel.Top = (center - (TextView.LineHeight / 2.0)) + TextView.LineHeight;
-                    editorDiffViewModel.Height = TextView.LineHeight;
-                    editorDiffViewModel.IsVisible = true;
+                    diffViewModel.Top = (center - (TextView.LineHeight / 2.0)) + TextView.LineHeight;
+                    diffViewModel.Height = TextView.LineHeight;
+                    diffViewModel.IsVisible = true;
                 }
                 else
                 {
                     // could be reachable if translation changes an addition to empty
-                    editorDiffViewModel.IsVisible = false;
+                    diffViewModel.IsVisible = false;
                 }
 
                 return;
             }
 
-            editorDiffViewModel.Top = startTop;
-            editorDiffViewModel.Height = stopBottom - startTop;
-            editorDiffViewModel.IsVisible = true;
+            diffViewModel.Top = startTop;
+            diffViewModel.Height = stopBottom - startTop;
+            diffViewModel.IsVisible = true;
         }
-
     }
 }

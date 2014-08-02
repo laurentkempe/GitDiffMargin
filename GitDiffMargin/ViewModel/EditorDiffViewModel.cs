@@ -14,8 +14,6 @@ namespace GitDiffMargin.ViewModel
 {
     internal class EditorDiffViewModel : DiffViewModel
     {
-        private readonly IMarginCore _marginCore;
-        private readonly Action<EditorDiffViewModel, HunkRangeInfo> _updateDiffDimensions;
         private bool _isDiffTextVisible;
         private bool _showPopup;
         private bool _reverted;
@@ -23,27 +21,16 @@ namespace GitDiffMargin.ViewModel
         private ICommand _rollbackCommand;
         private ICommand _showPopUpCommand;
 
-        internal EditorDiffViewModel(HunkRangeInfo hunkRangeInfo, IMarginCore marginCore, Action<EditorDiffViewModel, HunkRangeInfo> updateDiffDimensions)
-            : base(hunkRangeInfo, marginCore)
+        internal EditorDiffViewModel(HunkRangeInfo hunkRangeInfo, IMarginCore marginCore, Action<DiffViewModel, HunkRangeInfo> updateDiffDimensions)
+            : base(hunkRangeInfo, marginCore, updateDiffDimensions)
         {
-            HunkRangeInfo = hunkRangeInfo;
-            _marginCore = marginCore;
-            _updateDiffDimensions = updateDiffDimensions;
-
-            _marginCore.BrushesChanged += HandleBrushesChanged;
-
             ShowPopup = false;
-
-            UpdateDimensions();
 
             DiffText = GetDiffText();
 
             IsDiffTextVisible = GetIsDiffTextVisible();
-        }
 
-        private void HandleBrushesChanged(object sender, EventArgs e)
-        {
-            RaisePropertyChanged(() => DiffBrush);
+            UpdateDimensions();
         }
 
         private bool GetIsDiffTextVisible()
@@ -65,24 +52,24 @@ namespace GitDiffMargin.ViewModel
         {
             if (_reverted) return;
 
-            _updateDiffDimensions(this, HunkRangeInfo);
+            base.UpdateDimensions();
         }
 
         public FontFamily FontFamily
         {
-            get { return _marginCore.FontFamily; }
+            get { return MarginCore.FontFamily; }
         }
 
         public FontStretch FontStretch
         {
-            get { return _marginCore.FontStretch; }
+            get { return MarginCore.FontStretch; }
         }
 
         public FontStyle FontStyle
         {
             get
             {
-                return _marginCore.FontStyle;
+                return MarginCore.FontStyle;
             }
         }
 
@@ -90,7 +77,7 @@ namespace GitDiffMargin.ViewModel
         {
             get
             {
-                return _marginCore.FontWeight;
+                return MarginCore.FontWeight;
             }
         }
 
@@ -98,7 +85,7 @@ namespace GitDiffMargin.ViewModel
         {
             get
             {
-                return _marginCore.FontSize;
+                return MarginCore.FontSize;
             }
         }
 
@@ -122,7 +109,7 @@ namespace GitDiffMargin.ViewModel
         {
             get
             {
-                return _marginCore.Background;
+                return MarginCore.Background;
             }
         }
 
@@ -130,7 +117,7 @@ namespace GitDiffMargin.ViewModel
         {
             get
             {
-                return _marginCore.Foreground;
+                return MarginCore.Foreground;
             }
         }
 
@@ -152,13 +139,6 @@ namespace GitDiffMargin.ViewModel
 
         public string DiffText { get; private set; }
 
-        public bool IsVisible
-        {
-            get { return _isVisible; }
-            set { _isVisible = value;
-            RaisePropertyChanged(() => IsVisible);}
-        }
-
         public bool IsDiffTextVisible
         {
             get { return _isDiffTextVisible; }
@@ -172,8 +152,6 @@ namespace GitDiffMargin.ViewModel
 
         private ICommand _showDifferenceCommand;
 
-        private bool _isVisible;
-
         public ICommand ShowDifferenceCommand
         {
             get { return _showDifferenceCommand ?? (_showDifferenceCommand = new RelayCommand(ShowDifference, ShowDifferenceCanExecute)); }
@@ -186,10 +164,10 @@ namespace GitDiffMargin.ViewModel
 
         private void ShowDifference()
         {
-            var document = _marginCore.GetTextDocument();
+            var document = MarginCore.GetTextDocument();
             if (document != null)
             {
-                _marginCore.GitCommands.StartExternalDiff(document);
+                MarginCore.GitCommands.StartExternalDiff(document);
             } 
         }
 
@@ -221,7 +199,7 @@ namespace GitDiffMargin.ViewModel
 
         private void Rollback()
         {
-            if (!_marginCore.RollBack(HunkRangeInfo)) return;
+            if (!MarginCore.RollBack(HunkRangeInfo)) return;
 
             // immediately hide the change
             _reverted = true;
