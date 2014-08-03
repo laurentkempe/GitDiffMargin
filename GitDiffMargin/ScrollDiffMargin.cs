@@ -9,7 +9,7 @@ namespace GitDiffMargin
     internal sealed class ScrollDiffMargin : DiffMarginBase
     {
         private readonly IVerticalScrollBar _scrollBar;
-        private const double MarginWidth = 10.0;
+        private const double MarginWidth = 4.0;
 
         public const string MarginNameConst = "ScrollDiffMargin";
 
@@ -27,7 +27,7 @@ namespace GitDiffMargin
 
             ViewModel = new ScrollDiffMarginViewModel(marginCore, UpdateDiffDimensions);
 
-            UserControl = new ScrollDiffMarginControl {DataContext = ViewModel, Width = MarginWidth};
+            UserControl = new ScrollDiffMarginControl { DataContext = ViewModel, Width = MarginWidth, MaxWidth = MarginWidth, MinWidth = MarginWidth};
         }
 
         private void UpdateDiffDimensions(DiffViewModel diffViewModel, HunkRangeInfo hunkRangeInfo)

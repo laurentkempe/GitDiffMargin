@@ -163,7 +163,12 @@ namespace GitDiffMargin
         {
             get { return 5.0; }
         }
-        
+
+        public double ScrollChangeWidth
+        {
+            get { return 3.0; }
+        }
+
         public event EventHandler BrushesChanged;
 
         public event EventHandler<IEnumerable<HunkRangeInfo>> HunksChanged;

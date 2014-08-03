@@ -3,7 +3,7 @@ using GitDiffMargin.Git;
 
 namespace GitDiffMargin.ViewModel
 {
-    internal class ScrollDiffViewModel : DiffViewModel
+    internal sealed class ScrollDiffViewModel : DiffViewModel
     {
         internal ScrollDiffViewModel(HunkRangeInfo hunkRangeInfo, IMarginCore marginCore, Action<DiffViewModel, HunkRangeInfo> updateDiffDimensions)
             : base(hunkRangeInfo, marginCore, updateDiffDimensions)
@@ -16,5 +16,14 @@ namespace GitDiffMargin.ViewModel
             get { return true; }
             set { }
         }
+
+        public override double Width
+        {
+            get
+            {
+                return MarginCore.ScrollChangeWidth;
+            }
+        }
+
     }
 }

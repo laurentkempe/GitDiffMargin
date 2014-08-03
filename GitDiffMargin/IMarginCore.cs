@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
 using GitDiffMargin.Git;
-using GitDiffMargin.ViewModel;
 using Microsoft.VisualStudio.Text;
 
 namespace GitDiffMargin
@@ -27,6 +26,7 @@ namespace GitDiffMargin
         Brush RemovedBrush { get; }
         double EditorChangeLeft { get; }
         double EditorChangeWidth { get; }
+        double ScrollChangeWidth { get; }
         void MoveToChange(int lineNumber);
         bool RollBack(HunkRangeInfo hunkRangeInfo);
         ITextDocument GetTextDocument();

@@ -2,9 +2,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GitDiffMargin.Git;
 
@@ -67,14 +65,12 @@ namespace GitDiffMargin.ViewModel
 
             _marginCore.MoveToChange(diffViewModel.LineNumber);    
 
-            //todo uncomment this because it is sued for the editor margin
-            //currentDiffViewModel.ShowPopup = false;
+            ((EditorDiffViewModel)currentDiffViewModel).ShowPopup = false;
         }
 
         protected override void HandleHunksChanged(object sender, IEnumerable<HunkRangeInfo> hunkRangeInfos)
         {
-            //todo uncomment this because it is sued for the editor margin
-            //if (DiffViewModels.Any(dvm => dvm.ShowPopup)) return;
+            if (DiffViewModels.Cast<EditorDiffViewModel>().Any(dvm => dvm.ShowPopup)) return;
 
             DiffViewModels.Clear();
 

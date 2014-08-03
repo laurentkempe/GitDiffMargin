@@ -23,9 +23,6 @@ namespace GitDiffMargin.ViewModel
 
         protected override void HandleHunksChanged(object sender, IEnumerable<HunkRangeInfo> hunkRangeInfos)
         {
-            //todo uncomment this because it is sued for the editor margin
-            //if (DiffViewModels.Any(dvm => dvm.ShowPopup)) return;
-
             DiffViewModels.Clear();
 
             foreach (var diffViewModel in hunkRangeInfos.Select(hunkRangeInfo => new ScrollDiffViewModel(hunkRangeInfo, _marginCore, _updateDiffDimensions)))

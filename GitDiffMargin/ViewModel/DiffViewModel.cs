@@ -44,7 +44,7 @@ namespace GitDiffMargin.ViewModel
             }
         }
 
-        public double Width
+        public virtual double Width
         {
             get
             {
