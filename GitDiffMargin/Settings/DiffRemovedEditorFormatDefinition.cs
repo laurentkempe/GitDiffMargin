@@ -4,18 +4,18 @@ using GitDiffMargin.Git;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Utilities;
 
-namespace GitDiffMargin
+namespace GitDiffMargin.Settings
 {
     [Export(typeof(EditorFormatDefinition))]
-    [Name(DiffFormatNames.Modification)]
+    [Name(DiffFormatNames.Removed)]
     [UserVisible(true)]
-    internal sealed class DiffModificationEditorFormatDefinition : EditorFormatDefinition
+    internal sealed class DiffRemovedEditorFormatDefinition : EditorFormatDefinition
     {
-        public DiffModificationEditorFormatDefinition()
+        public DiffRemovedEditorFormatDefinition()
         {
-            BackgroundColor = Color.FromRgb(160, 200, 255);
+            BackgroundColor = Color.FromRgb(255, 160, 180);
             ForegroundCustomizable = false;
-            DisplayName = "Git Diff Modification";
+            DisplayName = "Git Diff Removed";
         }
     }
 }

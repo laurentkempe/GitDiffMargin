@@ -8,8 +8,8 @@
     <MoreInfoUrl>https://github.com/laurentkempe/GitDiffMargin</MoreInfoUrl>
     <ReleaseNotes>http://visualstudiogallery.msdn.microsoft.com/cf49cf30-2ca6-4ea0-b7cc-6a8e0dadc1a8</ReleaseNotes>
     <Locale>1033</Locale>
-    <Icon>GitDiffMargin-Thumb.png</Icon>
-    <PreviewImage>GitDiffMargin-Preview.png</PreviewImage>
+    <Icon>Resources/GitDiffMargin-Thumb.png</Icon>
+    <PreviewImage>Resources/GitDiffMargin-Preview.png</PreviewImage>
     <License>License.md</License>
     <SupportedProducts>
       <VisualStudio Version="12.0">

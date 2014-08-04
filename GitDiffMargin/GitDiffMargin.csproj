@@ -99,11 +99,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\BackgroundParser.cs" />
-    <Compile Include="DiffAdditionEditorFormatDefinition.cs" />
+    <Compile Include="Settings\DiffAdditionEditorFormatDefinition.cs" />
     <Compile Include="DiffMarginBase.cs" />
-    <Compile Include="DiffModificationEditorFormatDefinition.cs" />
+    <Compile Include="Settings\DiffModificationEditorFormatDefinition.cs" />
     <Compile Include="Core\DiffParseResultEventArgs.cs" />
-    <Compile Include="DiffRemovedEditorFormatDefinition.cs" />
+    <Compile Include="Settings\DiffRemovedEditorFormatDefinition.cs" />
     <Compile Include="Core\DiffUpdateBackgroundParser.cs" />
     <Compile Include="Git\Extensions.cs" />
     <Compile Include="EditorDiffMargin.cs" />
