@@ -51,9 +51,9 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Grid>
-                        <Button Name="diffControl">
-                            <Button.Style>
-                                <Style TargetType="{x:Type Button}">
+                        <Control Name="diffControl">
+                            <Control.Style>
+                                <Style TargetType="{x:Type Control}">
                                     <Style.Triggers>
                                         <DataTrigger Value="true" Binding="{Binding IsDeletion}">
                                             <Setter Property="Template" Value="{StaticResource DeletionTemplate}" />
@@ -63,8 +63,8 @@
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </Button.Style>
-                        </Button>
+                            </Control.Style>
+                        </Control>
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
