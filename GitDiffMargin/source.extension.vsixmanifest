@@ -3,7 +3,7 @@
   <Identifier Id="GitDiffMargin..5ef9f816-d9ce-45cd-a8fa-cd67a807df0e">
     <Name>Git Diff Margin</Name>
     <Author>Laurent Kempé</Author>
-    <Version>1.3.9</Version>
+    <Version>1.3.9.1</Version>
     <Description xml:space="preserve">A margin extension to the Visual Studio Editor which displays the git diff.</Description>
     <MoreInfoUrl>https://github.com/laurentkempe/GitDiffMargin</MoreInfoUrl>
     <ReleaseNotes>http://visualstudiogallery.msdn.microsoft.com/cf49cf30-2ca6-4ea0-b7cc-6a8e0dadc1a8</ReleaseNotes>
