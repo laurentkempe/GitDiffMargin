@@ -5,7 +5,7 @@ using System.Windows.Media;
 using GitDiffMargin.Git;
 using Microsoft.VisualStudio.Text;
 
-namespace GitDiffMargin
+namespace GitDiffMargin.Core
 {
     internal interface IMarginCore
     {

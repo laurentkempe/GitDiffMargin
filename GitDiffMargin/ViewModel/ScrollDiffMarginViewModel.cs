@@ -1,4 +1,5 @@
 using System;
+using GitDiffMargin.Core;
 using GitDiffMargin.Git;
 
 namespace GitDiffMargin.ViewModel

@@ -22,41 +22,34 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace GitDiffMargin
+using System;
+using Microsoft.VisualStudio.Text;
+
+namespace GitDiffMargin.Core
 {
-    using SerializationInfo = System.Runtime.Serialization.SerializationInfo;
-    using StreamingContext = System.Runtime.Serialization.StreamingContext;
-    using WeakReference = System.WeakReference;
-
-    public class WeakReference<T> : WeakReference
-        where T : class
+    public class ParseResultEventArgs : EventArgs
     {
-        public WeakReference(object target)
-            : base(target)
+        public ParseResultEventArgs(ITextSnapshot snapshot)
         {
+            Snapshot = snapshot;
         }
 
-        public WeakReference(object target, bool trackResurrection)
-            : base(target, trackResurrection)
+        public ParseResultEventArgs(ITextSnapshot snapshot, TimeSpan elapsedTime)
         {
+            Snapshot = snapshot;
+            ElapsedTime = elapsedTime;
         }
 
-        protected WeakReference(SerializationInfo info, StreamingContext context)
-            : base(info, context)
+        public ITextSnapshot Snapshot
         {
+            get;
+            private set;
         }
 
-        public new T Target
+        public TimeSpan? ElapsedTime
         {
-            get
-            {
-                return (T)base.Target;
-            }
-
-            set
-            {
-                base.Target = value;
-            }
+            get;
+            private set;
         }
     }
 }

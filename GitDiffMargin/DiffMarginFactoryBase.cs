@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Composition;
+using GitDiffMargin.Core;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
@@ -22,7 +23,7 @@ namespace GitDiffMargin
 
         public abstract IWpfTextViewMargin CreateMargin(IWpfTextViewHost wpfTextViewHost, IWpfTextViewMargin marginContainer);
 
-        protected MarginCore GetMarginCore(IWpfTextViewHost textViewHost)
+        protected IMarginCore GetMarginCore(IWpfTextViewHost textViewHost)
         {
             return textViewHost.TextView.Properties.GetOrCreateSingletonProperty(
                         () => new MarginCore(textViewHost.TextView, TextDocumentFactoryService, ClassificationFormatMapService, ServiceProvider, EditorFormatMapService));

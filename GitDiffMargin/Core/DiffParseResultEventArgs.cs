@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using GitDiffMargin.Git;
 using Microsoft.VisualStudio.Text;
 
-namespace GitDiffMargin
+namespace GitDiffMargin.Core
 {
     public class DiffParseResultEventArgs : ParseResultEventArgs
     {

@@ -28,7 +28,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Text;
 
-namespace GitDiffMargin
+namespace GitDiffMargin.Core
 {
     public abstract class BackgroundParser : IDisposable
     {
@@ -45,7 +45,7 @@ namespace GitDiffMargin
 
         public event EventHandler<ParseResultEventArgs> ParseComplete;
 
-        public BackgroundParser(ITextBuffer textBuffer, TaskScheduler taskScheduler, ITextDocumentFactoryService textDocumentFactoryService)
+        protected BackgroundParser(ITextBuffer textBuffer, TaskScheduler taskScheduler, ITextDocumentFactoryService textDocumentFactoryService)
         {
             if (textBuffer == null)
                 throw new ArgumentNullException("textBuffer");

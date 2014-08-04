@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using GalaSoft.MvvmLight.Command;
+using GitDiffMargin.Core;
 using GitDiffMargin.Git;
 using System.Linq;
 

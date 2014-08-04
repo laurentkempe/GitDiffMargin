@@ -23,33 +23,39 @@
  */
 
 using System;
-using Microsoft.VisualStudio.Text;
+using System.Runtime.Serialization;
 
-namespace GitDiffMargin
+namespace GitDiffMargin.Core
 {
-    public class ParseResultEventArgs : EventArgs
+    public class WeakReference<T> : WeakReference
+        where T : class
     {
-        public ParseResultEventArgs(ITextSnapshot snapshot)
+        public WeakReference(object target)
+            : base(target)
         {
-            Snapshot = snapshot;
         }
 
-        public ParseResultEventArgs(ITextSnapshot snapshot, TimeSpan elapsedTime)
+        public WeakReference(object target, bool trackResurrection)
+            : base(target, trackResurrection)
         {
-            Snapshot = snapshot;
-            ElapsedTime = elapsedTime;
         }
 
-        public ITextSnapshot Snapshot
+        protected WeakReference(SerializationInfo info, StreamingContext context)
+            : base(info, context)
         {
-            get;
-            private set;
         }
 
-        public TimeSpan? ElapsedTime
+        public new T Target
         {
-            get;
-            private set;
+            get
+            {
+                return (T)base.Target;
+            }
+
+            set
+            {
+                base.Target = value;
+            }
         }
     }
 }

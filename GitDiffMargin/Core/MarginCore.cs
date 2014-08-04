@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
 
-namespace GitDiffMargin
+namespace GitDiffMargin.Core
 {
     internal class MarginCore : IMarginCore, IDisposable
     {

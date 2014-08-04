@@ -2,6 +2,7 @@ using System;
 using System.Windows;
 using System.Windows.Media;         
 using GalaSoft.MvvmLight;
+using GitDiffMargin.Core;
 using GitDiffMargin.Git;
 
 namespace GitDiffMargin.ViewModel
