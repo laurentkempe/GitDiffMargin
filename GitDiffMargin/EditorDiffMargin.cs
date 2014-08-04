@@ -53,7 +53,6 @@ namespace GitDiffMargin
 
             if (startLine == null || endLine == null) return;
 
-
             if (endLine.LineNumber < startLine.LineNumber)
             {
                 var span = new SnapshotSpan(endLine.Start, startLine.End);

@@ -40,8 +40,18 @@ namespace GitDiffMargin
 
             var snapshot = TextView.TextBuffer.CurrentSnapshot;
 
+            if (startLineNumber < 0
+                || startLineNumber >= snapshot.LineCount
+                || endLineNumber < 0
+                || endLineNumber >= snapshot.LineCount)
+            {
+                return;
+            }
+
             var startLine = snapshot.GetLineFromLineNumber(startLineNumber);
             var endLine = snapshot.GetLineFromLineNumber(endLineNumber);
+
+            if (startLine == null || endLine == null) return;
 
             var mapTop = _scrollBar.Map.GetCoordinateAtBufferPosition(startLine.Start) - 0.5;
             var mapBottom = _scrollBar.Map.GetCoordinateAtBufferPosition(endLine.End) + 0.5;
