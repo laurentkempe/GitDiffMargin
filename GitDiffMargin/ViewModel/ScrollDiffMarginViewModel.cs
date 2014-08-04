@@ -1,34 +1,24 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using GitDiffMargin.Git;
 
 namespace GitDiffMargin.ViewModel
 {
     internal class ScrollDiffMarginViewModel : DiffMarginViewModelBase
     {
-        private readonly IMarginCore _marginCore;
         private readonly Action<DiffViewModel, HunkRangeInfo> _updateDiffDimensions;
 
-        internal ScrollDiffMarginViewModel(IMarginCore marginCore, Action<DiffViewModel, HunkRangeInfo> updateDiffDimensions)
+        internal ScrollDiffMarginViewModel(IMarginCore marginCore, Action<DiffViewModel, HunkRangeInfo> updateDiffDimensions) :
+            base(marginCore)
         {
-            if (marginCore == null)
-                throw new ArgumentNullException("marginCore");
+            if (updateDiffDimensions == null)
+                throw new ArgumentNullException("updateDiffDimensions");
 
-            _marginCore = marginCore;
             _updateDiffDimensions = updateDiffDimensions;
-
-            _marginCore.HunksChanged += HandleHunksChanged;
         }
 
-        protected override void HandleHunksChanged(object sender, IEnumerable<HunkRangeInfo> hunkRangeInfos)
+        protected override DiffViewModel CreateDiffViewModel(HunkRangeInfo hunkRangeInfo)
         {
-            DiffViewModels.Clear();
-
-            foreach (var diffViewModel in hunkRangeInfos.Select(hunkRangeInfo => new ScrollDiffViewModel(hunkRangeInfo, _marginCore, _updateDiffDimensions)))
-            {
-                DiffViewModels.Add(diffViewModel);
-            }
+            return new ScrollDiffViewModel(hunkRangeInfo, MarginCore, _updateDiffDimensions);
         }
     }
 }

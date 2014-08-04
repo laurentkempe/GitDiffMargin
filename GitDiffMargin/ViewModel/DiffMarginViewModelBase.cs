@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using GalaSoft.MvvmLight;
 using GitDiffMargin.Git;
 
@@ -7,9 +9,18 @@ namespace GitDiffMargin.ViewModel
 {
     internal abstract class DiffMarginViewModelBase : ViewModelBase
     {
-        protected DiffMarginViewModelBase()
+        protected readonly IMarginCore MarginCore;
+
+        protected DiffMarginViewModelBase(IMarginCore marginCore)
         {
+            if (marginCore == null)
+                throw new ArgumentNullException("marginCore");
+
+            MarginCore = marginCore;
+
             DiffViewModels = new ObservableCollection<DiffViewModel>();
+
+            MarginCore.HunksChanged += HandleHunksChanged;
         }
 
         public ObservableCollection<DiffViewModel> DiffViewModels { get; private set; }
@@ -22,6 +33,23 @@ namespace GitDiffMargin.ViewModel
             }
         }
 
-        protected abstract void HandleHunksChanged(object sender, IEnumerable<HunkRangeInfo> hunkRangeInfos);
+        protected virtual void HandleHunksChanged(object sender, IEnumerable<HunkRangeInfo> hunkRangeInfos)
+        {
+            DiffViewModels.Clear();
+
+            foreach (var diffViewModel in hunkRangeInfos.Select(CreateDiffViewModel))
+            {
+                DiffViewModels.Add(diffViewModel);
+            }
+        }
+
+        protected abstract DiffViewModel CreateDiffViewModel(HunkRangeInfo hunkRangeInfo);
+
+        public override void Cleanup()
+        {
+            MarginCore.HunksChanged -= HandleHunksChanged;
+
+            base.Cleanup();
+        }
     }
 }

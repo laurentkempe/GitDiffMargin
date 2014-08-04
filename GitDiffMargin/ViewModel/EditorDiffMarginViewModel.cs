@@ -12,20 +12,17 @@ namespace GitDiffMargin.ViewModel
 {
     internal class EditorDiffMarginViewModel : DiffMarginViewModelBase
     {
-        private readonly IMarginCore _marginCore;
         private readonly Action<DiffViewModel, HunkRangeInfo> _updateDiffDimensions;
         private RelayCommand<DiffViewModel> _previousChangeCommand;
         private RelayCommand<DiffViewModel> _nextChangeCommand;
 
-        internal EditorDiffMarginViewModel(IMarginCore marginCore, Action<DiffViewModel, HunkRangeInfo> updateDiffDimensions)
+        internal EditorDiffMarginViewModel(IMarginCore marginCore, Action<DiffViewModel, HunkRangeInfo> updateDiffDimensions) :
+            base(marginCore)
         {
-            if (marginCore == null)
-                throw new ArgumentNullException("marginCore");
+            if (updateDiffDimensions == null)
+                throw new ArgumentNullException("updateDiffDimensions");
 
-            _marginCore = marginCore;
             _updateDiffDimensions = updateDiffDimensions;
-
-            _marginCore.HunksChanged += HandleHunksChanged;
         }
 
         public RelayCommand<DiffViewModel> PreviousChangeCommand
@@ -63,7 +60,7 @@ namespace GitDiffMargin.ViewModel
             var diffViewModelIndex = DiffViewModels.IndexOf(currentDiffViewModel) + indexModifier;
             var diffViewModel  = DiffViewModels[diffViewModelIndex];
 
-            _marginCore.MoveToChange(diffViewModel.LineNumber);    
+            MarginCore.MoveToChange(diffViewModel.LineNumber);    
 
             ((EditorDiffViewModel)currentDiffViewModel).ShowPopup = false;
         }
@@ -72,12 +69,12 @@ namespace GitDiffMargin.ViewModel
         {
             if (DiffViewModels.Cast<EditorDiffViewModel>().Any(dvm => dvm.ShowPopup)) return;
 
-            DiffViewModels.Clear();
+            base.HandleHunksChanged(sender, hunkRangeInfos);
+        }
 
-            foreach (var diffViewModel in hunkRangeInfos.Select(hunkRangeInfo => new EditorDiffViewModel(hunkRangeInfo, _marginCore, _updateDiffDimensions)))
-            {
-                DiffViewModels.Add(diffViewModel);
-            }
+        protected override DiffViewModel CreateDiffViewModel(HunkRangeInfo hunkRangeInfo)
+        {
+            return new EditorDiffViewModel(hunkRangeInfo, MarginCore, _updateDiffDimensions);
         }
     }
 }

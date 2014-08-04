@@ -22,6 +22,7 @@ namespace GitDiffMargin
         {
             TextView = textView;
             _marginCore = marginCore;
+
             TextView.Options.OptionChanged += HandleOptionChanged;
             TextView.LayoutChanged += OnLayoutChanged;
         }
