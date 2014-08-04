@@ -23,7 +23,7 @@ namespace GitDiffMargin
         }
 
         internal EditorDiffMargin(IWpfTextView textView, IMarginCore marginCore)
-            : base(textView, marginCore)
+            : base(textView)
         {
             ViewModel = new EditorDiffMarginViewModel(marginCore, UpdateDiffDimensions);
 

@@ -1,7 +1,6 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using GitDiffMargin.ViewModel;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Editor.OptionsExtensionMethods;
@@ -11,45 +10,18 @@ namespace GitDiffMargin
     internal abstract class DiffMarginBase : Canvas, IWpfTextViewMargin
     {
         protected readonly ITextView TextView;
-        private readonly IMarginCore _marginCore;
         private bool _isDisposed;
         protected DiffMarginViewModelBase ViewModel;
         protected UserControl UserControl;
 
         protected abstract string MarginName { get; }
 
-        protected DiffMarginBase(ITextView textView, IMarginCore marginCore)
+        protected DiffMarginBase(ITextView textView)
         {
             TextView = textView;
-            _marginCore = marginCore;
 
             TextView.Options.OptionChanged += HandleOptionChanged;
             TextView.LayoutChanged += OnLayoutChanged;
-        }
-
-        public Brush AdditionBrush
-        {
-
-            get
-            {
-                return _marginCore.AdditionBrush;
-            }
-        }
-
-        public Brush ModificationBrush
-        {
-            get
-            {
-                return _marginCore.ModificationBrush;
-            }
-        }
-
-        public Brush RemovedBrush
-        {
-            get
-            {
-                return _marginCore.RemovedBrush;
-            }
         }
 
         public void Dispose()

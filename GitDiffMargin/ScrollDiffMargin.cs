@@ -19,7 +19,7 @@ namespace GitDiffMargin
         }
 
         internal ScrollDiffMargin(IWpfTextView textView, IMarginCore marginCore, IWpfTextViewMargin containerMargin)
-            : base(textView, marginCore)
+            : base(textView)
         {
             var scrollBarMargin = containerMargin.GetTextViewMargin(PredefinedMarginNames.VerticalScrollBar);
             // ReSharper disable once SuspiciousTypeConversion.Global
@@ -42,9 +42,6 @@ namespace GitDiffMargin
 
             var startLine = snapshot.GetLineFromLineNumber(startLineNumber);
             var endLine = snapshot.GetLineFromLineNumber(endLineNumber);
-
-            //var mapTop = _scrollBar.Map.GetBufferPositionAtFraction(_hunkRangeInfo.NewHunkRange.StartingLineNumber) - 0.5;
-            //var mapBottom = _scrollBar.Map.GetBufferPositionAtFraction(_hunkRangeInfo.NewHunkRange.StartingLineNumber + _hunkRangeInfo.NewHunkRange.NumberOfLines - 1) + 0.5;
 
             var mapTop = _scrollBar.Map.GetCoordinateAtBufferPosition(startLine.Start) - 0.5;
             var mapBottom = _scrollBar.Map.GetCoordinateAtBufferPosition(endLine.End) + 0.5;
