@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("EditorDiffMargin")]
+[assembly: AssemblyTitle("GitDiffMargin")]
 [assembly: AssemblyDescription("A margin extension to the Visual Studio Editor which displays the git diff.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Laurent Kempé")]
-[assembly: AssemblyProduct("EditorDiffMargin")]
+[assembly: AssemblyProduct("GitDiffMargin")]
 [assembly: AssemblyCopyright("Laurent Kempé")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
