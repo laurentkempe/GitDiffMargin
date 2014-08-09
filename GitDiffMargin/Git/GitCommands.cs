@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using EnvDTE;
 using LibGit2Sharp;
 using Microsoft.VisualStudio.Text;
@@ -36,22 +35,20 @@ namespace GitDiffMargin.Git
                 var content = GetCompleteContent(textDocument, snapshot);
                 if (content == null) yield break;
 
-                content = AdaptCrlf(repo, content, textDocument);
-
                 using (var currentContent = new MemoryStream(content))
                 {
-                    var newBlob = repo.ObjectDatabase.CreateBlob(currentContent);
-
                     var directoryInfo = new DirectoryInfo(discoveredPath).Parent;
                     if (directoryInfo == null) yield break;
 
                     var relativeFilepath = filename.Replace(directoryInfo.FullName + "\\", string.Empty);
 
+                    var newBlob = repo.ObjectDatabase.CreateBlob(currentContent, relativeFilepath);
+
                     var from = TreeDefinition.From(repo.Head.Tip.Tree);
 
-                    if (!repo.ObjectDatabase.Contains(@from[relativeFilepath].TargetId)) yield break;
+                    if (!repo.ObjectDatabase.Contains(from[relativeFilepath].TargetId)) yield break;
 
-                    var blob = repo.Lookup<Blob>(@from[relativeFilepath].TargetId);
+                    var blob = repo.Lookup<Blob>(from[relativeFilepath].TargetId);
 
                     var treeChanges = repo.Diff.Compare(blob, newBlob, new CompareOptions { ContextLines = ContextLines, InterhunkLines = 0 });
 
@@ -64,21 +61,6 @@ namespace GitDiffMargin.Git
                     }
                 }
             }
-        }
-
-        private byte[] AdaptCrlf(IRepository repo, byte[] content, ITextDocument textDocument)
-        {
-            var docu = _dte.Documents.AllDocuments().FirstOrDefault(doc => doc.FullName == textDocument.FilePath);
-
-            if (docu != null && docu.Language == "HTML") return content;
-
-            var autocrlf = repo.Config.Get<string>("core.autocrlf");
-
-            if (autocrlf == null || autocrlf.Value != "true") return content;
-
-            var contentText = Encoding.UTF8.GetString(content);
-            content = Encoding.UTF8.GetBytes(contentText.Replace("\r\n", "\n"));
-            return content;
         }
 
         private static byte[] GetCompleteContent(ITextDocument textDocument, ITextSnapshot snapshot)
