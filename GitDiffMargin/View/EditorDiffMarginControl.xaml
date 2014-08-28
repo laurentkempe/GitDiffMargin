@@ -1,0 +1,203 @@
+﻿<UserControl x:Class="GitDiffMargin.View.EditorDiffMarginControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModel="clr-namespace:GitDiffMargin.ViewModel"
+             Cursor="Hand"
+             ClipToBounds="True"
+             d:DataContext="{d:DesignInstance viewModel:EditorDiffMarginViewModel}"
+             d:DesignHeight="300"
+             d:DesignWidth="9"
+             mc:Ignorable="d">
+  <UserControl.Resources>
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    <Style x:Key="ButtonFocusVisual">
+      <Setter Property="Control.Template">
+        <Setter.Value>
+          <ControlTemplate>
+            <Rectangle Margin="2"
+                       SnapsToDevicePixels="true"
+                       Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
+                       StrokeDashArray="1 2"
+                       StrokeThickness="4" />
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+    <LinearGradientBrush x:Key="ButtonNormalBackground" StartPoint="0,0" EndPoint="0,1">
+      <GradientStop Offset="0" Color="#F3F3F3" />
+      <GradientStop Offset="0.5" Color="#EBEBEB" />
+      <GradientStop Offset="0.5" Color="#DDDDDD" />
+      <GradientStop Offset="1" Color="#CDCDCD" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="ButtonNormalBorder" Color="#FF707070" />
+    <Style x:Key="PopupButtonStyle" TargetType="{x:Type Button}">
+      <Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisual}" />
+      <Setter Property="Background" Value="{StaticResource ButtonNormalBackground}" />
+      <Setter Property="BorderBrush" Value="{StaticResource ButtonNormalBorder}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+      <Setter Property="HorizontalContentAlignment" Value="Center" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+      <Setter Property="Padding" Value="1" />
+      <Setter Property="Width" Value="24" />
+      <Setter Property="Height" Value="24" />
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="{x:Type Button}">
+            <Grid>
+                <Border x:Name="border" SnapsToDevicePixels="True">
+                    <ContentPresenter Margin="{TemplateBinding Padding}"
+                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                    RecognizesAccessKey="True"
+                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                </Border>
+            </Grid>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsKeyboardFocused" Value="true" />
+              <Trigger Property="ToggleButton.IsChecked" Value="true" />
+              <Trigger Property="IsEnabled" Value="false">
+                <Setter Property="Opacity" TargetName="border" Value="0.3" />
+              </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" TargetName="border" Value="#FFBEE6FD"/>
+                <Setter Property="BorderBrush" TargetName="border" Value="#FF3C7FB1"/>
+            </Trigger>
+                        </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+        <ControlTemplate x:Key="ChangeTemplate" d:DataContext="{d:DesignInstance viewModel:EditorDiffViewModel}">
+            <Rectangle Width="{Binding Width, Mode=OneWay}" HorizontalAlignment="Left" Margin="{Binding Margin, Mode=OneWay}" Fill="{Binding DiffBrush}" />
+        </ControlTemplate>
+        <ControlTemplate x:Key="DeletionTemplate" d:DataContext="{d:DesignInstance viewModel:EditorDiffViewModel}">
+            <Polygon Points="0,0 1,1 0,2 0,0" Fill="{Binding DiffBrush}" Width="9" Height="{Binding Height}" Stretch="Fill" />
+        </ControlTemplate>
+    </UserControl.Resources>
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="9" MinWidth="9" />
+    </Grid.ColumnDefinitions>
+    <ItemsControl Grid.Column="0"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  ItemsSource="{Binding DiffViewModels, Mode=OneWay}">
+      <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate>
+          <Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        </ItemsPanelTemplate>
+      </ItemsControl.ItemsPanel>
+      <ItemsControl.ItemContainerStyle>
+        <Style TargetType="ContentPresenter" d:DataContext="{d:DesignInstance viewModel:EditorDiffViewModel}">
+          <Setter Property="VerticalAlignment" Value="Top" />
+          <Setter Property="Canvas.Top" Value="{Binding Top, Mode=OneWay}" />
+          <Setter Property="Height" Value="{Binding Height, Mode=OneWay}" />
+        </Style>
+      </ItemsControl.ItemContainerStyle>
+      <ItemsControl.ItemTemplate>
+        <DataTemplate>
+            <Grid Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                  d:DataContext="{d:DesignInstance viewModel:EditorDiffViewModel}">
+              <Button Name="diffControl" Command="{Binding ShowPopUpCommand}">
+                  <Button.Style>
+                      <Style TargetType="{x:Type Button}">
+                          <Style.Triggers>
+                              <DataTrigger Binding="{Binding IsDeletion}" Value="true">
+                                  <Setter Property="Template" Value="{StaticResource DeletionTemplate}" />
+                              </DataTrigger>
+                              <DataTrigger Binding="{Binding IsDeletion}" Value="false">
+                                  <Setter Property="Template" Value="{StaticResource ChangeTemplate}" />
+                              </DataTrigger>
+                          </Style.Triggers>
+                      </Style>
+                  </Button.Style>
+              </Button>
+            <Popup AllowsTransparency="True"
+                   HorizontalOffset="8"
+                   IsOpen="{Binding ShowPopup, Mode=TwoWay}"
+                   Placement="MousePoint"
+                   PlacementTarget="{Binding ElementName=diffControl}"
+                   StaysOpen="False">
+              <Border Background="Transparent">
+                <StackPanel Orientation="Vertical">
+                  <Border HorizontalAlignment="Left"
+                          Background="White"
+                          BorderBrush="Black"
+                          BorderThickness="1,1,1,1">
+                    <StackPanel Margin="0"
+                                Background="White"
+                                Orientation="Horizontal">
+                        <Button
+                            Command="{Binding DataContext.PreviousChangeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl} }}"
+                            CommandParameter="{Binding}"
+                            Style="{DynamicResource PopupButtonStyle}"
+                            ToolTip="Previous Change">
+                            <Image Width="16"
+                                   Height="16"
+                                   Source="..\Resources\PreviousArrow.png" />
+                        </Button>
+                        <Button
+                            Command="{Binding DataContext.NextChangeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl} }}"
+                            CommandParameter="{Binding}"
+                            Style="{DynamicResource PopupButtonStyle}"
+                            ToolTip="Next Change">
+                            <Image Width="16"
+                                   Height="16"
+                                   Source="..\Resources\NextArrow.png" />
+                        </Button>
+                      <Button Command="{Binding RollbackCommand}"
+                              Style="{DynamicResource PopupButtonStyle}"
+                              ToolTip="Rollback">
+                        <Image Width="16"
+                               Height="16"
+                               Source="..\Resources\Rollback.png" />
+                      </Button>
+                      <Button Command="{Binding ShowDifferenceCommand}"
+                              Style="{DynamicResource PopupButtonStyle}"
+                              ToolTip="Show Difference">
+                        <Image Width="16"
+                               Height="16"
+                               Source="..\Resources\ShowDifference.png" />
+                      </Button>
+                      <Button Command="{Binding CopyOldTextCommand}"
+                              Style="{DynamicResource PopupButtonStyle}"
+                              ToolTip="Copy Old Text">
+                        <Image Width="16"
+                               Height="16"
+                               Source="..\Resources\CopyOldText.png" />
+                      </Button>
+                    </StackPanel>
+                  </Border>
+                 <Border Background="{Binding Background, Mode=OneWay}"
+                          BorderBrush="{Binding Foreground, Mode=OneWay}"
+                          BorderThickness="1,1,1,1"
+                          Margin="0,-1,0,0"
+                          Visibility="{Binding IsDiffTextVisible,
+                                               Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <TextBox Margin="5"
+                             BorderThickness="0"
+                             IsReadOnly="True"
+                             FontFamily="{Binding FontFamily, Mode=OneWay}"
+                             FontStretch="{Binding FontStretch, Mode=OneWay}"
+                             FontStyle="{Binding FontStyle, Mode=OneWay}"
+                             FontWeight="{Binding FontWeight, Mode=OneWay}"
+                             FontSize="{Binding FontSize, Mode=OneWay}"
+                             Text="{Binding DiffText, Mode=OneWay}"
+                             Background="{Binding Background, Mode=OneWay}"
+                             Foreground="{Binding Foreground, Mode=OneWay}"
+                             VerticalScrollBarVisibility="Auto"
+                             HorizontalScrollBarVisibility="Auto"
+                             />
+                  </Border>
+                </StackPanel>
+              </Border>
+            </Popup>
+          </Grid>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+  </Grid>
+</UserControl>

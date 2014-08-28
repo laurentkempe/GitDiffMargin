@@ -10,7 +10,7 @@ namespace GitDiffMargin.Unit.Tests.Git
     // ReSharper disable InconsistentNaming 
 
     [TestFixture]
-    public class Tests1
+    public class GitDiffParserTests
     {
         /*
         git diff --unified=0 Sources/skyeEditor/Core/Model/Dependency/IModelDependency.cs                                                  

@@ -1,16 +1,23 @@
 # Git Diff Margin
 
-A Visual Studio 2013/2012 extension to display Git Diff on the margin of the current file.
+Git Diff Margin displays live changes of the currently edited file on Visual Studio 2013 margin and scroll bar
 
-* Quickly view all current file changes on the left margin: blue rectangle for modification, green rectangle for new lines and grey triangle for deletion
-* Navigate to previous/next change on the file
+* Quickly view all current file changes on
+    * Left margin
+    * Scroll Bars in map and bar mode with and without source overview
+        * blue rectangle for modifications
+        * green rectangles for new lines
+        * red triangles for deletions
+        * all colors configurable through Visual Studio Fonts and Colors options
 * Undo the change
-* Show the diff in external tool
 * Copy the old code into the clipboard
 * Copy a part of the old code by selecting it in the popup
-* Define the colors of the Addition, Modification and Deletion diff margin through Visual Studio Fonts and Colors options
-* Support Visual Studio 2013/2012 Dark, Light and Blue Theme
-* Support the zoom
+* Show the diff in configured Git external diff tool
+* Navigate to previous/next change on the file
+* Support Visual Studio 2013 Dark, Light and Blue Theme
+* Support zoom
+
+![Screenshot](https://c2.staticflickr.com/6/5584/14880092457_5b32e67a6a.jpg)
 
 Perfect companion of [Visual Studio Tools for Git](http://visualstudiogallery.msdn.microsoft.com/abafc7d6-dcaa-40f4-8a5e-d6724bdb980c)
 
@@ -18,20 +25,16 @@ Perfect companion of [Visual Studio Tools for Git](http://visualstudiogallery.ms
 
 Grab it from inside of Visual Studio's Extension Manager, or via the [Extension Gallery link](http://visualstudiogallery.msdn.microsoft.com/cf49cf30-2ca6-4ea0-b7cc-6a8e0dadc1a8)
 
-Or use the [Chocolatey installation](http://chocolatey.org/packages/GitDiffMargin.vs2012) Thanks to [@Iristyle](https://github.com/Iristyle)
+Or use the [Chocolatey installation](http://chocolatey.org/packages/GitDiffMargin.vs2012)
 
-## Screenshots
+## Video
 
-![Screenshot](http://farm9.staticflickr.com/8329/8116895025_ec9519b5bb_o.png)
-
-![Screenshot](http://farm9.staticflickr.com/8370/8457441367_dc23f4a51c_o.png)
-
-![Screenshot](http://farm9.staticflickr.com/8385/8457451383_068e258b94_o.png)
-
-You might see a little video on the [following page](http://www.flickr.com/photos/laurentkempe/8116990137/).
+You might see a little video on the [following page](https://www.flickr.com/photos/laurentkempe/14879945429/).
 
 ## Credits
 
-Thanks to Sam Harwell [@sharwell](https://github.com/sharwell) for all the improvements!
+Thanks to Sam Harwell [@sharwell](https://github.com/sharwell) for all the improvements
 
-Thanks to Rick Sladkey [@ricksladkey](https://github.com/ricksladkey) for the fixes!
+Thanks to Rick Sladkey [@ricksladkey](https://github.com/ricksladkey) for the fixes
+
+ Thanks to [@Iristyle](https://github.com/Iristyle) for the chocolatey package
