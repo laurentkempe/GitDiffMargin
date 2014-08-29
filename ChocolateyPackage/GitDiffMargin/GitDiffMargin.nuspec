@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>GitDiffMargin</id>
+    <title>Git Diff Margin</title>
+    <version>3.0.0</version>
+    <authors>Laurent Kempé</authors>
+    <owners>Laurent Kempé</owners>
+    <summary>Git Diff Margin displays live Git changes of the currently edited file on Visual Studio margin and scroll bar. Supports Visual Studio 2010 through Visual Studio 14 "CTP".</summary>
+    <description>Git Diff Margin displays live Git changes of the currently edited file on Visual Studio margin and scroll bar.
+	
+* Supports Visual Studio 2010 through Visual Studio 14 "CTP"
+* Quickly view all current file changes on
+* Left margin
+* Scroll Bars in map and bar mode with and without source overview
+* blue rectangle for modifications
+* green rectangles for new lines
+* red triangles for deletions
+* all colors configurable through Visual Studio Fonts and Colors options
+* Undo the change
+* Copy the old code into the clipboard
+* Copy a part of the old code by selecting it in the popup
+* Show the diff in Visual Studio Diff window except for Visual Studio 2010 which still use configured Git external diff tool
+* Navigate to previous/next change on the file using user defined keyboard shortcuts or the popup icons
+* Support Visual Studio 2013 Dark, Light and Blue Theme
+* Support zoom
+  </description>
+  <releaseNotes></releaseNotes>
+    <projectUrl>https://github.com/laurentkempe/GitDiffMargin</projectUrl>
+    <tags>git visualstudio vs vs2010 vs2012 vs2013 vs14 2010 2012 2013</tags>
+    <licenseUrl>https://raw.githubusercontent.com/laurentkempe/GitDiffMargin/master/LICENSE.md</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <iconUrl>https://raw.githubusercontent.com/laurentkempe/GitDiffMargin/master/GitDiffMargin/Resources/GitDiffMargin-Thumb.png</iconUrl>
+  </metadata>
+</package>
