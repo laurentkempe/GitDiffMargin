@@ -1,6 +1,6 @@
 # Git Diff Margin
 
-Git Diff Margin displays live changes of the currently edited file on Visual Studio 2013 margin and scroll bar
+Git Diff Margin displays live Git changes of the currently edited file on Visual Studio 2013 margin and scroll bar
 
 * Quickly view all current file changes on
     * Left margin
@@ -25,7 +25,7 @@ Perfect companion of [Visual Studio Tools for Git](http://visualstudiogallery.ms
 
 Grab it from inside of Visual Studio's Extension Manager, or via the [Extension Gallery link](http://visualstudiogallery.msdn.microsoft.com/cf49cf30-2ca6-4ea0-b7cc-6a8e0dadc1a8)
 
-Or use the [Chocolatey installation](http://chocolatey.org/packages/GitDiffMargin.vs2012)
+Or use the [Chocolatey installation](https://chocolatey.org/packages/GitDiffMargin.vs2013/2.0.0)
 
 ## Video
 
