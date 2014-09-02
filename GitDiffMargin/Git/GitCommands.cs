@@ -6,7 +6,6 @@ using System.Runtime.InteropServices;
 using EnvDTE;
 using LibGit2Sharp;
 using Microsoft.VisualStudio.Text;
-using Process = System.Diagnostics.Process;
 
 namespace GitDiffMargin.Git
 {
@@ -112,19 +111,19 @@ namespace GitDiffMargin.Git
                 var diffCmd = repo.Config.Get<string>("difftool." + diffGuiTool.Value + ".cmd");
                 var cmd = diffCmd.Value.Replace("$LOCAL", tempFileName).Replace("$REMOTE", filename);
 
-                string exe;
-                var args = CommandLineToArgs(cmd, out exe);
-
-                var process = new Process
-                {
-                    StartInfo =
-                    {
-                        FileName = exe,
-                        Arguments = string.Join(" ", args)
-                    }
-                };
-
-                process.Start();
+                var si = new STARTUPINFO();
+                PROCESS_INFORMATION pi;
+                CreateProcess(
+                    null,
+                    cmd,
+                    IntPtr.Zero,
+                    IntPtr.Zero,
+                    false,
+                    0,
+                    IntPtr.Zero,
+                    null,
+                    ref si,
+                    out pi);
             }
         }
 
@@ -148,36 +147,47 @@ namespace GitDiffMargin.Git
             return directoryInfo != null ? directoryInfo.FullName : null;
         }
 
-        [DllImport("shell32.dll", SetLastError = true)]
-        static extern IntPtr CommandLineToArgvW(
+        [DllImport("kernel32.dll")]
+        static extern bool CreateProcess(
+            string lpApplicationName,
+            string lpCommandLine,
+            IntPtr lpProcessAttributes,
+            IntPtr lpThreadAttributes,
+            bool bInheritHandles,
+            uint dwCreationFlags,
+            IntPtr lpEnvironment,
+            string lpCurrentDirectory,
+            ref STARTUPINFO lpStartupInfo,
+            out PROCESS_INFORMATION lpProcessInformation);
 
-        [MarshalAs(UnmanagedType.LPWStr)] string lpCmdLine, out int pNumArgs);
-        private static string[] CommandLineToArgs(string commandLine, out string executableName)
+        public struct PROCESS_INFORMATION
         {
-            int argCount;
-            var result = CommandLineToArgvW(commandLine, out argCount);
-            if (result == IntPtr.Zero)
-            {
-                throw new System.ComponentModel.Win32Exception();
-            }
-
-            try
-            {
-                var pStr = Marshal.ReadIntPtr(result, 0 * IntPtr.Size);
-                executableName = Marshal.PtrToStringUni(pStr);
-                var args = new string[argCount - 1];
-                for (var i = 0; i < args.Length; i++)
-                {
-                    pStr = Marshal.ReadIntPtr(result, (i + 1) * IntPtr.Size);
-                    var arg = Marshal.PtrToStringUni(pStr);
-                    args[i] = arg;
-                }
-                return args;
-            }
-            finally
-            {
-                Marshal.FreeHGlobal(result);
-            }
+            public IntPtr hProcess;
+            public IntPtr hThread;
+            public uint dwProcessId;
+            public uint dwThreadId;
+        }
+        
+        public struct STARTUPINFO
+        {
+            public uint cb;
+            public string lpReserved;
+            public string lpDesktop;
+            public string lpTitle;
+            public uint dwX;
+            public uint dwY;
+            public uint dwXSize;
+            public uint dwYSize;
+            public uint dwXCountChars;
+            public uint dwYCountChars;
+            public uint dwFillAttribute;
+            public uint dwFlags;
+            public short wShowWindow;
+            public short cbReserved2;
+            public IntPtr lpReserved2;
+            public IntPtr hStdInput;
+            public IntPtr hStdOutput;
+            public IntPtr hStdError;
         }
     }
 }
