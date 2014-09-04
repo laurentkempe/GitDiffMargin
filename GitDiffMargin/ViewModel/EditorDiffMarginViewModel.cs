@@ -66,11 +66,11 @@ namespace GitDiffMargin.ViewModel
             ((EditorDiffViewModel)currentDiffViewModel).ShowPopup = false;
         }
 
-        protected override void HandleHunksChanged(object sender, IEnumerable<HunkRangeInfo> hunkRangeInfos)
+        protected override void HandleHunksChanged(object sender, HunksChangedEventArgs e)
         {
             if (DiffViewModels.Cast<EditorDiffViewModel>().Any(dvm => dvm.ShowPopup)) return;
 
-            base.HandleHunksChanged(sender, hunkRangeInfos);
+            base.HandleHunksChanged(sender, e);
         }
 
         protected override DiffViewModel CreateDiffViewModel(HunkRangeInfo hunkRangeInfo)
