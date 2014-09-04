@@ -11,7 +11,7 @@ namespace GitDiffMargin.Core
     {
         event EventHandler BrushesChanged;
 
-        event EventHandler<IEnumerable<HunkRangeInfo>> HunksChanged;
+        event EventHandler<HunksChangedEventArgs> HunksChanged;
 
         GitCommands GitCommands { get; }
         FontFamily FontFamily { get; }

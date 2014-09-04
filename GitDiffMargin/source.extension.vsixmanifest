@@ -1,17 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Vsix xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="1.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2010">
+<Vsix Version="1.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2010">
   <Identifier Id="GitDiffMargin..5ef9f816-d9ce-45cd-a8fa-cd67a807df0e">
-    <Name>Git Diff Margin 2013</Name>
+    <Name>Git Diff Margin</Name>
     <Author>Laurent Kempé</Author>
     <Version>2.0.0.0</Version>
-    <Description xml:space="preserve">Git Diff Margin displays live changes of the currently edited file on Visual Studio 2013 margin and scroll bar.</Description>
+    <Description xml:space="preserve">Git Diff Margin displays live changes of the currently edited file on Visual Studio 2010-2013 margin and scroll bar.</Description>
     <MoreInfoUrl>https://github.com/laurentkempe/GitDiffMargin</MoreInfoUrl>
-    <ReleaseNotes>http://visualstudiogallery.msdn.microsoft.com/cf49cf30-2ca6-4ea0-b7cc-6a8e0dadc1a8</ReleaseNotes>
+    <GettingStartedGuide>http://visualstudiogallery.msdn.microsoft.com/cf49cf30-2ca6-4ea0-b7cc-6a8e0dadc1a8</GettingStartedGuide>
     <Locale>1033</Locale>
     <Icon>Resources/GitDiffMargin-Thumb.png</Icon>
     <PreviewImage>Resources/GitDiffMargin-Preview.png</PreviewImage>
     <License>License.md</License>
     <SupportedProducts>
+      <VisualStudio Version="10.0">
+        <Edition>Pro</Edition>
+        <Edition>Premium</Edition>
+        <Edition>Ultimate</Edition>
+        <Edition>IntegratedShell</Edition>
+      </VisualStudio>
+      <VisualStudio Version="11.0">
+        <Edition>Pro</Edition>
+        <Edition>Premium</Edition>
+        <Edition>Ultimate</Edition>
+        <Edition>IntegratedShell</Edition>
+      </VisualStudio>
       <VisualStudio Version="12.0">
         <Edition>Pro</Edition>
         <Edition>Premium</Edition>
