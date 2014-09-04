@@ -34,11 +34,11 @@ namespace GitDiffMargin.ViewModel
             }
         }
 
-        protected virtual void HandleHunksChanged(object sender, IEnumerable<HunkRangeInfo> hunkRangeInfos)
+        protected virtual void HandleHunksChanged(object sender, HunksChangedEventArgs e)
         {
             DiffViewModels.Clear();
 
-            foreach (var diffViewModel in hunkRangeInfos.Select(CreateDiffViewModel))
+            foreach (var diffViewModel in e.Hunks.Select(CreateDiffViewModel))
             {
                 DiffViewModels.Add(diffViewModel);
             }

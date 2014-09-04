@@ -171,7 +171,7 @@ namespace GitDiffMargin.Core
 
         public event EventHandler BrushesChanged;
 
-        public event EventHandler<IEnumerable<HunkRangeInfo>> HunksChanged;
+        public event EventHandler<HunksChangedEventArgs> HunksChanged;
 
         public void MoveToChange(int lineNumber)
         {
@@ -312,7 +312,7 @@ namespace GitDiffMargin.Core
         {
             var t = HunksChanged;
             if (t != null)
-                t(this, hunkRangeInfos);
+                t(this, new HunksChangedEventArgs(hunkRangeInfos));
         }
 
         public void Dispose()
