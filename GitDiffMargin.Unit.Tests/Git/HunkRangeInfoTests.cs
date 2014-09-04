@@ -11,7 +11,7 @@ namespace GitDiffMargin.Unit.Tests.Git
 {
     // ReSharper disable InconsistentNaming 
 
-    [TestFixture]
+    [TestFixture(0)]
     public class HunkRangeInfoTests
     {
         public HunkRangeInfoTests(int contextLines)
