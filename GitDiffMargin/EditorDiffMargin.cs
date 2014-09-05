@@ -139,61 +139,54 @@ namespace GitDiffMargin
 
         private bool? UpdateDeletedDiffDimensions(DiffViewModel diffViewModel, HunkRangeInfo hunkRangeInfo)
         {
+            if (hunkRangeInfo.NewHunkRange.NumberOfLines != 0)
+            {
+                // unexpected number of lines for a deletion hunk
+                return false;
+            }
+
             var snapshot = TextView.TextBuffer.CurrentSnapshot;
 
-            var startLineNumber = hunkRangeInfo.NewHunkRange.StartingLineNumber;
-            var endLineNumber = startLineNumber + hunkRangeInfo.NewHunkRange.NumberOfLines - 1;
-            if (startLineNumber < 0
-                || startLineNumber >= snapshot.LineCount
-                || endLineNumber < 0
-                || endLineNumber >= snapshot.LineCount)
-            {
+            var followingLineNumber = hunkRangeInfo.NewHunkRange.StartingLineNumber + 1;
+            if (followingLineNumber < 0 || followingLineNumber >= snapshot.LineCount)
                 return false;
-            }
 
-            var startLine = snapshot.GetLineFromLineNumber(startLineNumber);
-            var endLine = snapshot.GetLineFromLineNumber(endLineNumber);
-
-            if (startLine == null || endLine == null)
+            var followingLine = snapshot.GetLineFromLineNumber(followingLineNumber);
+            if (followingLine == null)
                 return null;
 
-            if (endLine.LineNumber < startLine.LineNumber)
-            {
-                var span = new SnapshotSpan(endLine.Start, startLine.End);
-                if (!TextView.TextViewLines.FormattedSpan.IntersectsWith(span))
-                    return false;
-            }
-            else
-            {
-                var span = new SnapshotSpan(startLine.Start, endLine.End);
-                if (!TextView.TextViewLines.FormattedSpan.IntersectsWith(span))
-                    return false;
-            }
-
-            var startLineView = TextView.GetTextViewLineContainingBufferPosition(startLine.Start);
-            var endLineView = TextView.GetTextViewLineContainingBufferPosition(endLine.Start);
-
-            if (startLineView == null || endLineView == null)
+            var span = new SnapshotSpan(followingLine.Start, followingLine.End);
+            if (!TextView.TextViewLines.FormattedSpan.IntersectsWith(span))
                 return false;
 
-            if (TextView.TextViewLines.LastVisibleLine.EndIncludingLineBreak < startLineView.Start
-                || TextView.TextViewLines.FirstVisibleLine.Start > endLineView.EndIncludingLineBreak)
+            var followingLineView = TextView.GetTextViewLineContainingBufferPosition(followingLine.Start);
+            if (followingLineView == null)
+                return false;
+
+            if (TextView.TextViewLines.LastVisibleLine.EndIncludingLineBreak < followingLineView.Start)
             {
+                // starts after the last visible line
                 return false;
             }
 
-            double startTop;
-            switch (startLineView.VisibilityState)
+            if (TextView.TextViewLines.FirstVisibleLine.Start > followingLineView.EndIncludingLineBreak)
+            {
+                // ends before the first visible line
+                return false;
+            }
+
+            double followingTop;
+            switch (followingLineView.VisibilityState)
             {
                 case VisibilityState.FullyVisible:
                 case VisibilityState.Hidden:
                 case VisibilityState.PartiallyVisible:
-                    startTop = startLineView.Top - TextView.ViewportTop;
+                    followingTop = followingLineView.Top - TextView.ViewportTop;
                     break;
 
                 case VisibilityState.Unattached:
                     // if the closest line was past the end we would have already returned
-                    startTop = 0;
+                    followingTop = 0;
                     break;
 
                 default:
@@ -201,55 +194,10 @@ namespace GitDiffMargin
                     return false;
             }
 
-            if (startTop >= TextView.ViewportHeight + TextView.LineHeight)
-            {
-                // shouldn't be reachable, but definitely hide if this is the case
-                return false;
-            }
-
-            double stopBottom;
-            switch (endLineView.VisibilityState)
-            {
-                case VisibilityState.FullyVisible:
-                case VisibilityState.Hidden:
-                case VisibilityState.PartiallyVisible:
-                    stopBottom = endLineView.Bottom - TextView.ViewportTop;
-                    break;
-
-                case VisibilityState.Unattached:
-                    // if the closest line was before the start we would have already returned
-                    stopBottom = TextView.ViewportHeight;
-                    break;
-
-                default:
-                    // shouldn't be reachable, but definitely hide if this is the case
-                    return false;
-            }
-
-            if (stopBottom <= -TextView.LineHeight)
-            {
-                // shouldn't be reachable, but definitely hide if this is the case
-                return false;
-            }
-
-            if (stopBottom <= startTop)
-            {
-                if (hunkRangeInfo.IsDeletion)
-                {
-                    double center = (startTop + stopBottom) / 2.0;
-                    diffViewModel.Top = (center - (TextView.LineHeight / 2.0)) + TextView.LineHeight;
-                    diffViewModel.Height = TextView.LineHeight;
-                    return true;
-                }
-                else
-                {
-                    // could be reachable if translation changes an addition to empty
-                    return false;
-                }
-            }
-
-            diffViewModel.Top = startTop;
-            diffViewModel.Height = stopBottom - startTop;
+            double center = followingTop;
+            double height = TextView.LineHeight;
+            diffViewModel.Top = center - (height / 2.0);
+            diffViewModel.Height = TextView.LineHeight;
             return true;
         }
     }
