@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GitDiffMargin.Git;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Text;
 
 namespace GitDiffMargin.Core
@@ -44,10 +45,24 @@ namespace GitDiffMargin.Core
                 }
             }
         }
-        
+
         private void HandleFileSystemChanged(object sender, FileSystemEventArgs e)
         {
-            Action action = () => ProcessFileSystemChange(e);
+            Action action =
+                () =>
+                {
+                    try
+                    {
+                        ProcessFileSystemChange(e);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Failure to handle TPL exception in .NET 4 would bring down Visual Studio 2010
+                        if (ErrorHandler.IsCriticalException(ex))
+                            throw;
+                    }
+                };
+
             Task.Factory.StartNew(action, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
         }
 
