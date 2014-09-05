@@ -91,13 +91,7 @@ namespace GitDiffMargin
             switch (startLineView.VisibilityState)
             {
                 case VisibilityState.FullyVisible:
-                    startTop = startLineView.Top - TextView.ViewportTop;
-                    break;
-
                 case VisibilityState.Hidden:
-                    startTop = startLineView.Top - TextView.ViewportTop;
-                    break;
-
                 case VisibilityState.PartiallyVisible:
                     startTop = startLineView.Top - TextView.ViewportTop;
                     break;
@@ -122,13 +116,7 @@ namespace GitDiffMargin
             switch (endLineView.VisibilityState)
             {
                 case VisibilityState.FullyVisible:
-                    stopBottom = endLineView.Bottom - TextView.ViewportTop;
-                    break;
-
                 case VisibilityState.Hidden:
-                    stopBottom = endLineView.Bottom - TextView.ViewportTop;
-                    break;
-
                 case VisibilityState.PartiallyVisible:
                     stopBottom = endLineView.Bottom - TextView.ViewportTop;
                     break;
