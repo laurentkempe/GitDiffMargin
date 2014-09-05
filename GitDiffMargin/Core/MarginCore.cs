@@ -11,7 +11,7 @@ using Microsoft.VisualStudio.Text.Editor;
 
 namespace GitDiffMargin.Core
 {
-    internal class MarginCore : IMarginCore, IDisposable
+    internal sealed class MarginCore : IMarginCore, IDisposable
     {
         private readonly IWpfTextView _textView;
 
