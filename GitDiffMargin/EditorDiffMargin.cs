@@ -36,6 +36,14 @@ namespace GitDiffMargin
             if (TextView.IsClosed)
                 return;
 
+            bool? visible = UpdateDiffDimensionsImpl(diffViewModel, hunkRangeInfo);
+
+            if (visible.HasValue)
+                diffViewModel.IsVisible = visible.Value;
+        }
+
+        private bool? UpdateDiffDimensionsImpl(DiffViewModel diffViewModel, HunkRangeInfo hunkRangeInfo)
+        {
             var snapshot = TextView.TextBuffer.CurrentSnapshot;
 
             var startLineNumber = hunkRangeInfo.NewHunkRange.StartingLineNumber;
@@ -45,48 +53,38 @@ namespace GitDiffMargin
                 || endLineNumber < 0
                 || endLineNumber >= snapshot.LineCount)
             {
-                diffViewModel.IsVisible = false;
-                return;
+                return false;
             }
 
             var startLine = snapshot.GetLineFromLineNumber(startLineNumber);
             var endLine = snapshot.GetLineFromLineNumber(endLineNumber);
 
-            if (startLine == null || endLine == null) return;
+            if (startLine == null || endLine == null)
+                return null;
 
             if (endLine.LineNumber < startLine.LineNumber)
             {
                 var span = new SnapshotSpan(endLine.Start, startLine.End);
                 if (!TextView.TextViewLines.FormattedSpan.IntersectsWith(span))
-                {
-                    diffViewModel.IsVisible = false;
-                    return;
-                }
+                    return false;
             }
             else
             {
                 var span = new SnapshotSpan(startLine.Start, endLine.End);
                 if (!TextView.TextViewLines.FormattedSpan.IntersectsWith(span))
-                {
-                    diffViewModel.IsVisible = false;
-                    return;
-                }
+                    return false;
             }
 
             var startLineView = TextView.GetTextViewLineContainingBufferPosition(startLine.Start);
             var endLineView = TextView.GetTextViewLineContainingBufferPosition(endLine.Start);
 
             if (startLineView == null || endLineView == null)
-            {
-                diffViewModel.IsVisible = false;
-                return;
-            }
+                return false;
 
             if (TextView.TextViewLines.LastVisibleLine.EndIncludingLineBreak < startLineView.Start
                 || TextView.TextViewLines.FirstVisibleLine.Start > endLineView.EndIncludingLineBreak)
             {
-                diffViewModel.IsVisible = false;
-                return;
+                return false;
             }
 
             double startTop;
@@ -111,15 +109,13 @@ namespace GitDiffMargin
 
                 default:
                     // shouldn't be reachable, but definitely hide if this is the case
-                    diffViewModel.IsVisible = false;
-                    return;
+                    return false;
             }
 
             if (startTop >= TextView.ViewportHeight + TextView.LineHeight)
             {
                 // shouldn't be reachable, but definitely hide if this is the case
-                diffViewModel.IsVisible = false;
-                return;
+                return false;
             }
 
             double stopBottom;
@@ -144,15 +140,13 @@ namespace GitDiffMargin
 
                 default:
                     // shouldn't be reachable, but definitely hide if this is the case
-                    diffViewModel.IsVisible = false;
-                    return;
+                    return false;
             }
 
             if (stopBottom <= -TextView.LineHeight)
             {
                 // shouldn't be reachable, but definitely hide if this is the case
-                diffViewModel.IsVisible = false;
-                return;
+                return false;
             }
 
             if (stopBottom <= startTop)
@@ -162,20 +156,18 @@ namespace GitDiffMargin
                     double center = (startTop + stopBottom) / 2.0;
                     diffViewModel.Top = (center - (TextView.LineHeight / 2.0)) + TextView.LineHeight;
                     diffViewModel.Height = TextView.LineHeight;
-                    diffViewModel.IsVisible = true;
+                    return true;
                 }
                 else
                 {
                     // could be reachable if translation changes an addition to empty
-                    diffViewModel.IsVisible = false;
+                    return false;
                 }
-
-                return;
             }
 
             diffViewModel.Top = startTop;
             diffViewModel.Height = stopBottom - startTop;
-            diffViewModel.IsVisible = true;
+            return true;
         }
     }
 }
