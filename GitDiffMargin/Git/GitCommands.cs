@@ -37,10 +37,10 @@ namespace GitDiffMargin.Git
 
                 using (var currentContent = new MemoryStream(content))
                 {
-                    var directoryInfo = new DirectoryInfo(discoveredPath).Parent;
+                    var directoryInfo = new DirectoryInfo(repo.Info.WorkingDirectory);
                     if (directoryInfo == null) yield break;
 
-                    var relativeFilepath = filename.Replace(directoryInfo.FullName + "\\", string.Empty);
+                    var relativeFilepath = filename.Replace(directoryInfo.FullName, string.Empty);
 
                     var newBlob = repo.ObjectDatabase.CreateBlob(currentContent, relativeFilepath);
 
@@ -142,9 +142,18 @@ namespace GitDiffMargin.Git
             if (string.IsNullOrWhiteSpace(filePath)) return null;
             var discoveredPath = Repository.Discover(Path.GetFullPath(filePath));
             if (string.IsNullOrWhiteSpace(discoveredPath)) return null;
-            var fullPath = Path.GetFullPath(discoveredPath);
-            var directoryInfo = Directory.GetParent(fullPath).Parent;
-            return directoryInfo != null ? directoryInfo.FullName : null;
+
+            if (!Repository.IsValid(discoveredPath))
+                return null;
+
+            using (Repository repository = new Repository(discoveredPath))
+            {
+                string workingDirectory = repository.Info.WorkingDirectory;
+                if (string.IsNullOrEmpty(workingDirectory))
+                    return null;
+
+                return Path.GetFullPath(workingDirectory);
+            }
         }
 
         [DllImport("kernel32.dll")]
