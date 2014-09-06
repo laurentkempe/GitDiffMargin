@@ -19,7 +19,10 @@ namespace GitDiffMargin
             if (typeof(ErrorHandler).Assembly.GetName().Version.Major >= 12)
                 return null;
 
-            var marginCore = GetMarginCore(textViewHost);
+            var marginCore = TryGetMarginCore(textViewHost);
+            if (marginCore == null)
+                return null;
+
             return new ScrollDiffMargin(textViewHost.TextView, marginCore, containerMargin);
         }
     }
