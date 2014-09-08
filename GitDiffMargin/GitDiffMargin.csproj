@@ -179,6 +179,7 @@
   <ItemGroup>
     <Compile Include="Core\BackgroundParser.cs" />
     <Compile Include="Core\HunksChangedEventArgs.cs" />
+    <Compile Include="GitDiffMarginCommand.cs" />
     <Compile Include="GitDiffMarginPackage.cs" />
     <Compile Include="Settings\DiffAdditionEditorFormatDefinition.cs" />
     <Compile Include="DiffMarginBase.cs" />
@@ -268,6 +269,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <VSCTCompile Include="GitDiffMargin.vsct">
+      <ResourceName>Menus.ctmenu</ResourceName>
+    </VSCTCompile>
     <EmbeddedResource Include="VSPackage.resx">
       <ManifestResourceName>VSPackage</ManifestResourceName>
       <MergeWithCTO>true</MergeWithCTO>
