@@ -12,64 +12,6 @@
              mc:Ignorable="d">
   <UserControl.Resources>
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-    <Style x:Key="ButtonFocusVisual">
-      <Setter Property="Control.Template">
-        <Setter.Value>
-          <ControlTemplate>
-            <Rectangle Margin="2"
-                       SnapsToDevicePixels="true"
-                       Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
-                       StrokeDashArray="1 2"
-                       StrokeThickness="4" />
-          </ControlTemplate>
-        </Setter.Value>
-      </Setter>
-    </Style>
-    <LinearGradientBrush x:Key="ButtonNormalBackground" StartPoint="0,0" EndPoint="0,1">
-      <GradientStop Offset="0" Color="#F3F3F3" />
-      <GradientStop Offset="0.5" Color="#EBEBEB" />
-      <GradientStop Offset="0.5" Color="#DDDDDD" />
-      <GradientStop Offset="1" Color="#CDCDCD" />
-    </LinearGradientBrush>
-    <SolidColorBrush x:Key="ButtonNormalBorder" Color="#FF707070" />
-    <Style x:Key="PopupButtonStyle" TargetType="{x:Type Button}">
-      <Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisual}" />
-      <Setter Property="Background" Value="{StaticResource ButtonNormalBackground}" />
-      <Setter Property="BorderBrush" Value="{StaticResource ButtonNormalBorder}" />
-      <Setter Property="BorderThickness" Value="1" />
-      <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
-      <Setter Property="HorizontalContentAlignment" Value="Center" />
-      <Setter Property="VerticalContentAlignment" Value="Center" />
-      <Setter Property="Padding" Value="1" />
-      <Setter Property="Width" Value="24" />
-      <Setter Property="Height" Value="24" />
-      <Setter Property="Template">
-        <Setter.Value>
-          <ControlTemplate TargetType="{x:Type Button}">
-            <Grid>
-                <Border x:Name="border" SnapsToDevicePixels="True">
-                    <ContentPresenter Margin="{TemplateBinding Padding}"
-                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                    RecognizesAccessKey="True"
-                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                </Border>
-            </Grid>
-            <ControlTemplate.Triggers>
-              <Trigger Property="IsKeyboardFocused" Value="true" />
-              <Trigger Property="ToggleButton.IsChecked" Value="true" />
-              <Trigger Property="IsEnabled" Value="false">
-                <Setter Property="Opacity" TargetName="border" Value="0.3" />
-              </Trigger>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" TargetName="border" Value="#FFBEE6FD"/>
-                <Setter Property="BorderBrush" TargetName="border" Value="#FF3C7FB1"/>
-            </Trigger>
-                        </ControlTemplate.Triggers>
-          </ControlTemplate>
-        </Setter.Value>
-      </Setter>
-    </Style>
         <ControlTemplate x:Key="ChangeTemplate" d:DataContext="{d:DesignInstance viewModel:EditorDiffViewModel}">
             <Rectangle Width="{Binding Width, Mode=OneWay}" HorizontalAlignment="Left" Margin="{Binding Margin, Mode=OneWay}" Fill="{Binding DiffBrush}" />
         </ControlTemplate>
@@ -101,7 +43,7 @@
         <DataTemplate>
             <Grid Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
                   d:DataContext="{d:DesignInstance viewModel:EditorDiffViewModel}">
-              <Button Name="diffControl" Command="{Binding ShowPopUpCommand}">
+              <Button Name="diffControl" Command="{Binding ShowPopUpCommand}" CommandParameter="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}">
                   <Button.Style>
                       <Style TargetType="{x:Type Button}">
                           <Style.Triggers>
@@ -127,49 +69,7 @@
                           Background="White"
                           BorderBrush="Black"
                           BorderThickness="1,1,1,1">
-                    <StackPanel Margin="0"
-                                Background="White"
-                                Orientation="Horizontal">
-                        <Button
-                            Command="{Binding DataContext.PreviousChangeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl} }}"
-                            CommandParameter="{Binding}"
-                            Style="{DynamicResource PopupButtonStyle}"
-                            ToolTip="Previous Change">
-                            <Image Width="16"
-                                   Height="16"
-                                   Source="..\Resources\PreviousArrow.png" />
-                        </Button>
-                        <Button
-                            Command="{Binding DataContext.NextChangeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl} }}"
-                            CommandParameter="{Binding}"
-                            Style="{DynamicResource PopupButtonStyle}"
-                            ToolTip="Next Change">
-                            <Image Width="16"
-                                   Height="16"
-                                   Source="..\Resources\NextArrow.png" />
-                        </Button>
-                      <Button Command="{Binding RollbackCommand}"
-                              Style="{DynamicResource PopupButtonStyle}"
-                              ToolTip="Rollback">
-                        <Image Width="16"
-                               Height="16"
-                               Source="..\Resources\Rollback.png" />
-                      </Button>
-                      <Button Command="{Binding ShowDifferenceCommand}"
-                              Style="{DynamicResource PopupButtonStyle}"
-                              ToolTip="Show Difference">
-                        <Image Width="16"
-                               Height="16"
-                               Source="..\Resources\ShowDifference.png" />
-                      </Button>
-                      <Button Command="{Binding CopyOldTextCommand}"
-                              Style="{DynamicResource PopupButtonStyle}"
-                              ToolTip="Copy Old Text">
-                        <Image Width="16"
-                               Height="16"
-                               Source="..\Resources\CopyOldText.png" />
-                      </Button>
-                    </StackPanel>
+                    <ContentControl Content="{Binding ToolBarTray, Mode=OneWay}"/>
                   </Border>
                  <Border Background="{Binding Background, Mode=OneWay}"
                           BorderBrush="{Binding Foreground, Mode=OneWay}"
