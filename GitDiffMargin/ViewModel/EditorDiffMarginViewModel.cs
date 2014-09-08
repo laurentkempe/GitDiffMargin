@@ -64,6 +64,7 @@ namespace GitDiffMargin.ViewModel
             MarginCore.MoveToChange(diffViewModel.LineNumber);    
 
             ((EditorDiffViewModel)currentDiffViewModel).ShowPopup = false;
+            ((EditorDiffViewModel)diffViewModel).ShowPopUpCommand.Execute(this);
         }
 
         protected override void HandleHunksChanged(object sender, HunksChangedEventArgs e)
