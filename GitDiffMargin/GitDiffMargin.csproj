@@ -14,7 +14,8 @@
     <AssemblyName>GitDiffMargin</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <GeneratePkgDefFile>false</GeneratePkgDefFile>
+    <UseCodebase>true</UseCodebase>
+    <GeneratePkgDefFile>true</GeneratePkgDefFile>
     <Utf8Output>true</Utf8Output>
     <ExpressionBlendVersion>4.0.30816.0</ExpressionBlendVersion>
     <FileUpgradeFlags>
@@ -178,6 +179,7 @@
   <ItemGroup>
     <Compile Include="Core\BackgroundParser.cs" />
     <Compile Include="Core\HunksChangedEventArgs.cs" />
+    <Compile Include="GitDiffMarginPackage.cs" />
     <Compile Include="Settings\DiffAdditionEditorFormatDefinition.cs" />
     <Compile Include="DiffMarginBase.cs" />
     <Compile Include="Settings\DiffModificationEditorFormatDefinition.cs" />
@@ -264,6 +266,12 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="VSPackage.resx">
+      <ManifestResourceName>VSPackage</ManifestResourceName>
+      <MergeWithCTO>true</MergeWithCTO>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Condition="Exists($(VsSdkTargets))" Project="$(VsSdkTargets)" />
