@@ -158,10 +158,19 @@ namespace GitDiffMargin.Git
 
                 var tempFileName = Path.GetTempFileName();
                 File.WriteAllText(tempFileName, blob.GetContentText());
+                File.SetAttributes(tempFileName, File.GetAttributes(tempFileName) | FileAttributes.ReadOnly);
 
-                string remoteFile = textDocument.IsDirty ? Path.GetTempFileName() : filename;
+                string remoteFile;
                 if (textDocument.IsDirty)
+                {
+                    remoteFile = Path.GetTempFileName();
                     File.WriteAllBytes(remoteFile, GetCompleteContent(textDocument, textDocument.TextBuffer.CurrentSnapshot));
+                    File.SetAttributes(remoteFile, File.GetAttributes(remoteFile) | FileAttributes.ReadOnly);
+                }
+                else
+                {
+                    remoteFile = filename;
+                }
 
                 var diffCmd = repo.Config.Get<string>("difftool." + diffGuiTool.Value + ".cmd");
                 var cmd = diffCmd.Value.Replace("$LOCAL", tempFileName).Replace("$REMOTE", remoteFile);
