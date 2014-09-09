@@ -1,19 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using EnvDTE;
 using LibGit2Sharp;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 
 namespace GitDiffMargin.Git
 {
+    [Export(typeof(IGitCommands))]
     public class GitCommands : IGitCommands
     {
         private readonly DTE _dte;
 
-        public GitCommands(IServiceProvider serviceProvider)
+        [ImportingConstructor]
+        public GitCommands(SVsServiceProvider serviceProvider)
         {
             _dte = (DTE)serviceProvider.GetService(typeof(_DTE));
         }

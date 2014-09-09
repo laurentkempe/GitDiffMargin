@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.Text;
 
 namespace GitDiffMargin.Git
 {
-    public interface IGitCommands
+    internal interface IGitCommands
     {
         IEnumerable<HunkRangeInfo> GetGitDiffFor(ITextDocument textDocument, ITextSnapshot snapshot);
         void StartExternalDiff(ITextDocument textDocument);
