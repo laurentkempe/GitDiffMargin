@@ -4,9 +4,7 @@ using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using EnvDTE;
 using LibGit2Sharp;
-using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 
 namespace GitDiffMargin.Git
@@ -14,12 +12,9 @@ namespace GitDiffMargin.Git
     [Export(typeof(IGitCommands))]
     public class GitCommands : IGitCommands
     {
-        private readonly DTE _dte;
-
         [ImportingConstructor]
-        public GitCommands(SVsServiceProvider serviceProvider)
+        public GitCommands()
         {
-            _dte = (DTE)serviceProvider.GetService(typeof(_DTE));
         }
 
         private const int ContextLines = 0;
@@ -143,15 +138,6 @@ namespace GitDiffMargin.Git
 
             var filename = textDocument.FilePath;
 
-            if (textDocument.IsDirty)
-            {
-                var docu = _dte.Documents.AllDocuments().FirstOrDefault(doc => doc.FullName == filename);
-                if (docu != null)
-                {
-                    docu.Save();
-                }
-            };
-
             var repositoryPath = GetGitRepository(Path.GetFullPath(filename));
             if (repositoryPath == null)
                 return;
@@ -173,8 +159,12 @@ namespace GitDiffMargin.Git
                 var tempFileName = Path.GetTempFileName();
                 File.WriteAllText(tempFileName, blob.GetContentText());
 
+                string remoteFile = textDocument.IsDirty ? Path.GetTempFileName() : filename;
+                if (textDocument.IsDirty)
+                    File.WriteAllBytes(remoteFile, GetCompleteContent(textDocument, textDocument.TextBuffer.CurrentSnapshot));
+
                 var diffCmd = repo.Config.Get<string>("difftool." + diffGuiTool.Value + ".cmd");
-                var cmd = diffCmd.Value.Replace("$LOCAL", tempFileName).Replace("$REMOTE", filename);
+                var cmd = diffCmd.Value.Replace("$LOCAL", tempFileName).Replace("$REMOTE", remoteFile);
 
                 var si = new STARTUPINFO();
                 PROCESS_INFORMATION pi;

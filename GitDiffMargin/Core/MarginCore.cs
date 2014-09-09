@@ -27,7 +27,7 @@ namespace GitDiffMargin.Core
 
         private bool _isDisposed;
 
-        public MarginCore(IWpfTextView textView, ITextDocumentFactoryService textDocumentFactoryService, IClassificationFormatMapService classificationFormatMapService, SVsServiceProvider serviceProvider, IEditorFormatMapService editorFormatMapService, IGitCommands gitCommands)
+        public MarginCore(IWpfTextView textView, ITextDocumentFactoryService textDocumentFactoryService, IClassificationFormatMapService classificationFormatMapService, IEditorFormatMapService editorFormatMapService, IGitCommands gitCommands)
         {
             _textView = textView;
 
