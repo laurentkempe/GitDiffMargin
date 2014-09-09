@@ -133,14 +133,15 @@ namespace GitDiffMargin.Git
             }
         }
 
-        public bool IsGitRepository(string directory)
+        /// <inheritdoc/>
+        public bool IsGitRepository(string path)
         {
-            if (string.IsNullOrWhiteSpace(directory)) return false;
-            var discoveredPath = Repository.Discover(Path.GetFullPath(directory));
-            if (string.IsNullOrWhiteSpace(discoveredPath)) return false;
-            var fullPath = Path.GetFullPath(discoveredPath);
-            if (string.IsNullOrWhiteSpace(fullPath)) return false;
-            return Repository.IsValid(fullPath);
+            if (!Directory.Exists(path) && !File.Exists(path))
+                return false;
+
+            var discoveredPath = Repository.Discover(Path.GetFullPath(path));
+            // https://github.com/libgit2/libgit2sharp/issues/818#issuecomment-54760613
+            return discoveredPath != null;
         }
 
         public string GetGitRepository(string filePath)
