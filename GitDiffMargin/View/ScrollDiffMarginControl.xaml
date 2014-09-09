@@ -51,7 +51,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Grid>
-                        <Control Name="diffControl">
+                        <Control Name="diffControl" IsHitTestVisible="False">
                             <Control.Style>
                                 <Style TargetType="{x:Type Control}">
                                     <Style.Triggers>
