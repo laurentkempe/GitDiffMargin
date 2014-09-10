@@ -84,11 +84,28 @@ namespace GitDiffMargin.Git
                     {
                         suppressRollback = false;
 
-                        var from = TreeDefinition.From(repo.Head.Tip.Tree);
+                        Commit from = repo.Head.Tip;
+                        TreeEntry fromEntry = from[relativeFilepath];
+                        if (fromEntry == null)
+                        {
+                            // try again using case-insensitive comparison
+                            Tree tree = from.Tree;
+                            foreach (string segment in relativeFilepath.Split(Path.DirectorySeparatorChar))
+                            {
+                                if (tree == null)
+                                    yield break;
 
-                        if (!repo.ObjectDatabase.Contains(from[relativeFilepath].TargetId)) yield break;
+                                fromEntry = tree.FirstOrDefault(i => string.Equals(segment, i.Name, StringComparison.OrdinalIgnoreCase));
+                                if (fromEntry == null)
+                                    yield break;
 
-                        blob = repo.Lookup<Blob>(from[relativeFilepath].TargetId);
+                                tree = fromEntry.Target as Tree;
+                            }
+                        }
+
+                        blob = fromEntry.Target as Blob;
+                        if (blob == null)
+                            yield break;
                     }
 
                     var treeChanges = repo.Diff.Compare(blob, newBlob, new CompareOptions { ContextLines = ContextLines, InterhunkLines = 0 });
