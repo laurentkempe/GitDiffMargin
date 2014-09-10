@@ -36,6 +36,24 @@ namespace GitDiffMargin
             if (TextView.IsClosed)
                 return;
 
+            bool? visible;
+            if (diffViewModel.IsDeletion)
+                visible = UpdateDeletedDiffDimensions(diffViewModel, hunkRangeInfo);
+            else
+                visible = UpdateNormalDiffDimensions(diffViewModel, hunkRangeInfo);
+
+            if (visible.HasValue)
+                diffViewModel.IsVisible = visible.Value;
+        }
+
+        private bool? UpdateNormalDiffDimensions(DiffViewModel diffViewModel, HunkRangeInfo hunkRangeInfo)
+        {
+            if (hunkRangeInfo.NewHunkRange.NumberOfLines <= 0)
+            {
+                // if visible, it would have been as a deletion
+                return false;
+            }
+
             var snapshot = TextView.TextBuffer.CurrentSnapshot;
 
             var startLineNumber = hunkRangeInfo.NewHunkRange.StartingLineNumber;
@@ -45,61 +63,42 @@ namespace GitDiffMargin
                 || endLineNumber < 0
                 || endLineNumber >= snapshot.LineCount)
             {
-                diffViewModel.IsVisible = false;
-                return;
+                return false;
             }
 
             var startLine = snapshot.GetLineFromLineNumber(startLineNumber);
             var endLine = snapshot.GetLineFromLineNumber(endLineNumber);
 
-            if (startLine == null || endLine == null) return;
+            if (startLine == null || endLine == null)
+                return null;
 
-            if (endLine.LineNumber < startLine.LineNumber)
-            {
-                var span = new SnapshotSpan(endLine.Start, startLine.End);
-                if (!TextView.TextViewLines.FormattedSpan.IntersectsWith(span))
-                {
-                    diffViewModel.IsVisible = false;
-                    return;
-                }
-            }
-            else
-            {
-                var span = new SnapshotSpan(startLine.Start, endLine.End);
-                if (!TextView.TextViewLines.FormattedSpan.IntersectsWith(span))
-                {
-                    diffViewModel.IsVisible = false;
-                    return;
-                }
-            }
+            var span = new SnapshotSpan(startLine.Start, endLine.End);
+            if (!TextView.TextViewLines.FormattedSpan.IntersectsWith(span))
+                return false;
 
             var startLineView = TextView.GetTextViewLineContainingBufferPosition(startLine.Start);
             var endLineView = TextView.GetTextViewLineContainingBufferPosition(endLine.Start);
 
             if (startLineView == null || endLineView == null)
+                return false;
+
+            if (TextView.TextViewLines.LastVisibleLine.EndIncludingLineBreak < startLineView.Start)
             {
-                diffViewModel.IsVisible = false;
-                return;
+                // starts after the last visible line
+                return false;
             }
 
-            if (TextView.TextViewLines.LastVisibleLine.EndIncludingLineBreak < startLineView.Start
-                || TextView.TextViewLines.FirstVisibleLine.Start > endLineView.EndIncludingLineBreak)
+            if (TextView.TextViewLines.FirstVisibleLine.Start > endLineView.EndIncludingLineBreak)
             {
-                diffViewModel.IsVisible = false;
-                return;
+                // ends before the first visible line
+                return false;
             }
 
             double startTop;
             switch (startLineView.VisibilityState)
             {
                 case VisibilityState.FullyVisible:
-                    startTop = startLineView.Top - TextView.ViewportTop;
-                    break;
-
                 case VisibilityState.Hidden:
-                    startTop = startLineView.Top - TextView.ViewportTop;
-                    break;
-
                 case VisibilityState.PartiallyVisible:
                     startTop = startLineView.Top - TextView.ViewportTop;
                     break;
@@ -111,28 +110,14 @@ namespace GitDiffMargin
 
                 default:
                     // shouldn't be reachable, but definitely hide if this is the case
-                    diffViewModel.IsVisible = false;
-                    return;
-            }
-
-            if (startTop >= TextView.ViewportHeight + TextView.LineHeight)
-            {
-                // shouldn't be reachable, but definitely hide if this is the case
-                diffViewModel.IsVisible = false;
-                return;
+                    return false;
             }
 
             double stopBottom;
             switch (endLineView.VisibilityState)
             {
                 case VisibilityState.FullyVisible:
-                    stopBottom = endLineView.Bottom - TextView.ViewportTop;
-                    break;
-
                 case VisibilityState.Hidden:
-                    stopBottom = endLineView.Bottom - TextView.ViewportTop;
-                    break;
-
                 case VisibilityState.PartiallyVisible:
                     stopBottom = endLineView.Bottom - TextView.ViewportTop;
                     break;
@@ -144,38 +129,76 @@ namespace GitDiffMargin
 
                 default:
                     // shouldn't be reachable, but definitely hide if this is the case
-                    diffViewModel.IsVisible = false;
-                    return;
-            }
-
-            if (stopBottom <= -TextView.LineHeight)
-            {
-                // shouldn't be reachable, but definitely hide if this is the case
-                diffViewModel.IsVisible = false;
-                return;
-            }
-
-            if (stopBottom <= startTop)
-            {
-                if (hunkRangeInfo.IsDeletion)
-                {
-                    double center = (startTop + stopBottom) / 2.0;
-                    diffViewModel.Top = (center - (TextView.LineHeight / 2.0)) + TextView.LineHeight;
-                    diffViewModel.Height = TextView.LineHeight;
-                    diffViewModel.IsVisible = true;
-                }
-                else
-                {
-                    // could be reachable if translation changes an addition to empty
-                    diffViewModel.IsVisible = false;
-                }
-
-                return;
+                    return false;
             }
 
             diffViewModel.Top = startTop;
             diffViewModel.Height = stopBottom - startTop;
-            diffViewModel.IsVisible = true;
+            return true;
+        }
+
+        private bool? UpdateDeletedDiffDimensions(DiffViewModel diffViewModel, HunkRangeInfo hunkRangeInfo)
+        {
+            if (hunkRangeInfo.NewHunkRange.NumberOfLines != 0)
+            {
+                // unexpected number of lines for a deletion hunk
+                return false;
+            }
+
+            var snapshot = TextView.TextBuffer.CurrentSnapshot;
+
+            var followingLineNumber = hunkRangeInfo.NewHunkRange.StartingLineNumber + 1;
+            if (followingLineNumber < 0 || followingLineNumber >= snapshot.LineCount)
+                return false;
+
+            var followingLine = snapshot.GetLineFromLineNumber(followingLineNumber);
+            if (followingLine == null)
+                return null;
+
+            var span = new SnapshotSpan(followingLine.Start, followingLine.End);
+            if (!TextView.TextViewLines.FormattedSpan.IntersectsWith(span))
+                return false;
+
+            var followingLineView = TextView.GetTextViewLineContainingBufferPosition(followingLine.Start);
+            if (followingLineView == null)
+                return false;
+
+            if (TextView.TextViewLines.LastVisibleLine.EndIncludingLineBreak < followingLineView.Start)
+            {
+                // starts after the last visible line
+                return false;
+            }
+
+            if (TextView.TextViewLines.FirstVisibleLine.Start > followingLineView.EndIncludingLineBreak)
+            {
+                // ends before the first visible line
+                return false;
+            }
+
+            double followingTop;
+            switch (followingLineView.VisibilityState)
+            {
+                case VisibilityState.FullyVisible:
+                case VisibilityState.Hidden:
+                case VisibilityState.PartiallyVisible:
+                    followingTop = followingLineView.Top - TextView.ViewportTop;
+                    break;
+
+                case VisibilityState.Unattached:
+                    // if the closest line was past the end we would have already returned
+                    followingTop = 0;
+                    break;
+
+                default:
+                    // shouldn't be reachable, but definitely hide if this is the case
+                    return false;
+            }
+
+            double center = followingTop;
+            double height = TextView.LineHeight;
+            diffViewModel.Top = center - (height / 2.0);
+            diffViewModel.Height = TextView.LineHeight;
+            return true;
         }
     }
 }
