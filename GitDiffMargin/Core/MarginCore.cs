@@ -255,6 +255,9 @@ namespace GitDiffMargin.Core
         }
         public bool RollBack(HunkRangeInfo hunkRangeInfo)
         {
+            if (hunkRangeInfo.SuppressRollback)
+                return false;
+
             var snapshot = _textView.TextSnapshot;
 
             if (snapshot != snapshot.TextBuffer.CurrentSnapshot)

@@ -50,10 +50,13 @@ namespace GitDiffMargin.Git
 
                     var newBlob = repo.ObjectDatabase.CreateBlob(currentContent, relativeFilepath);
 
+                    bool suppressRollback;
                     Blob blob;
 
                     if ((retrieveStatus & FileStatus.Untracked) != 0 || (retrieveStatus & FileStatus.Added) != 0)
                     {
+                        suppressRollback = true;
+
                         // special handling for added files (would need updating to compare against index)
                         using (var emptyContent = new MemoryStream())
                         {
@@ -62,6 +65,8 @@ namespace GitDiffMargin.Git
                     }
                     else
                     {
+                        suppressRollback = false;
+
                         var from = TreeDefinition.From(repo.Head.Tip.Tree);
 
                         if (!repo.ObjectDatabase.Contains(from[relativeFilepath].TargetId)) yield break;
@@ -71,7 +76,7 @@ namespace GitDiffMargin.Git
 
                     var treeChanges = repo.Diff.Compare(blob, newBlob, new CompareOptions { ContextLines = ContextLines, InterhunkLines = 0 });
 
-                    var gitDiffParser = new GitDiffParser(treeChanges.Patch, ContextLines);
+                    var gitDiffParser = new GitDiffParser(treeChanges.Patch, ContextLines, suppressRollback);
                     var hunkRangeInfos = gitDiffParser.Parse();
 
                     foreach (var hunkRangeInfo in hunkRangeInfos)
