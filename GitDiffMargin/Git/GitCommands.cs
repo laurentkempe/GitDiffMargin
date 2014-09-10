@@ -34,8 +34,23 @@ namespace GitDiffMargin.Git
             using (var repo = new Repository(repositoryPath))
             {
                 var retrieveStatus = repo.Index.RetrieveStatus(filename);
-                if ((retrieveStatus & FileStatus.Ignored) != 0)
+                if (retrieveStatus == FileStatus.Nonexistent)
+                {
+                    // this occurs if a file within the repository itself (not the working copy) is opened.
                     yield break;
+                }
+
+                if ((retrieveStatus & FileStatus.Ignored) != 0)
+                {
+                    // pointless to show diffs for ignored files
+                    yield break;
+                }
+
+                if (retrieveStatus == FileStatus.Unaltered && !textDocument.IsDirty)
+                {
+                    // truly unaltered
+                    yield break;
+                }
 
                 var content = GetCompleteContent(textDocument, snapshot);
                 if (content == null) yield break;
