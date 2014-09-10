@@ -24,6 +24,8 @@ namespace GitDiffMargin.Git
         {
             var filename = textDocument.FilePath;
             var discoveredPath = Repository.Discover(Path.GetFullPath(filename));
+            if (string.IsNullOrEmpty(discoveredPath))
+                yield break;
 
             if (!Repository.IsValid(discoveredPath)) yield break;
 
