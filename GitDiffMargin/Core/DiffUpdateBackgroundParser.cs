@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GitDiffMargin.Git;
+using LibGit2Sharp;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Text;
 
@@ -30,12 +31,10 @@ namespace GitDiffMargin.Core
                 {
                     _textDocument.FileActionOccurred += OnFileActionOccurred;
 
-                    var solutionDirectory = _commands.GetGitRepository(_textDocument.FilePath);
-
-                    if (!string.IsNullOrWhiteSpace(solutionDirectory))
+                    string repositoryDirectory = Repository.Discover(_textDocument.FilePath);
+                    if (Directory.Exists(repositoryDirectory))
                     {
-                        var gitDirectory = Path.Combine(solutionDirectory, ".git");
-                        _watcher = new FileSystemWatcher(gitDirectory);
+                        _watcher = new FileSystemWatcher(Path.GetFullPath(repositoryDirectory));
                         _watcher.Changed += HandleFileSystemChanged;
                         _watcher.Created += HandleFileSystemChanged;
                         _watcher.Deleted += HandleFileSystemChanged;
