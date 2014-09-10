@@ -33,6 +33,10 @@ namespace GitDiffMargin.Git
 
             using (var repo = new Repository(repositoryPath))
             {
+                var workingDirectory = repo.Info.WorkingDirectory;
+                if (workingDirectory == null)
+                    yield break;
+
                 var retrieveStatus = repo.Index.RetrieveStatus(filename);
                 if (retrieveStatus == FileStatus.Nonexistent)
                 {
@@ -57,11 +61,9 @@ namespace GitDiffMargin.Git
 
                 using (var currentContent = new MemoryStream(content))
                 {
-                    var workingCopy = GetGitWorkingCopy(repositoryPath);
-                    if (workingCopy == null)
-                        yield break;
-
-                    var relativeFilepath = filename.Replace(workingCopy, string.Empty);
+                    var relativeFilepath = filename;
+                    if (relativeFilepath.StartsWith(workingDirectory, StringComparison.OrdinalIgnoreCase))
+                        relativeFilepath = relativeFilepath.Substring(workingDirectory.Length);
 
                     var newBlob = repo.ObjectDatabase.CreateBlob(currentContent, relativeFilepath);
 
@@ -143,7 +145,12 @@ namespace GitDiffMargin.Git
 
                 if (diffGuiTool == null) return;
 
-                var indexEntry = repo.Index[filename.Replace(repo.Info.WorkingDirectory, "")];
+                string workingDirectory = repo.Info.WorkingDirectory;
+                string relativePath = Path.GetFullPath(filename);
+                if (relativePath.StartsWith(workingDirectory, StringComparison.OrdinalIgnoreCase))
+                    relativePath = relativePath.Substring(workingDirectory.Length);
+
+                var indexEntry = repo.Index[relativePath];
                 var blob = repo.Lookup<Blob>(indexEntry.Id);
 
                 var tempFileName = Path.GetTempFileName();
