@@ -34,7 +34,8 @@ namespace GitDiffMargin.Git
             using (var repo = new Repository(repositoryPath))
             {
                 var retrieveStatus = repo.Index.RetrieveStatus(filename);
-                if (retrieveStatus == FileStatus.Untracked || retrieveStatus == FileStatus.Added) yield break;
+                if ((retrieveStatus & FileStatus.Ignored) != 0)
+                    yield break;
 
                 var content = GetCompleteContent(textDocument, snapshot);
                 if (content == null) yield break;
@@ -49,11 +50,24 @@ namespace GitDiffMargin.Git
 
                     var newBlob = repo.ObjectDatabase.CreateBlob(currentContent, relativeFilepath);
 
-                    var from = TreeDefinition.From(repo.Head.Tip.Tree);
+                    Blob blob;
 
-                    if (!repo.ObjectDatabase.Contains(from[relativeFilepath].TargetId)) yield break;
+                    if ((retrieveStatus & FileStatus.Untracked) != 0 || (retrieveStatus & FileStatus.Added) != 0)
+                    {
+                        // special handling for added files (would need updating to compare against index)
+                        using (var emptyContent = new MemoryStream())
+                        {
+                            blob = repo.ObjectDatabase.CreateBlob(emptyContent, relativeFilepath);
+                        }
+                    }
+                    else
+                    {
+                        var from = TreeDefinition.From(repo.Head.Tip.Tree);
 
-                    var blob = repo.Lookup<Blob>(from[relativeFilepath].TargetId);
+                        if (!repo.ObjectDatabase.Contains(from[relativeFilepath].TargetId)) yield break;
+
+                        blob = repo.Lookup<Blob>(from[relativeFilepath].TargetId);
+                    }
 
                     var treeChanges = repo.Diff.Compare(blob, newBlob, new CompareOptions { ContextLines = ContextLines, InterhunkLines = 0 });
 
