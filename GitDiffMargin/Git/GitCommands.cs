@@ -27,13 +27,11 @@ namespace GitDiffMargin.Git
         public IEnumerable<HunkRangeInfo> GetGitDiffFor(ITextDocument textDocument, ITextSnapshot snapshot)
         {
             var filename = textDocument.FilePath;
-            var discoveredPath = Repository.Discover(Path.GetFullPath(filename));
-            if (string.IsNullOrEmpty(discoveredPath))
+            var repositoryPath = GetGitRepository(Path.GetFullPath(filename));
+            if (repositoryPath == null)
                 yield break;
 
-            if (!Repository.IsValid(discoveredPath)) yield break;
-
-            using (var repo = new Repository(discoveredPath))
+            using (var repo = new Repository(repositoryPath))
             {
                 var retrieveStatus = repo.Index.RetrieveStatus(filename);
                 if (retrieveStatus == FileStatus.Untracked || retrieveStatus == FileStatus.Added) yield break;
@@ -43,10 +41,11 @@ namespace GitDiffMargin.Git
 
                 using (var currentContent = new MemoryStream(content))
                 {
-                    var directoryInfo = new DirectoryInfo(repo.Info.WorkingDirectory);
-                    if (directoryInfo == null) yield break;
+                    var workingCopy = GetGitWorkingCopy(repositoryPath);
+                    if (workingCopy == null)
+                        yield break;
 
-                    var relativeFilepath = filename.Replace(directoryInfo.FullName, string.Empty);
+                    var relativeFilepath = filename.Replace(workingCopy, string.Empty);
 
                     var newBlob = repo.ObjectDatabase.CreateBlob(currentContent, relativeFilepath);
 
@@ -100,9 +99,11 @@ namespace GitDiffMargin.Git
                 }
             };
 
-            var discoveredPath = Repository.Discover(Path.GetFullPath(filename));
+            var repositoryPath = GetGitRepository(Path.GetFullPath(filename));
+            if (repositoryPath == null)
+                return;
 
-            using (var repo = new Repository(discoveredPath))
+            using (var repo = new Repository(repositoryPath))
             {
                 var diffGuiTool = repo.Config.Get<string>("diff.tool");
 
@@ -136,27 +137,31 @@ namespace GitDiffMargin.Git
         /// <inheritdoc/>
         public bool IsGitRepository(string path)
         {
+            return GetGitRepository(path) != null;
+        }
+
+        /// <inheritdoc/>
+        public string GetGitRepository(string path)
+        {
             if (!Directory.Exists(path) && !File.Exists(path))
-                return false;
+                return null;
 
             var discoveredPath = Repository.Discover(Path.GetFullPath(path));
             // https://github.com/libgit2/libgit2sharp/issues/818#issuecomment-54760613
-            return discoveredPath != null;
+            return discoveredPath;
         }
 
-        public string GetGitRepository(string filePath)
+        /// <inheritdoc/>
+        public string GetGitWorkingCopy(string path)
         {
-            if (string.IsNullOrWhiteSpace(filePath)) return null;
-            var discoveredPath = Repository.Discover(Path.GetFullPath(filePath));
-            if (string.IsNullOrWhiteSpace(discoveredPath)) return null;
-
-            if (!Repository.IsValid(discoveredPath))
+            var repositoryPath = GetGitRepository(path);
+            if (repositoryPath == null)
                 return null;
 
-            using (Repository repository = new Repository(discoveredPath))
+            using (Repository repository = new Repository(repositoryPath))
             {
                 string workingDirectory = repository.Info.WorkingDirectory;
-                if (string.IsNullOrEmpty(workingDirectory))
+                if (workingDirectory == null)
                     return null;
 
                 return Path.GetFullPath(workingDirectory);

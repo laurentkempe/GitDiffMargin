@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.Composition;
 using GitDiffMargin.Core;
 using GitDiffMargin.Git;
-using LibGit2Sharp;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
@@ -47,8 +46,8 @@ namespace GitDiffMargin
                 return null;
 
             var filename = textDocument.FilePath;
-            var discoveredPath = Repository.Discover(Path.GetFullPath(filename));
-            if (string.IsNullOrEmpty(discoveredPath) || !Repository.IsValid(discoveredPath))
+            var repositoryPath = GitCommands.GetGitRepository(Path.GetFullPath(filename));
+            if (repositoryPath == null)
                 return null;
 
             return textViewHost.TextView.Properties.GetOrCreateSingletonProperty(
