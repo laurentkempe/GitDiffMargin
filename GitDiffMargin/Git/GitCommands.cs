@@ -34,7 +34,23 @@ namespace GitDiffMargin.Git
             using (var repo = new Repository(repositoryPath))
             {
                 var retrieveStatus = repo.Index.RetrieveStatus(filename);
-                if (retrieveStatus == FileStatus.Untracked || retrieveStatus == FileStatus.Added) yield break;
+                if (retrieveStatus == FileStatus.Nonexistent)
+                {
+                    // this occurs if a file within the repository itself (not the working copy) is opened.
+                    yield break;
+                }
+
+                if ((retrieveStatus & FileStatus.Ignored) != 0)
+                {
+                    // pointless to show diffs for ignored files
+                    yield break;
+                }
+
+                if (retrieveStatus == FileStatus.Unaltered && !textDocument.IsDirty)
+                {
+                    // truly unaltered
+                    yield break;
+                }
 
                 var content = GetCompleteContent(textDocument, snapshot);
                 if (content == null) yield break;
@@ -49,15 +65,33 @@ namespace GitDiffMargin.Git
 
                     var newBlob = repo.ObjectDatabase.CreateBlob(currentContent, relativeFilepath);
 
-                    var from = TreeDefinition.From(repo.Head.Tip.Tree);
+                    bool suppressRollback;
+                    Blob blob;
 
-                    if (!repo.ObjectDatabase.Contains(from[relativeFilepath].TargetId)) yield break;
+                    if ((retrieveStatus & FileStatus.Untracked) != 0 || (retrieveStatus & FileStatus.Added) != 0)
+                    {
+                        suppressRollback = true;
 
-                    var blob = repo.Lookup<Blob>(from[relativeFilepath].TargetId);
+                        // special handling for added files (would need updating to compare against index)
+                        using (var emptyContent = new MemoryStream())
+                        {
+                            blob = repo.ObjectDatabase.CreateBlob(emptyContent, relativeFilepath);
+                        }
+                    }
+                    else
+                    {
+                        suppressRollback = false;
+
+                        var from = TreeDefinition.From(repo.Head.Tip.Tree);
+
+                        if (!repo.ObjectDatabase.Contains(from[relativeFilepath].TargetId)) yield break;
+
+                        blob = repo.Lookup<Blob>(from[relativeFilepath].TargetId);
+                    }
 
                     var treeChanges = repo.Diff.Compare(blob, newBlob, new CompareOptions { ContextLines = ContextLines, InterhunkLines = 0 });
 
-                    var gitDiffParser = new GitDiffParser(treeChanges.Patch, ContextLines);
+                    var gitDiffParser = new GitDiffParser(treeChanges.Patch, ContextLines, suppressRollback);
                     var hunkRangeInfos = gitDiffParser.Parse();
 
                     foreach (var hunkRangeInfo in hunkRangeInfos)

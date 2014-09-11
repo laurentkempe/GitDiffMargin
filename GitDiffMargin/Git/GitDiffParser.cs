@@ -8,18 +8,25 @@ namespace GitDiffMargin.Git
     {
         private readonly string _gitDiff;
         private readonly int _contextLines;
+        private readonly bool _suppressRollback;
 
         public GitDiffParser(string gitDiff, int contextLines)
+            : this(gitDiff, contextLines, false)
+        {
+        }
+
+        public GitDiffParser(string gitDiff, int contextLines, bool suppressRollback)
         {
             _gitDiff = gitDiff;
             _contextLines = contextLines;
+            _suppressRollback = suppressRollback;
         }
 
         public IEnumerable<HunkRangeInfo> Parse()
         {
             return from hunkLine in GetUnifiedFormatHunkLines() 
                    where !string.IsNullOrEmpty(hunkLine.Item1)
-                   select new HunkRangeInfo(new HunkRange(GetHunkOriginalFile(hunkLine.Item1), _contextLines), new HunkRange(GetHunkNewFile(hunkLine.Item1), _contextLines), hunkLine.Item2);
+                   select new HunkRangeInfo(new HunkRange(GetHunkOriginalFile(hunkLine.Item1), _contextLines), new HunkRange(GetHunkNewFile(hunkLine.Item1), _contextLines), hunkLine.Item2, _suppressRollback);
         }
 
         public IEnumerable<Tuple<string, IEnumerable<string>>> GetUnifiedFormatHunkLines()

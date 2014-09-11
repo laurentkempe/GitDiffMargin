@@ -195,6 +195,9 @@ namespace GitDiffMargin.ViewModel
 
         private bool RollbackCanExecute()
         {
+            if (HunkRangeInfo.SuppressRollback)
+                return false;
+
             return HunkRangeInfo.IsModification || HunkRangeInfo.IsDeletion || HunkRangeInfo.IsAddition;
         }
 
