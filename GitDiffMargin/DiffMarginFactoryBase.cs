@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.Composition;
 using GitDiffMargin.Core;
-using LibGit2Sharp;
+using GitDiffMargin.Git;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
@@ -23,6 +23,9 @@ namespace GitDiffMargin
         [Import]
         internal SVsServiceProvider ServiceProvider { get; private set; }
 
+        [Import]
+        internal IGitCommands GitCommands { get; private set; }
+
         public abstract IWpfTextViewMargin CreateMargin(IWpfTextViewHost wpfTextViewHost, IWpfTextViewMargin marginContainer);
 
         protected IMarginCore TryGetMarginCore(IWpfTextViewHost textViewHost)
@@ -43,12 +46,12 @@ namespace GitDiffMargin
                 return null;
 
             var filename = textDocument.FilePath;
-            var discoveredPath = Repository.Discover(Path.GetFullPath(filename));
-            if (string.IsNullOrEmpty(discoveredPath) || !Repository.IsValid(discoveredPath))
+            var repositoryPath = GitCommands.GetGitRepository(Path.GetFullPath(filename));
+            if (repositoryPath == null)
                 return null;
 
             return textViewHost.TextView.Properties.GetOrCreateSingletonProperty(
-                        () => new MarginCore(textViewHost.TextView, TextDocumentFactoryService, ClassificationFormatMapService, ServiceProvider, EditorFormatMapService));
+                        () => new MarginCore(textViewHost.TextView, TextDocumentFactoryService, ClassificationFormatMapService, ServiceProvider, EditorFormatMapService, GitCommands));
         }
     }
 }
