@@ -51,6 +51,14 @@ namespace GitDiffMargin.Core
             UpdateBrushes();
         }
 
+        public IWpfTextView TextView
+        {
+            get
+            {
+                return _textView;
+            }
+        }
+
         public IGitCommands GitCommands
         {
             get
