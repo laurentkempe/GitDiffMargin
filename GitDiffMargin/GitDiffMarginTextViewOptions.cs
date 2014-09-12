@@ -2,7 +2,7 @@
 
 namespace GitDiffMargin
 {
-    public class GitDiffMarginTextViewOptions
+    public static class GitDiffMarginTextViewOptions
     {
         public const string DiffMarginName = EditorDiffMargin.MarginNameConst + "/DiffMarginName";
 
