@@ -33,6 +33,10 @@ namespace GitDiffMargin.Git
 
             using (var repo = new Repository(repositoryPath))
             {
+                var workingDirectory = repo.Info.WorkingDirectory;
+                if (workingDirectory == null)
+                    yield break;
+
                 var retrieveStatus = repo.Index.RetrieveStatus(filename);
                 if (retrieveStatus == FileStatus.Nonexistent)
                 {
@@ -57,11 +61,9 @@ namespace GitDiffMargin.Git
 
                 using (var currentContent = new MemoryStream(content))
                 {
-                    var workingCopy = GetGitWorkingCopy(repositoryPath);
-                    if (workingCopy == null)
-                        yield break;
-
-                    var relativeFilepath = filename.Replace(workingCopy, string.Empty);
+                    var relativeFilepath = filename;
+                    if (relativeFilepath.StartsWith(workingDirectory, StringComparison.OrdinalIgnoreCase))
+                        relativeFilepath = relativeFilepath.Substring(workingDirectory.Length);
 
                     var newBlob = repo.ObjectDatabase.CreateBlob(currentContent, relativeFilepath);
 
@@ -82,11 +84,28 @@ namespace GitDiffMargin.Git
                     {
                         suppressRollback = false;
 
-                        var from = TreeDefinition.From(repo.Head.Tip.Tree);
+                        Commit from = repo.Head.Tip;
+                        TreeEntry fromEntry = from[relativeFilepath];
+                        if (fromEntry == null)
+                        {
+                            // try again using case-insensitive comparison
+                            Tree tree = from.Tree;
+                            foreach (string segment in relativeFilepath.Split(Path.DirectorySeparatorChar))
+                            {
+                                if (tree == null)
+                                    yield break;
 
-                        if (!repo.ObjectDatabase.Contains(from[relativeFilepath].TargetId)) yield break;
+                                fromEntry = tree.FirstOrDefault(i => string.Equals(segment, i.Name, StringComparison.OrdinalIgnoreCase));
+                                if (fromEntry == null)
+                                    yield break;
 
-                        blob = repo.Lookup<Blob>(from[relativeFilepath].TargetId);
+                                tree = fromEntry.Target as Tree;
+                            }
+                        }
+
+                        blob = fromEntry.Target as Blob;
+                        if (blob == null)
+                            yield break;
                     }
 
                     var treeChanges = repo.Diff.Compare(blob, newBlob, new CompareOptions { ContextLines = ContextLines, InterhunkLines = 0 });
@@ -143,7 +162,12 @@ namespace GitDiffMargin.Git
 
                 if (diffGuiTool == null) return;
 
-                var indexEntry = repo.Index[filename.Replace(repo.Info.WorkingDirectory, "")];
+                string workingDirectory = repo.Info.WorkingDirectory;
+                string relativePath = Path.GetFullPath(filename);
+                if (relativePath.StartsWith(workingDirectory, StringComparison.OrdinalIgnoreCase))
+                    relativePath = relativePath.Substring(workingDirectory.Length);
+
+                var indexEntry = repo.Index[relativePath];
                 var blob = repo.Lookup<Blob>(indexEntry.Id);
 
                 var tempFileName = Path.GetTempFileName();
