@@ -1,6 +1,5 @@
 ﻿extern alias vs11;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.IO;
@@ -28,40 +27,41 @@ namespace GitDiffMargin.Git
 
         private const int ContextLines = 0;
 
-        public IEnumerable<HunkRangeInfo> GetGitDiffFor(ITextDocument textDocument, ITextSnapshot snapshot)
+        public DiffResult GetGitDiffFor(ITextDocument textDocument, ITextSnapshot snapshot)
         {
             var filename = textDocument.FilePath;
             var repositoryPath = GetGitRepository(Path.GetFullPath(filename));
             if (repositoryPath == null)
-                yield break;
+                return DiffResult.Empty;
 
             using (var repo = new Repository(repositoryPath))
             {
                 var workingDirectory = repo.Info.WorkingDirectory;
                 if (workingDirectory == null)
-                    yield break;
+                    return DiffResult.Empty;
 
                 var retrieveStatus = repo.Index.RetrieveStatus(filename);
                 if (retrieveStatus == FileStatus.Nonexistent)
                 {
                     // this occurs if a file within the repository itself (not the working copy) is opened.
-                    yield break;
+                    return DiffResult.Empty;
                 }
 
                 if ((retrieveStatus & FileStatus.Ignored) != 0)
                 {
                     // pointless to show diffs for ignored files
-                    yield break;
+                    return DiffResult.Empty;
                 }
 
                 if (retrieveStatus == FileStatus.Unaltered && !textDocument.IsDirty)
                 {
                     // truly unaltered
-                    yield break;
+                    return DiffResult.Empty;
                 }
 
                 var content = GetCompleteContent(textDocument, snapshot);
-                if (content == null) yield break;
+                if (content == null)
+                    return DiffResult.Empty;
 
                 using (var currentContent = new MemoryStream(content))
                 {
@@ -71,22 +71,24 @@ namespace GitDiffMargin.Git
 
                     var newBlob = repo.ObjectDatabase.CreateBlob(currentContent, relativeFilepath);
 
-                    bool suppressRollback;
-                    Blob blob;
+                    bool headSuppressRollback;
+                    bool indexSuppressRollback;
+                    Blob headBlob;
+                    Blob indexBlob;
 
                     if ((retrieveStatus & FileStatus.Untracked) != 0 || (retrieveStatus & FileStatus.Added) != 0)
                     {
-                        suppressRollback = true;
+                        headSuppressRollback = true;
 
                         // special handling for added files (would need updating to compare against index)
                         using (var emptyContent = new MemoryStream())
                         {
-                            blob = repo.ObjectDatabase.CreateBlob(emptyContent, relativeFilepath);
+                            headBlob = repo.ObjectDatabase.CreateBlob(emptyContent, relativeFilepath);
                         }
                     }
                     else
                     {
-                        suppressRollback = false;
+                        headSuppressRollback = false;
 
                         Commit from = repo.Head.Tip;
                         TreeEntry fromEntry = from[relativeFilepath];
@@ -97,30 +99,51 @@ namespace GitDiffMargin.Git
                             foreach (string segment in relativeFilepath.Split(Path.DirectorySeparatorChar))
                             {
                                 if (tree == null)
-                                    yield break;
+                                    return DiffResult.Empty;
 
                                 fromEntry = tree.FirstOrDefault(i => string.Equals(segment, i.Name, StringComparison.OrdinalIgnoreCase));
                                 if (fromEntry == null)
-                                    yield break;
+                                    return DiffResult.Empty;
 
                                 tree = fromEntry.Target as Tree;
                             }
                         }
 
-                        blob = fromEntry.Target as Blob;
-                        if (blob == null)
-                            yield break;
+                        headBlob = fromEntry.Target as Blob;
+                        if (headBlob == null)
+                            return DiffResult.Empty;
                     }
 
-                    var treeChanges = repo.Diff.Compare(blob, newBlob, new CompareOptions { ContextLines = ContextLines, InterhunkLines = 0 });
-
-                    var gitDiffParser = new GitDiffParser(treeChanges.Patch, ContextLines, suppressRollback);
-                    var hunkRangeInfos = gitDiffParser.Parse();
-
-                    foreach (var hunkRangeInfo in hunkRangeInfos)
+                    if ((retrieveStatus & FileStatus.Untracked) != 0)
                     {
-                        yield return hunkRangeInfo;
+                        indexSuppressRollback = true;
+                        indexBlob = headBlob;
                     }
+                    else
+                    {
+                        indexSuppressRollback = false;
+
+                        // the index matches the head unless a specific IndexEntry exists
+                        indexBlob = headBlob;
+                        foreach (var indexEntry in repo.Index)
+                        {
+                            if (string.Equals(indexEntry.Path, relativeFilepath, StringComparison.OrdinalIgnoreCase))
+                            {
+                                indexBlob = repo.Lookup<Blob>(indexEntry.Id);
+                                break;
+                            }
+                        }
+                    }
+
+                    ContentChanges treeChanges = repo.Diff.Compare(headBlob, newBlob, new CompareOptions { ContextLines = ContextLines, InterhunkLines = 0 });
+                    var gitDiffParser = new GitDiffParser(treeChanges.Patch, ContextLines, headSuppressRollback);
+                    var diffToHead = gitDiffParser.Parse();
+
+                    treeChanges = repo.Diff.Compare(indexBlob, newBlob, new CompareOptions { ContextLines = ContextLines, InterhunkLines = 0 });
+                    gitDiffParser = new GitDiffParser(treeChanges.Patch, ContextLines, indexSuppressRollback);
+                    var diffToIndex = gitDiffParser.Parse();
+
+                    return new DiffResult(diffToIndex, diffToHead);
                 }
             }
         }
@@ -154,7 +177,7 @@ namespace GitDiffMargin.Git
             "|" + "(?:" + QuotedParameterPattern + "(?:" + UnquotedParameterPattern + QuotedParameterPattern + ")*" + "(?:" + UnquotedParameterPattern + ")?" + ")" +
             ")";
 
-        public void StartExternalDiff(ITextDocument textDocument)
+        public void StartExternalDiff(ITextDocument textDocument, bool compareToIndex)
         {
             if (textDocument == null || string.IsNullOrEmpty(textDocument.FilePath)) return;
 
@@ -174,12 +197,25 @@ namespace GitDiffMargin.Git
                 // the name of the object in the database
                 string objectName = Path.GetFileName(filename);
 
+                IndexEntry indexEntry = null;
                 Blob oldBlob = null;
-                var indexEntry = repo.Index[relativePath];
-                if (indexEntry != null)
+                if (compareToIndex)
                 {
-                    objectName = Path.GetFileName(indexEntry.Path);
-                    oldBlob = repo.Lookup<Blob>(indexEntry.Id);
+                    indexEntry = repo.Index[relativePath];
+                    if (indexEntry != null)
+                    {
+                        objectName = Path.GetFileName(indexEntry.Path);
+                        oldBlob = repo.Lookup<Blob>(indexEntry.Id);
+                    }
+                }
+                else
+                {
+                    var headEntry = repo.Head[relativePath];
+                    if (headEntry != null)
+                    {
+                        objectName = Path.GetFileName(headEntry.Path);
+                        oldBlob = repo.Lookup<Blob>(headEntry.Target.Id);
+                    }
                 }
 
                 var tempFileName = Path.GetTempFileName();

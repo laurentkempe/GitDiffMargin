@@ -42,6 +42,8 @@ namespace GitDiffMargin.Core
             _parser.ParseComplete += HandleParseComplete;
             _parser.RequestParse(false);
 
+            _textView.Options.OptionChanged += HandleOptionChanged;
+
             _textView.Closed += (sender, e) =>
             {
                 _editorFormatMap.FormatMappingChanged -= HandleFormatMappingChanged;
@@ -261,6 +263,18 @@ namespace GitDiffMargin.Core
 
             return Brushes.Transparent;
         }
+
+        private void HandleOptionChanged(object sender, EditorOptionChangedEventArgs e)
+        {
+            if (_isDisposed)
+                return;
+
+            if (string.Equals(e.OptionId, GitDiffMarginTextViewOptions.CompareToIndexId.Name, StringComparison.Ordinal))
+            {
+                _parser.RequestParse(true);
+            }
+        }
+
         public bool RollBack(HunkRangeInfo hunkRangeInfo)
         {
             if (hunkRangeInfo.SuppressRollback)
@@ -323,7 +337,12 @@ namespace GitDiffMargin.Core
             var diffResult = e as DiffParseResultEventArgs;
             if (diffResult == null) return;
 
-            CheckBeginInvokeOnUi(() => OnHunksChanged(diffResult.Diff));
+            CheckBeginInvokeOnUi(
+                () =>
+                {
+                    bool compareToIndex = _textView.Options.GetOptionValue(GitDiffMarginTextViewOptions.CompareToIndexId);
+                    OnHunksChanged(compareToIndex ? diffResult.DiffToIndex : diffResult.DiffToHead);
+                });
         }
 
         private void OnHunksChanged(IEnumerable<HunkRangeInfo> hunkRangeInfos)
