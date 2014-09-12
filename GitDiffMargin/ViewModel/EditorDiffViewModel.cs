@@ -13,9 +13,6 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using IOleCommandTarget = Microsoft.VisualStudio.OLE.Interop.IOleCommandTarget;
-using OLECMD = Microsoft.VisualStudio.OLE.Interop.OLECMD;
-using OLECMDF = Microsoft.VisualStudio.OLE.Interop.OLECMDF;
-using OleConstants = Microsoft.VisualStudio.OLE.Interop.Constants;
 
 #endregion
 
@@ -172,8 +169,10 @@ namespace GitDiffMargin.ViewModel
                     IVsUIShell4 uiShell = Package.GetGlobalService(typeof(SVsUIShell)) as IVsUIShell4;
                     if (uiShell != null)
                     {
+                        IOleCommandTarget commandTarget = MarginCore.TextView.Properties.GetProperty<GitDiffMarginCommandHandler>(typeof(GitDiffMarginCommandHandler));
+
                         IVsToolbarTrayHost toolbarTrayHost;
-                        ErrorHandler.ThrowOnFailure(uiShell.CreateToolbarTray(new ToolbarCommandHandler(this), out toolbarTrayHost));
+                        ErrorHandler.ThrowOnFailure(uiShell.CreateToolbarTray(commandTarget, out toolbarTrayHost));
 
                         Guid toolBarGuid = typeof(GitDiffMarginCommand).GUID;
                         ErrorHandler.ThrowOnFailure(toolbarTrayHost.AddToolbar(ref toolBarGuid, (int)GitDiffMarginCommand.GitDiffToolbar));
@@ -273,112 +272,6 @@ namespace GitDiffMargin.ViewModel
         {
             _diffMarginViewModel = diffMarginViewModel;
             ShowPopup = true;
-        }
-
-        private class ToolbarCommandHandler : IOleCommandTarget
-        {
-            private readonly EditorDiffViewModel _viewModel;
-
-            public ToolbarCommandHandler(EditorDiffViewModel viewModel)
-            {
-                _viewModel = viewModel;
-            }
-
-            public int QueryStatus(ref Guid pguidCmdGroup, uint cCmds, OLECMD[] prgCmds, IntPtr pCmdText)
-            {
-                if (pguidCmdGroup == typeof(GitDiffMarginCommand).GUID)
-                {
-                    switch ((GitDiffMarginCommand)prgCmds[0].cmdID)
-                    {
-                    case GitDiffMarginCommand.PreviousChange:
-                        if (_viewModel._diffMarginViewModel == null)
-                        {
-                            prgCmds[0].cmdf = (uint)OLECMDF.OLECMDF_SUPPORTED;
-                            return VSConstants.S_OK;
-                        }
-
-                        prgCmds[0].cmdf = ToCommandFlags(_viewModel._diffMarginViewModel.PreviousChangeCommand.CanExecute(_viewModel));
-                        return VSConstants.S_OK;
-
-                    case GitDiffMarginCommand.NextChange:
-                        if (_viewModel._diffMarginViewModel == null)
-                        {
-                            prgCmds[0].cmdf = (uint)OLECMDF.OLECMDF_SUPPORTED;
-                            return VSConstants.S_OK;
-                        }
-
-                        prgCmds[0].cmdf = ToCommandFlags(_viewModel._diffMarginViewModel.NextChangeCommand.CanExecute(_viewModel));
-                        return VSConstants.S_OK;
-
-                    case GitDiffMarginCommand.RollbackChange:
-                        prgCmds[0].cmdf = ToCommandFlags(_viewModel.RollbackCanExecute());
-                        return VSConstants.S_OK;
-
-                    case GitDiffMarginCommand.ShowDiff:
-                        prgCmds[0].cmdf = ToCommandFlags(_viewModel.ShowDifferenceCanExecute());
-                        return VSConstants.S_OK;
-
-                    case GitDiffMarginCommand.CopyOldText:
-                        prgCmds[0].cmdf = ToCommandFlags(_viewModel.CopyOldTextCanExecute());
-                        return VSConstants.S_OK;
-
-                    default:
-                        prgCmds[0].cmdf = 0;
-                        return VSConstants.S_OK;
-                    }
-                }
-
-                prgCmds[0].cmdf = 0;
-                return VSConstants.S_OK;
-            }
-
-            public int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
-            {
-                if (pguidCmdGroup == typeof(GitDiffMarginCommand).GUID)
-                {
-                    switch ((GitDiffMarginCommand)nCmdID)
-                    {
-                    case GitDiffMarginCommand.PreviousChange:
-                        if (_viewModel._diffMarginViewModel == null)
-                            return (int)OleConstants.MSOCMDERR_E_NOTSUPPORTED;
-
-                        _viewModel._diffMarginViewModel.PreviousChangeCommand.Execute(_viewModel);
-                        return VSConstants.S_OK;
-
-                    case GitDiffMarginCommand.NextChange:
-                        if (_viewModel._diffMarginViewModel == null)
-                            return (int)OleConstants.MSOCMDERR_E_NOTSUPPORTED;
-
-                        _viewModel._diffMarginViewModel.NextChangeCommand.Execute(_viewModel);
-                        return VSConstants.S_OK;
-
-                    case GitDiffMarginCommand.RollbackChange:
-                        _viewModel.Rollback();
-                        return VSConstants.S_OK;
-
-                    case GitDiffMarginCommand.ShowDiff:
-                        _viewModel.ShowDifference();
-                        return VSConstants.S_OK;
-
-                    case GitDiffMarginCommand.CopyOldText:
-                        _viewModel.CopyOldText();
-                        return VSConstants.S_OK;
-
-                    default:
-                        return (int)OleConstants.MSOCMDERR_E_NOTSUPPORTED;
-                    }
-                }
-
-                return (int)OleConstants.MSOCMDERR_E_UNKNOWNGROUP;
-            }
-
-            private static uint ToCommandFlags(bool canExecute)
-            {
-                if (canExecute)
-                    return (uint)(OLECMDF.OLECMDF_SUPPORTED | OLECMDF.OLECMDF_ENABLED);
-                else
-                    return (uint)OLECMDF.OLECMDF_SUPPORTED;
-            }
         }
     }
 }
