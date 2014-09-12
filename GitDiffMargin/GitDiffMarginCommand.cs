@@ -11,6 +11,10 @@
         ShowDiff = 3,
         CopyOldText = 4,
 
+        ToggleCompareToIndex = 50,
+        CompareToIndex = 51,
+        CompareToHead = 52,
+
         GitDiffToolbar = 100,
 
         GitDiffToolbarGroup = 150,
