@@ -51,92 +51,114 @@ namespace GitDiffMargin.Git
                     return DiffResult.Empty;
                 }
 
-                var content = GetCompleteContent(textDocument, snapshot);
-                if (content == null)
-                    return DiffResult.Empty;
+                var relativeFilepath = filename;
+                if (relativeFilepath.StartsWith(workingDirectory, StringComparison.OrdinalIgnoreCase))
+                    relativeFilepath = relativeFilepath.Substring(workingDirectory.Length);
 
-                using (var currentContent = new MemoryStream(content))
+                string headPatchContent;
+                string indexPatchContent;
+                bool headSuppressRollback;
+                bool indexSuppressRollback;
+
+                if (!textDocument.IsDirty)
                 {
-                    var relativeFilepath = filename;
-                    if (relativeFilepath.StartsWith(workingDirectory, StringComparison.OrdinalIgnoreCase))
-                        relativeFilepath = relativeFilepath.Substring(workingDirectory.Length);
+                    string[] paths = { relativeFilepath };
+                    var headChanges = repo.Diff.Compare<Patch>(repo.Head.Tip.Tree, DiffTargets.WorkingDirectory, paths, compareOptions: new CompareOptions { ContextLines = ContextLines, InterhunkLines = 0 });
+                    headPatchContent = headChanges.Content;
+                    headSuppressRollback = (retrieveStatus & FileStatus.Untracked) != 0 || (retrieveStatus & FileStatus.Added) != 0;
 
-                    var newBlob = repo.ObjectDatabase.CreateBlob(currentContent, relativeFilepath);
-
-                    bool headSuppressRollback;
-                    bool indexSuppressRollback;
-                    Blob headBlob;
-                    Blob indexBlob;
-
-                    if ((retrieveStatus & FileStatus.Untracked) != 0 || (retrieveStatus & FileStatus.Added) != 0)
-                    {
-                        headSuppressRollback = true;
-
-                        // special handling for added files (would need updating to compare against index)
-                        using (var emptyContent = new MemoryStream())
-                        {
-                            headBlob = repo.ObjectDatabase.CreateBlob(emptyContent, relativeFilepath);
-                        }
-                    }
-                    else
-                    {
-                        headSuppressRollback = false;
-
-                        Commit from = repo.Head.Tip;
-                        TreeEntry fromEntry = from[relativeFilepath];
-                        if (fromEntry == null)
-                        {
-                            // try again using case-insensitive comparison
-                            Tree tree = from.Tree;
-                            foreach (string segment in relativeFilepath.Split(Path.DirectorySeparatorChar))
-                            {
-                                if (tree == null)
-                                    return DiffResult.Empty;
-
-                                fromEntry = tree.FirstOrDefault(i => string.Equals(segment, i.Name, StringComparison.OrdinalIgnoreCase));
-                                if (fromEntry == null)
-                                    return DiffResult.Empty;
-
-                                tree = fromEntry.Target as Tree;
-                            }
-                        }
-
-                        headBlob = fromEntry.Target as Blob;
-                        if (headBlob == null)
-                            return DiffResult.Empty;
-                    }
-
-                    if ((retrieveStatus & FileStatus.Untracked) != 0)
-                    {
-                        indexSuppressRollback = true;
-                        indexBlob = headBlob;
-                    }
-                    else
-                    {
-                        indexSuppressRollback = false;
-
-                        // the index matches the head unless a specific IndexEntry exists
-                        indexBlob = headBlob;
-                        foreach (var indexEntry in repo.Index)
-                        {
-                            if (string.Equals(indexEntry.Path, relativeFilepath, StringComparison.OrdinalIgnoreCase))
-                            {
-                                indexBlob = repo.Lookup<Blob>(indexEntry.Id);
-                                break;
-                            }
-                        }
-                    }
-
-                    ContentChanges treeChanges = repo.Diff.Compare(headBlob, newBlob, new CompareOptions { ContextLines = ContextLines, InterhunkLines = 0 });
-                    var gitDiffParser = new GitDiffParser(treeChanges.Patch, ContextLines, headSuppressRollback);
-                    var diffToHead = gitDiffParser.Parse();
-
-                    treeChanges = repo.Diff.Compare(indexBlob, newBlob, new CompareOptions { ContextLines = ContextLines, InterhunkLines = 0 });
-                    gitDiffParser = new GitDiffParser(treeChanges.Patch, ContextLines, indexSuppressRollback);
-                    var diffToIndex = gitDiffParser.Parse();
-
-                    return new DiffResult(diffToIndex, diffToHead);
+                    var indexChanges = repo.Diff.Compare<Patch>(paths, false, null, compareOptions: new CompareOptions { ContextLines = ContextLines, InterhunkLines = 0 });
+                    indexPatchContent = indexChanges.Content;
+                    indexSuppressRollback = (retrieveStatus & FileStatus.Untracked) != 0;
                 }
+                else
+                {
+
+                    var content = GetCompleteContent(textDocument, snapshot);
+                    if (content == null)
+                        return DiffResult.Empty;
+
+                    using (var currentContent = new MemoryStream(content))
+                    {
+                        var newBlob = repo.ObjectDatabase.CreateBlob(currentContent, relativeFilepath);
+
+                        Blob headBlob;
+                        Blob indexBlob;
+
+                        if ((retrieveStatus & FileStatus.Untracked) != 0 || (retrieveStatus & FileStatus.Added) != 0)
+                        {
+                            headSuppressRollback = true;
+
+                            // special handling for added files (would need updating to compare against index)
+                            using (var emptyContent = new MemoryStream())
+                            {
+                                headBlob = repo.ObjectDatabase.CreateBlob(emptyContent, relativeFilepath);
+                            }
+                        }
+                        else
+                        {
+                            headSuppressRollback = false;
+
+                            Commit from = repo.Head.Tip;
+                            TreeEntry fromEntry = from[relativeFilepath];
+                            if (fromEntry == null)
+                            {
+                                // try again using case-insensitive comparison
+                                Tree tree = from.Tree;
+                                foreach (string segment in relativeFilepath.Split(Path.DirectorySeparatorChar))
+                                {
+                                    if (tree == null)
+                                        return DiffResult.Empty;
+
+                                    fromEntry = tree.FirstOrDefault(i => string.Equals(segment, i.Name, StringComparison.OrdinalIgnoreCase));
+                                    if (fromEntry == null)
+                                        return DiffResult.Empty;
+
+                                    tree = fromEntry.Target as Tree;
+                                }
+                            }
+
+                            headBlob = fromEntry.Target as Blob;
+                            if (headBlob == null)
+                                return DiffResult.Empty;
+                        }
+
+                        if ((retrieveStatus & FileStatus.Untracked) != 0)
+                        {
+                            indexSuppressRollback = true;
+                            indexBlob = headBlob;
+                        }
+                        else
+                        {
+                            indexSuppressRollback = false;
+
+                            // the index matches the head unless a specific IndexEntry exists
+                            indexBlob = headBlob;
+                            foreach (var indexEntry in repo.Index)
+                            {
+                                if (string.Equals(indexEntry.Path, relativeFilepath, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    indexBlob = repo.Lookup<Blob>(indexEntry.Id);
+                                    break;
+                                }
+                            }
+                        }
+
+                        ContentChanges treeChanges = repo.Diff.Compare(headBlob, newBlob, new CompareOptions { ContextLines = ContextLines, InterhunkLines = 0 });
+                        headPatchContent = treeChanges.Patch;
+
+                        treeChanges = repo.Diff.Compare(indexBlob, newBlob, new CompareOptions { ContextLines = ContextLines, InterhunkLines = 0 });
+                        indexPatchContent = treeChanges.Patch;
+                    }
+                }
+
+                var gitDiffParser = new GitDiffParser(headPatchContent, ContextLines, headSuppressRollback);
+                var diffToHead = gitDiffParser.Parse();
+
+                gitDiffParser = new GitDiffParser(indexPatchContent, ContextLines, indexSuppressRollback);
+                var diffToIndex = gitDiffParser.Parse();
+
+                return new DiffResult(diffToIndex, diffToHead);
             }
         }
 
