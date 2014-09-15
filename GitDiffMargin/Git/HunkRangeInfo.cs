@@ -23,8 +23,8 @@ namespace GitDiffMargin.Git
             DiffLines = diffLines.ToList();
             SuppressRollback = suppressRollback;
             
-            IsAddition = DiffLines.All(s => s.StartsWith("+") || string.IsNullOrWhiteSpace(s));
-            IsDeletion = DiffLines.All(s => s.StartsWith("-") || string.IsNullOrWhiteSpace(s));
+            IsAddition = DiffLines.All(s => s.StartsWith("+") || s.StartsWith("\\") || string.IsNullOrWhiteSpace(s));
+            IsDeletion = DiffLines.All(s => s.StartsWith("-") || s.StartsWith("\\") || string.IsNullOrWhiteSpace(s));
             IsModification = !IsAddition && !IsDeletion;
 
             if (IsDeletion || IsModification)
