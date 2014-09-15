@@ -209,6 +209,9 @@ namespace GitDiffMargin.ViewModel
             _reverted = true;
             ShowPopup = false;
             IsVisible = false;
+
+            // Make sure the view is focused afterwards
+            MarginCore.TextView.VisualElement.Focus();
         }
 
         private void ShowPopUp()

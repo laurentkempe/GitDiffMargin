@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Media;
 using GitDiffMargin.Git;
 using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Editor;
 
 namespace GitDiffMargin.Core
 {
@@ -13,6 +14,7 @@ namespace GitDiffMargin.Core
 
         event EventHandler<HunksChangedEventArgs> HunksChanged;
 
+        IWpfTextView TextView { get; }
         IGitCommands GitCommands { get; }
         FontFamily FontFamily { get; }
         FontStretch FontStretch { get; }
