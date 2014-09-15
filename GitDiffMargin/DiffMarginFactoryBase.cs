@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.Composition;
 using GitDiffMargin.Core;
 using GitDiffMargin.Git;
-using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
@@ -19,9 +18,6 @@ namespace GitDiffMargin
 
         [Import]
         internal IEditorFormatMapService EditorFormatMapService { get; private set; }
-
-        [Import]
-        internal SVsServiceProvider ServiceProvider { get; private set; }
 
         [Import]
         internal IGitCommands GitCommands { get; private set; }
@@ -51,7 +47,7 @@ namespace GitDiffMargin
                 return null;
 
             return textViewHost.TextView.Properties.GetOrCreateSingletonProperty(
-                        () => new MarginCore(textViewHost.TextView, TextDocumentFactoryService, ClassificationFormatMapService, ServiceProvider, EditorFormatMapService, GitCommands));
+                        () => new MarginCore(textViewHost.TextView, TextDocumentFactoryService, ClassificationFormatMapService, EditorFormatMapService, GitCommands));
         }
     }
 }
