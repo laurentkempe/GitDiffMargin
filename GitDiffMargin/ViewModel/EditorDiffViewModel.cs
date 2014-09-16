@@ -1,13 +1,18 @@
 ﻿#region using
 
 using System;
+using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using GalaSoft.MvvmLight.Command;
 using GitDiffMargin.Core;
 using GitDiffMargin.Git;
-using System.Linq;
+using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
+using IOleCommandTarget = Microsoft.VisualStudio.OLE.Interop.IOleCommandTarget;
 
 #endregion
 
@@ -21,6 +26,9 @@ namespace GitDiffMargin.ViewModel
         private ICommand _copyOldTextCommand;
         private ICommand _rollbackCommand;
         private ICommand _showPopUpCommand;
+
+        private EditorDiffMarginViewModel _diffMarginViewModel;
+        private IVsToolbarTrayHost _toolbarTrayHost;
 
         internal EditorDiffViewModel(HunkRangeInfo hunkRangeInfo, IMarginCore marginCore, Action<DiffViewModel, HunkRangeInfo> updateDiffDimensions)
             : base(hunkRangeInfo, marginCore, updateDiffDimensions)
@@ -124,7 +132,29 @@ namespace GitDiffMargin.ViewModel
 
         public ICommand ShowPopUpCommand
         {
-            get { return _showPopUpCommand ?? (_showPopUpCommand = new RelayCommand(ShowPopUp)); }
+            get { return _showPopUpCommand ?? (_showPopUpCommand = new RelayCommand<EditorDiffMarginViewModel>(ShowPopUp)); }
+        }
+
+        public object ToolBarTray
+        {
+            get
+            {
+                if (_toolbarTrayHost == null)
+                    return null;
+
+                IVsUIElement toolbarTray;
+                ErrorHandler.ThrowOnFailure(_toolbarTrayHost.GetToolbarTray(out toolbarTray));
+
+                object uiObject;
+                ErrorHandler.ThrowOnFailure(toolbarTray.GetUIObject(out uiObject));
+
+                IVsUIWpfElement wpfElement = uiObject as IVsUIWpfElement;
+
+                object frameworkElement;
+                ErrorHandler.ThrowOnFailure(wpfElement.GetFrameworkElement(out frameworkElement));
+
+                return frameworkElement;
+            }
         }
 
         public bool ShowPopup
@@ -134,7 +164,31 @@ namespace GitDiffMargin.ViewModel
             {
                 if (value == _showPopup) return;
                 _showPopup = value;
+                if (value)
+                {
+                    IVsUIShell4 uiShell = Package.GetGlobalService(typeof(SVsUIShell)) as IVsUIShell4;
+                    if (uiShell != null)
+                    {
+                        IOleCommandTarget commandTarget = MarginCore.TextView.Properties.GetProperty<GitDiffMarginCommandHandler>(typeof(GitDiffMarginCommandHandler));
+
+                        IVsToolbarTrayHost toolbarTrayHost;
+                        ErrorHandler.ThrowOnFailure(uiShell.CreateToolbarTray(commandTarget, out toolbarTrayHost));
+
+                        Guid toolBarGuid = typeof(GitDiffMarginCommand).GUID;
+                        ErrorHandler.ThrowOnFailure(toolbarTrayHost.AddToolbar(ref toolBarGuid, (int)GitDiffMarginCommand.GitDiffToolbar));
+
+                        _toolbarTrayHost = toolbarTrayHost;
+                    }
+                }
+                else
+                {
+                    var toolbarTrayHost = Interlocked.Exchange(ref _toolbarTrayHost, null);
+                    if (toolbarTrayHost != null)
+                        ErrorHandler.CallWithCOMConvention(() => toolbarTrayHost.Close());
+                }
+
                 RaisePropertyChanged(() => ShowPopup);
+                RaisePropertyChanged(() => ToolBarTray);
             }
         }
 
@@ -214,8 +268,9 @@ namespace GitDiffMargin.ViewModel
             MarginCore.TextView.VisualElement.Focus();
         }
 
-        private void ShowPopUp()
+        private void ShowPopUp(EditorDiffMarginViewModel diffMarginViewModel)
         {
+            _diffMarginViewModel = diffMarginViewModel;
             ShowPopup = true;
         }
     }

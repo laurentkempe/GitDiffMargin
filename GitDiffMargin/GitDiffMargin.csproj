@@ -14,7 +14,8 @@
     <AssemblyName>GitDiffMargin</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <GeneratePkgDefFile>false</GeneratePkgDefFile>
+    <UseCodebase>true</UseCodebase>
+    <GeneratePkgDefFile>true</GeneratePkgDefFile>
     <Utf8Output>true</Utf8Output>
     <ExpressionBlendVersion>4.0.30816.0</ExpressionBlendVersion>
     <FileUpgradeFlags>
@@ -109,6 +110,10 @@
       <Private>False</Private>
       <HintPath>..\packages\VSSDK.CoreUtility.10.10.0.2\lib\net40\Microsoft.VisualStudio.CoreUtility.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.Editor, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <Private>False</Private>
+      <HintPath>..\packages\VSSDK.Editor.10.10.0.2\lib\net40\Microsoft.VisualStudio.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <Private>False</Private>
       <HintPath>..\packages\VSSDK.OLE.Interop.7.0.2\lib\net20\Microsoft.VisualStudio.OLE.Interop.dll</HintPath>
@@ -124,6 +129,11 @@
     <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <Private>False</Private>
       <HintPath>..\packages\VSSDK.Shell.Interop.7.0.2\lib\net20\Microsoft.VisualStudio.Shell.Interop.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <Private>False</Private>
+      <HintPath>..\packages\VSSDK.Shell.Interop.10.10.0.2\lib\net20\Microsoft.VisualStudio.Shell.Interop.10.0.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <Private>False</Private>
@@ -176,8 +186,13 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandFilter.cs" />
     <Compile Include="Core\BackgroundParser.cs" />
     <Compile Include="Core\HunksChangedEventArgs.cs" />
+    <Compile Include="GitDiffMarginCommand.cs" />
+    <Compile Include="GitDiffMarginCommandHandler.cs" />
+    <Compile Include="GitDiffMarginPackage.cs" />
+    <Compile Include="GitDiffMarginTextViewCreationListener.cs" />
     <Compile Include="Settings\DiffAdditionEditorFormatDefinition.cs" />
     <Compile Include="DiffMarginBase.cs" />
     <Compile Include="Settings\DiffModificationEditorFormatDefinition.cs" />
@@ -201,6 +216,7 @@
     <Compile Include="ScrollDiffMargin.cs" />
     <Compile Include="ScrollDiffMarginFactory2010.cs" />
     <Compile Include="ScrollDiffMarginFactory2013.cs" />
+    <Compile Include="TextViewCommandFilter.cs" />
     <Compile Include="ViewModel\DiffMarginViewModelBase.cs" />
     <Compile Include="ViewModel\EditorDiffMarginViewModel.cs" />
     <Compile Include="ViewModel\DiffViewModel.cs" />
@@ -245,15 +261,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Resource Include="Resources\Rollback.png" />
-    <Resource Include="Resources\ShowDifference.png" />
-    <Resource Include="Resources\NextArrow.png" />
-    <Resource Include="Resources\CopyOldText.png" />
+    <Content Include="Resources\Rollback.png" />
+    <Content Include="Resources\ShowDifference.png" />
+    <Content Include="Resources\NextArrow.png" />
+    <Content Include="Resources\CopyOldText.png" />
     <Content Include="Resources\Git-Icon-1788C.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Resource Include="Resources\PreviousArrow.png" />
+    <Content Include="Resources\PreviousArrow.png" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="View\EditorDiffMarginControl.xaml">
@@ -264,6 +280,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <VSCTCompile Include="GitDiffMargin.vsct">
+      <ResourceName>Menus.ctmenu</ResourceName>
+    </VSCTCompile>
+    <EmbeddedResource Include="VSPackage.resx">
+      <ManifestResourceName>VSPackage</ManifestResourceName>
+      <MergeWithCTO>true</MergeWithCTO>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Condition="Exists($(VsSdkTargets))" Project="$(VsSdkTargets)" />
