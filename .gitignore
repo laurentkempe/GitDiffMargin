@@ -22,3 +22,5 @@ Thumbs.db
 # Exclusions for other IDE extensions 
 _ReSharper*/
 *.dotcover
+*.ncrunchproject
+*.ncrunchsolution
