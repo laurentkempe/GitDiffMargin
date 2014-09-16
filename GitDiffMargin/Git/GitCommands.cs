@@ -165,7 +165,7 @@ namespace GitDiffMargin.Git
                 var blob = repo.Lookup<Blob>(indexEntry.Id);
 
                 var tempFileName = Path.GetTempFileName();
-                File.WriteAllText(tempFileName, blob.GetContentText());
+                File.WriteAllText(tempFileName, blob.GetContentText(new FilteringOptions(relativePath)));
                 File.SetAttributes(tempFileName, File.GetAttributes(tempFileName) | FileAttributes.ReadOnly);
 
                 string remoteFile;
