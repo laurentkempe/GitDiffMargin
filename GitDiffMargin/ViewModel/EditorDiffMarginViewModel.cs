@@ -1,7 +1,6 @@
 #region using
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using GalaSoft.MvvmLight.Command;
 using GitDiffMargin.Core;
@@ -56,12 +55,12 @@ namespace GitDiffMargin.ViewModel
             MoveToChange(currentEditorDiffViewModel, +1);
         }
 
-        private void MoveToChange(DiffViewModel currentDiffViewModel, int indexModifier)
+        public void MoveToChange(DiffViewModel currentDiffViewModel, int indexModifier)
         {
             var diffViewModelIndex = DiffViewModels.IndexOf(currentDiffViewModel) + indexModifier;
             var diffViewModel  = DiffViewModels[diffViewModelIndex];
 
-            MarginCore.MoveToChange(diffViewModel.LineNumber);    
+            MarginCore.MoveToChange(diffViewModel.LineNumber);
 
             ((EditorDiffViewModel)currentDiffViewModel).ShowPopup = false;
         }

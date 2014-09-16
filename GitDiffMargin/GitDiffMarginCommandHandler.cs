@@ -52,16 +52,7 @@
                                 return OLECMDF.OLECMDF_SUPPORTED;
                         }
 
-                        // TODO: Until the following block is implemented, the keyboard bindings for Previous Change and
-                        // Next Change will only work when a popup is shown.
-                        if ((GitDiffMarginCommand)commandId == GitDiffMarginCommand.NextChange)
-                        {
-                            // TODO: Get the first diff starting after the caret.
-                        }
-                        else
-                        {
-                            // TODO: Get the last diff starting before the caret.
-                        }
+                        diffViewModel = GetDiffViewModelToMoveTo(commandId, viewModel);
 
                         if (diffViewModel != null)
                             return OLECMDF.OLECMDF_SUPPORTED | OLECMDF.OLECMDF_ENABLED;
@@ -139,19 +130,12 @@
                             return true;
                         }
 
-                        // TODO: Until the following block is implemented, the keyboard bindings for Previous Change and
-                        // Next Change will only work when a popup is shown.
-                        if ((GitDiffMarginCommand)commandId == GitDiffMarginCommand.NextChange)
-                        {
-                            // TODO: Get the first diff starting after the caret.
-                        }
-                        else
-                        {
-                            // TODO: Get the last diff starting before the caret.
-                        }
+                        diffViewModel = GetDiffViewModelToMoveTo(commandId, viewModel);
 
-                        // TODO: Implement direct jump
-                        return false;
+                        if (diffViewModel == null) return false;
+
+                        viewModel.MoveToChange(diffViewModel, 0);
+                        return true;
                     }
 
                 case GitDiffMarginCommand.RollbackChange:
@@ -186,6 +170,15 @@
             }
 
             return false;
+        }
+
+        private EditorDiffViewModel GetDiffViewModelToMoveTo(uint commandId, DiffMarginViewModelBase viewModel)
+        {
+            var lineNumber = _textView.Caret.Position.BufferPosition.GetContainingLine().LineNumber;
+
+            return (GitDiffMarginCommand) commandId == GitDiffMarginCommand.NextChange ?
+                viewModel.DiffViewModels.OfType<EditorDiffViewModel>().FirstOrDefault(model => model.LineNumber > lineNumber) :
+                viewModel.DiffViewModels.OfType<EditorDiffViewModel>().LastOrDefault(model => model.LineNumber < lineNumber);
         }
 
         private bool TryGetMarginViewModel(out EditorDiffMarginViewModel viewModel)
