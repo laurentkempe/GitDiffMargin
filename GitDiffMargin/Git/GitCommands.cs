@@ -1,20 +1,28 @@
-﻿using System;
+﻿extern alias vs11;
+using System;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using LibGit2Sharp;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
+using __VSDIFFSERVICEOPTIONS = vs11::Microsoft.VisualStudio.Shell.Interop.__VSDIFFSERVICEOPTIONS;
+using IVsDifferenceService = vs11::Microsoft.VisualStudio.Shell.Interop.IVsDifferenceService;
+using SVsDifferenceService = vs11::Microsoft.VisualStudio.Shell.Interop.SVsDifferenceService;
 
 namespace GitDiffMargin.Git
 {
     [Export(typeof(IGitCommands))]
     public class GitCommands : IGitCommands
     {
+        private readonly SVsServiceProvider _serviceProvider;
+
         [ImportingConstructor]
-        public GitCommands()
+        public GitCommands(SVsServiceProvider serviceProvider)
         {
+            _serviceProvider = serviceProvider;
         }
 
         private const int ContextLines = 0;
@@ -191,7 +199,7 @@ namespace GitDiffMargin.Git
             "|" + "(?:" + QuotedParameterPattern + "(?:" + UnquotedParameterPattern + QuotedParameterPattern + ")*" + "(?:" + UnquotedParameterPattern + ")?" + ")" +
             ")";
 
-        public void StartExternalDiff(ITextDocument textDocument)
+        public void StartExternalDiff(ITextDocument textDocument, bool compareToIndex)
         {
             if (textDocument == null || string.IsNullOrEmpty(textDocument.FilePath)) return;
 
@@ -203,48 +211,122 @@ namespace GitDiffMargin.Git
 
             using (var repo = new Repository(repositoryPath))
             {
-                var diffGuiTool = repo.Config.Get<string>("diff.guitool");
-                if (diffGuiTool == null)
-                {
-                    diffGuiTool = repo.Config.Get<string>("diff.tool");
-                    if (diffGuiTool == null)
-                        return;
-                }
-
-                var diffCmd = repo.Config.Get<string>("difftool." + diffGuiTool.Value + ".cmd");
-                if (diffCmd == null || diffCmd.Value == null)
-                    return;
-
                 string workingDirectory = repo.Info.WorkingDirectory;
                 string relativePath = Path.GetFullPath(filename);
                 if (relativePath.StartsWith(workingDirectory, StringComparison.OrdinalIgnoreCase))
                     relativePath = relativePath.Substring(workingDirectory.Length);
 
-                var indexEntry = repo.Index[relativePath];
-                var blob = repo.Lookup<Blob>(indexEntry.Id);
+                // the name of the object in the database
+                string objectName = Path.GetFileName(filename);
 
-                var tempFileName = Path.GetTempFileName();
-                File.WriteAllText(tempFileName, blob.GetContentText(new FilteringOptions(relativePath)));
-                File.SetAttributes(tempFileName, File.GetAttributes(tempFileName) | FileAttributes.ReadOnly);
-
-                string remoteFile;
-                if (textDocument.IsDirty)
+                IndexEntry indexEntry = null;
+                Blob oldBlob = null;
+                if (compareToIndex)
                 {
-                    remoteFile = Path.GetTempFileName();
-                    File.WriteAllBytes(remoteFile, GetCompleteContent(textDocument, textDocument.TextBuffer.CurrentSnapshot));
-                    File.SetAttributes(remoteFile, File.GetAttributes(remoteFile) | FileAttributes.ReadOnly);
+                    indexEntry = repo.Index[relativePath];
+                    if (indexEntry != null)
+                    {
+                        objectName = Path.GetFileName(indexEntry.Path);
+                        oldBlob = repo.Lookup<Blob>(indexEntry.Id);
+                    }
                 }
                 else
                 {
-                    remoteFile = filename;
+                    var headEntry = repo.Head[relativePath];
+                    if (headEntry != null)
+                    {
+                        objectName = Path.GetFileName(headEntry.Path);
+                        oldBlob = repo.Lookup<Blob>(headEntry.Target.Id);
+                    }
                 }
 
-                var cmd = diffCmd.Value.Replace("$LOCAL", tempFileName).Replace("$REMOTE", remoteFile);
+                var tempFileName = Path.GetTempFileName();
+                if (oldBlob != null)
+                    File.WriteAllText(tempFileName, oldBlob.GetContentText(new FilteringOptions(relativePath)));
 
-                string fileName = Regex.Match(cmd, ParameterPattern).Value;
-                string arguments = cmd.Substring(fileName.Length);
-                ProcessStartInfo startInfo = new ProcessStartInfo(fileName, arguments);
-                Process.Start(startInfo);
+                IVsDifferenceService differenceService = _serviceProvider.GetService(typeof(SVsDifferenceService)) as IVsDifferenceService;
+                if (differenceService != null)
+                {
+                    string leftFileMoniker = tempFileName;
+                    // The difference service will automatically load the text from the file open in the editor, even if
+                    // it has changed.
+                    string rightFileMoniker = filename;
+
+                    string actualFilename = objectName;
+                    string tempPrefix = Path.GetRandomFileName().Substring(0, 5);
+                    string caption = string.Format("{0}_{1} vs. {1}", tempPrefix, actualFilename);
+
+                    string tooltip = null;
+
+                    string leftLabel;
+                    if (indexEntry != null)
+                    {
+                        // determine if the file has been staged
+                        string revision;
+                        FileStatus stagedMask = FileStatus.Added | FileStatus.Staged;
+                        if ((repo.Index.RetrieveStatus(relativePath) & stagedMask) != 0)
+                            revision = "index";
+                        else
+                            revision = repo.Head.Tip.Sha.Substring(0, 7);
+
+                        leftLabel = string.Format("{0}@{1}", objectName, revision);
+                    }
+                    else if (oldBlob != null)
+                    {
+                        // file was added
+                        leftLabel = null;
+                    }
+                    else
+                    {
+                        // we just compared to head
+                        leftLabel = string.Format("{0}@{1}", objectName, repo.Head.Tip.Sha.Substring(0, 7));
+                    }
+
+                    string rightLabel = filename;
+
+                    string inlineLabel = null;
+                    string roles = null;
+                    __VSDIFFSERVICEOPTIONS grfDiffOptions = __VSDIFFSERVICEOPTIONS.VSDIFFOPT_LeftFileIsTemporary;
+                    differenceService.OpenComparisonWindow2(leftFileMoniker, rightFileMoniker, caption, tooltip, leftLabel, rightLabel, inlineLabel, roles, (uint)grfDiffOptions);
+
+                    File.Delete(tempFileName);
+                }
+                else
+                {
+                    // Can't use __VSDIFFSERVICEOPTIONS, so mark the temporary file(s) read only on disk
+                    File.SetAttributes(tempFileName, File.GetAttributes(tempFileName) | FileAttributes.ReadOnly);
+
+                    string remoteFile;
+                    if (textDocument.IsDirty)
+                    {
+                        remoteFile = Path.GetTempFileName();
+                        File.WriteAllBytes(remoteFile, GetCompleteContent(textDocument, textDocument.TextBuffer.CurrentSnapshot));
+                        File.SetAttributes(remoteFile, File.GetAttributes(remoteFile) | FileAttributes.ReadOnly);
+                    }
+                    else
+                    {
+                        remoteFile = filename;
+                    }
+
+                    var diffGuiTool = repo.Config.Get<string>("diff.guitool");
+                    if (diffGuiTool == null)
+                    {
+                        diffGuiTool = repo.Config.Get<string>("diff.tool");
+                        if (diffGuiTool == null)
+                            return;
+                    }
+
+                    var diffCmd = repo.Config.Get<string>("difftool." + diffGuiTool.Value + ".cmd");
+                    if (diffCmd == null || diffCmd.Value == null)
+                        return;
+
+                    var cmd = diffCmd.Value.Replace("$LOCAL", tempFileName).Replace("$REMOTE", remoteFile);
+
+                    string fileName = Regex.Match(cmd, ParameterPattern).Value;
+                    string arguments = cmd.Substring(fileName.Length);
+                    ProcessStartInfo startInfo = new ProcessStartInfo(fileName, arguments);
+                    Process.Start(startInfo);
+                }
             }
         }
 

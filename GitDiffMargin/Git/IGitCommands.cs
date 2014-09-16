@@ -10,7 +10,7 @@ namespace GitDiffMargin.Git
     {
         DiffResult GetGitDiffFor(ITextDocument textDocument, ITextSnapshot snapshot);
 
-        void StartExternalDiff(ITextDocument textDocument);
+        void StartExternalDiff(ITextDocument textDocument, bool compareToIndex);
 
         /// <summary>
         /// Determines if a file or directory is located within a Git repository.
