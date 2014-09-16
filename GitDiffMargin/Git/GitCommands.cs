@@ -144,9 +144,17 @@ namespace GitDiffMargin.Git
 
             using (var repo = new Repository(repositoryPath))
             {
-                var diffGuiTool = repo.Config.Get<string>("diff.tool");
+                var diffGuiTool = repo.Config.Get<string>("diff.guitool");
+                if (diffGuiTool == null)
+                {
+                    diffGuiTool = repo.Config.Get<string>("diff.tool");
+                    if (diffGuiTool == null)
+                        return;
+                }
 
-                if (diffGuiTool == null) return;
+                var diffCmd = repo.Config.Get<string>("difftool." + diffGuiTool.Value + ".cmd");
+                if (diffCmd == null || diffCmd.Value == null)
+                    return;
 
                 string workingDirectory = repo.Info.WorkingDirectory;
                 string relativePath = Path.GetFullPath(filename);
