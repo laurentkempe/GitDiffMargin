@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using LibGit2Sharp;
 using Microsoft.VisualStudio.Text;
 
@@ -132,6 +133,19 @@ namespace GitDiffMargin.Git
             return completeContent;
         }
 
+        // http://msdn.microsoft.com/en-us/library/17w5ykft.aspx
+        private const string UnquotedParameterPattern = @"[^ \t""]+";
+        private const string QuotedParameterPattern = @"""(?:[^\\""]|\\[\\""]|\\[^\\""])*""";
+
+        // Two alternatives:
+        //   Unquoted (Quoted Unquoted)* Quoted?
+        //   Quoted (Unquoted Quoted)* Unquoted?
+        private const string ParameterPattern =
+            "^(?:" +
+            "(?:" + UnquotedParameterPattern + "(?:" + QuotedParameterPattern + UnquotedParameterPattern + ")*" + "(?:" + QuotedParameterPattern + ")?" + ")" +
+            "|" + "(?:" + QuotedParameterPattern + "(?:" + UnquotedParameterPattern + QuotedParameterPattern + ")*" + "(?:" + UnquotedParameterPattern + ")?" + ")" +
+            ")";
+
         public void StartExternalDiff(ITextDocument textDocument)
         {
             if (textDocument == null || string.IsNullOrEmpty(textDocument.FilePath)) return;
@@ -180,22 +194,12 @@ namespace GitDiffMargin.Git
                     remoteFile = filename;
                 }
 
-                var diffCmd = repo.Config.Get<string>("difftool." + diffGuiTool.Value + ".cmd");
                 var cmd = diffCmd.Value.Replace("$LOCAL", tempFileName).Replace("$REMOTE", remoteFile);
 
-                var si = new STARTUPINFO();
-                PROCESS_INFORMATION pi;
-                CreateProcess(
-                    null,
-                    cmd,
-                    IntPtr.Zero,
-                    IntPtr.Zero,
-                    false,
-                    0,
-                    IntPtr.Zero,
-                    null,
-                    ref si,
-                    out pi);
+                string fileName = Regex.Match(cmd, ParameterPattern).Value;
+                string arguments = cmd.Substring(fileName.Length);
+                ProcessStartInfo startInfo = new ProcessStartInfo(fileName, arguments);
+                Process.Start(startInfo);
             }
         }
 
@@ -231,49 +235,6 @@ namespace GitDiffMargin.Git
 
                 return Path.GetFullPath(workingDirectory);
             }
-        }
-
-        [DllImport("kernel32.dll")]
-        static extern bool CreateProcess(
-            string lpApplicationName,
-            string lpCommandLine,
-            IntPtr lpProcessAttributes,
-            IntPtr lpThreadAttributes,
-            bool bInheritHandles,
-            uint dwCreationFlags,
-            IntPtr lpEnvironment,
-            string lpCurrentDirectory,
-            ref STARTUPINFO lpStartupInfo,
-            out PROCESS_INFORMATION lpProcessInformation);
-
-        public struct PROCESS_INFORMATION
-        {
-            public IntPtr hProcess;
-            public IntPtr hThread;
-            public uint dwProcessId;
-            public uint dwThreadId;
-        }
-        
-        public struct STARTUPINFO
-        {
-            public uint cb;
-            public string lpReserved;
-            public string lpDesktop;
-            public string lpTitle;
-            public uint dwX;
-            public uint dwY;
-            public uint dwXSize;
-            public uint dwYSize;
-            public uint dwXCountChars;
-            public uint dwYCountChars;
-            public uint dwFillAttribute;
-            public uint dwFlags;
-            public short wShowWindow;
-            public short cbReserved2;
-            public IntPtr lpReserved2;
-            public IntPtr hStdInput;
-            public IntPtr hStdOutput;
-            public IntPtr hStdError;
         }
     }
 }
