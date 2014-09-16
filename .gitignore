@@ -1,5 +1,4 @@
 # NuGet files managed during the build
-/.nuget/NuGet.exe
 /packages/
 
 # Build output
