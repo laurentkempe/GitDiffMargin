@@ -23,8 +23,7 @@
         <Icon guid="IconPreviousArrow" id="1"/>
         <CommandFlag>DefaultDisabled</CommandFlag>
         <Strings>
-          <!-- Uncommenting the following line exposes the command for key binding -->
-          <!--<LocCanonicalName>GitDiffMargin.PreviousChange</LocCanonicalName>-->
+          <LocCanonicalName>GitDiffMargin.PreviousChange</LocCanonicalName>
           <ButtonText>Previous</ButtonText>
           <MenuText>Previous Change</MenuText>
           <ToolTipText>Jump to Previous Change</ToolTipText>
@@ -36,8 +35,7 @@
         <Icon guid="IconNextArrow" id="1"/>
         <CommandFlag>DefaultDisabled</CommandFlag>
         <Strings>
-          <!-- Uncommenting the following line exposes the command for key binding -->
-          <!--<LocCanonicalName>GitDiffMargin.NextChange</LocCanonicalName>-->
+          <LocCanonicalName>GitDiffMargin.NextChange</LocCanonicalName>
           <ButtonText>Next</ButtonText>
           <MenuText>Next Change</MenuText>
           <ToolTipText>Jump to Next Change</ToolTipText>
