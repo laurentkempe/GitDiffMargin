@@ -1,8 +1,9 @@
 # Git Diff Margin [![Build status](https://ci.appveyor.com/api/projects/status/42u2e3db3exo546p)](https://ci.appveyor.com/project/laurentkempe/gitdiffmargin)
 
 
-Git Diff Margin displays live Git changes of the currently edited file on Visual Studio 2013 margin and scroll bar
+Git Diff Margin displays live Git changes of the currently edited file on Visual Studio margin and scroll bar.
 
+* Supports Visual Studio 2010 through Visual Studio 14 "CTP"
 * Quickly view all current file changes on
     * Left margin
     * Scroll Bars in map and bar mode with and without source overview
