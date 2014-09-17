@@ -222,7 +222,7 @@ namespace GitDiffMargin.ViewModel
             var document = MarginCore.GetTextDocument();
             if (document != null)
             {
-                MarginCore.GitCommands.StartExternalDiff(document);
+                MarginCore.GitCommands.StartExternalDiff(document, MarginCore.TextView.Options.GetOptionValue(GitDiffMarginTextViewOptions.CompareToIndexId));
             } 
         }
 

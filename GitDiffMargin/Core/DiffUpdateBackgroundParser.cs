@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GitDiffMargin.Git;
@@ -102,7 +101,7 @@ namespace GitDiffMargin.Core
                 if (!TextDocumentFactoryService.TryGetTextDocument(_documentBuffer, out textDocument)) return;
 
                 var diff = _commands.GetGitDiffFor(textDocument, snapshot);
-                var result = new DiffParseResultEventArgs(snapshot, stopwatch.Elapsed, diff.ToList());
+                var result = new DiffParseResultEventArgs(snapshot, stopwatch.Elapsed, diff.DiffToIndex, diff.DiffToHead);
                 OnParseComplete(result);
             }
             catch (InvalidOperationException)

@@ -4,9 +4,8 @@ namespace GitDiffMargin
 {
     public static class GitDiffMarginTextViewOptions
     {
-        public const string DiffMarginName = EditorDiffMargin.MarginNameConst + "/DiffMarginName";
+        public static EditorOptionKey<bool> DiffMarginEnabledId = new EditorOptionKey<bool>("GitDiffMargin/DiffMarginEnabled");
 
-        public static readonly EditorOptionKey<bool> DiffMarginId = new EditorOptionKey<bool>(DiffMarginName);
-
+        public static EditorOptionKey<bool> CompareToIndexId = new EditorOptionKey<bool>("GitDiffMargin/CompareToIndex");
     }
 }

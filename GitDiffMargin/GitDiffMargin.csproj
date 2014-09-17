@@ -133,6 +133,12 @@
       <Private>False</Private>
       <HintPath>..\packages\VSSDK.Shell.Interop.10.10.0.2\lib\net20\Microsoft.VisualStudio.Shell.Interop.10.0.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.11.0, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <Private>False</Private>
+      <HintPath>..\packages\VSSDK.Shell.Interop.11.11.0.2\lib\net20\Microsoft.VisualStudio.Shell.Interop.11.0.dll</HintPath>
+      <Aliases>vs11</Aliases>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <Private>False</Private>
       <HintPath>..\packages\VSSDK.Shell.Interop.8.8.0.2\lib\net20\Microsoft.VisualStudio.Shell.Interop.8.0.dll</HintPath>
@@ -191,6 +197,7 @@
     <Compile Include="GitDiffMarginCommandHandler.cs" />
     <Compile Include="GitDiffMarginPackage.cs" />
     <Compile Include="GitDiffMarginTextViewCreationListener.cs" />
+    <Compile Include="Git\DiffResult.cs" />
     <Compile Include="Settings\DiffAdditionEditorFormatDefinition.cs" />
     <Compile Include="DiffMarginBase.cs" />
     <Compile Include="Settings\DiffModificationEditorFormatDefinition.cs" />
@@ -214,6 +221,8 @@
     <Compile Include="ScrollDiffMargin.cs" />
     <Compile Include="ScrollDiffMarginFactory2010.cs" />
     <Compile Include="ScrollDiffMarginFactory2013.cs" />
+    <Compile Include="Settings\CompareToIndex.cs" />
+    <Compile Include="Settings\DiffMarginEnabled.cs" />
     <Compile Include="TextViewCommandFilter.cs" />
     <Compile Include="ViewModel\DiffMarginViewModelBase.cs" />
     <Compile Include="ViewModel\EditorDiffMarginViewModel.cs" />

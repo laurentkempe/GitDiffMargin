@@ -3,7 +3,6 @@ using System.Windows;
 using System.Windows.Controls;
 using GitDiffMargin.ViewModel;
 using Microsoft.VisualStudio.Text.Editor;
-using Microsoft.VisualStudio.Text.Editor.OptionsExtensionMethods;
 
 namespace GitDiffMargin
 {
@@ -53,7 +52,7 @@ namespace GitDiffMargin
         {
             get
             {
-                return TextView.Options.IsSelectionMarginEnabled();
+                return TextView.Options.GetOptionValue(GitDiffMarginTextViewOptions.DiffMarginEnabledId);
             }
         }
 
@@ -68,7 +67,10 @@ namespace GitDiffMargin
 
         private void HandleOptionChanged(object sender, EditorOptionChangedEventArgs e)
         {
-            if (!_isDisposed && e.OptionId == GitDiffMarginTextViewOptions.DiffMarginName)
+            if (_isDisposed)
+                return;
+
+            if (string.Equals(e.OptionId, GitDiffMarginTextViewOptions.DiffMarginEnabledId.Name, StringComparison.Ordinal))
             {
                 UpdateVisibility();
             }
