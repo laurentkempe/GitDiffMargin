@@ -19,7 +19,7 @@ Git Diff Margin displays live Git changes of the currently edited file on Visual
 * Support Visual Studio 2013 Dark, Light and Blue Theme
 * Support zoom
 
-![Screenshot](https://c2.staticflickr.com/6/5584/14880092457_5b32e67a6a.jpg)
+![Screenshot](http://i1.visualstudiogallery.msdn.s-msft.com/cf49cf30-2ca6-4ea0-b7cc-6a8e0dadc1a8/image/file/142621/1/gitdiffmargin-preview.png)
 
 Perfect companion of [Visual Studio Tools for Git](http://visualstudiogallery.msdn.microsoft.com/abafc7d6-dcaa-40f4-8a5e-d6724bdb980c)
 
