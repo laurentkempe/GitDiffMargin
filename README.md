@@ -27,7 +27,7 @@ Perfect companion of [Visual Studio Tools for Git](http://visualstudiogallery.ms
 
 Grab it from inside of Visual Studio's Extension Manager, or via the [Extension Gallery link](http://visualstudiogallery.msdn.microsoft.com/cf49cf30-2ca6-4ea0-b7cc-6a8e0dadc1a8)
 
-Or use the [Chocolatey installation](https://chocolatey.org/packages/GitDiffMargin.vs2013/2.0.0)
+Or use the [Chocolatey installation](https://chocolatey.org/packages/GitDiffMargin)
 
 ## Video
 
