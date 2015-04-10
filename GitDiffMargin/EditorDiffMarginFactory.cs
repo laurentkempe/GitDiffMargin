@@ -10,7 +10,7 @@ namespace GitDiffMargin
 {
     [Export(typeof (IWpfTextViewMarginProvider))]
     [Name(EditorDiffMargin.MarginNameConst)]
-    [Order(Before = PredefinedMarginNames.LineNumber)]
+    [Order(After = PredefinedMarginNames.Spacer, Before = PredefinedMarginNames.Outlining)]
     [MarginContainer(PredefinedMarginNames.LeftSelection)]
     [ContentType("text")]
     [TextViewRole(PredefinedTextViewRoles.Editable)]
