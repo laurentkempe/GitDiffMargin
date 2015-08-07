@@ -3,7 +3,7 @@
   <Identifier Id="GitDiffMargin..5ef9f816-d9ce-45cd-a8fa-cd67a807df0e">
     <Name>Git Diff Margin</Name>
     <Author>Laurent Kempé</Author>
-    <Version>3.0.0.0</Version>
+    <Version>3.1.0.0</Version>
     <Description xml:space="preserve">Git Diff Margin displays live changes of the currently edited file on Visual Studio 2010+ margin and scroll bar.</Description>
     <MoreInfoUrl>https://github.com/laurentkempe/GitDiffMargin</MoreInfoUrl>
     <GettingStartedGuide>http://visualstudiogallery.msdn.microsoft.com/cf49cf30-2ca6-4ea0-b7cc-6a8e0dadc1a8</GettingStartedGuide>
