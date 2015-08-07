@@ -1,0 +1,14 @@
+version: 1.0.{build}
+configuration: Release
+platform: Any CPU
+init:
+- ps: git config --global core.autocrlf true
+before_build:
+- nuget restore
+build:
+  verbosity: minimal
+artifacts:
+- path: '**\*.vsix'
+# preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
+cache:
+  - packages -> **\packages.config
