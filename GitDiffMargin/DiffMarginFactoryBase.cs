@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.Composition;
+﻿using System;
+using System.ComponentModel.Composition;
+using System.IO;
+using System.Security;
 using GitDiffMargin.Core;
 using GitDiffMargin.Git;
 using Microsoft.VisualStudio.Text;
@@ -41,13 +44,43 @@ namespace GitDiffMargin
             if (!TextDocumentFactoryService.TryGetTextDocument(documentBuffer, out textDocument))
                 return null;
 
-            var filename = textDocument.FilePath;
-            var repositoryPath = GitCommands.GetGitRepository(Path.GetFullPath(filename));
+            var fullPath= GetFullPath(textDocument.FilePath);
+            if (fullPath == null)
+                return null;
+
+            var repositoryPath = GitCommands.GetGitRepository(fullPath);
             if (repositoryPath == null)
                 return null;
 
             return textViewHost.TextView.Properties.GetOrCreateSingletonProperty(
                         () => new MarginCore(textViewHost.TextView, TextDocumentFactoryService, ClassificationFormatMapService, EditorFormatMapService, GitCommands));
+        }
+
+        private static string GetFullPath(string filename)
+        {
+            if (filename == null)
+                return null;
+
+            try
+            {
+                return Path.GetFullPath(filename);
+            }
+            catch (ArgumentException)
+            {
+                return null;
+            }
+            catch (SecurityException)
+            {
+                return null;
+            }
+            catch (NotSupportedException)
+            {
+                return null;
+            }
+            catch (PathTooLongException)
+            {
+                return null;
+            }
         }
     }
 }
