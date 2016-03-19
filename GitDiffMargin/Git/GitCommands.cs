@@ -41,7 +41,7 @@ namespace GitDiffMargin.Git
                 if (workingDirectory == null)
                     yield break;
 
-                var retrieveStatus = repo.Index.RetrieveStatus(filename);
+                var retrieveStatus = repo.RetrieveStatus(filename);
                 if (retrieveStatus == FileStatus.Nonexistent)
                 {
                     // this occurs if a file within the repository itself (not the working copy) is opened.
@@ -74,7 +74,7 @@ namespace GitDiffMargin.Git
                     bool suppressRollback;
                     Blob blob;
 
-                    if ((retrieveStatus & FileStatus.Untracked) != 0 || (retrieveStatus & FileStatus.Added) != 0)
+                    if ((retrieveStatus & FileStatus.NewInWorkdir) != 0 || (retrieveStatus & FileStatus.NewInIndex) != 0)
                     {
                         suppressRollback = true;
 
@@ -205,8 +205,8 @@ namespace GitDiffMargin.Git
                     {
                         // determine if the file has been staged
                         string revision;
-                        FileStatus stagedMask = FileStatus.Added | FileStatus.Staged;
-                        if ((repo.Index.RetrieveStatus(relativePath) & stagedMask) != 0)
+                        var stagedMask = FileStatus.NewInIndex | FileStatus.ModifiedInIndex;
+                        if ((repo.RetrieveStatus(relativePath) & stagedMask) != 0)
                             revision = "index";
                         else
                             revision = repo.Head.Tip.Sha.Substring(0, 7);
