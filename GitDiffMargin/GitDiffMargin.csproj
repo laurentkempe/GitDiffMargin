@@ -201,6 +201,7 @@
     <Compile Include="GitDiffMarginCommandHandler.cs" />
     <Compile Include="GitDiffMarginPackage.cs" />
     <Compile Include="GitDiffMarginTextViewCreationListener.cs" />
+    <Compile Include="Git\DiffResult.cs" />
     <Compile Include="Settings\DiffAdditionEditorFormatDefinition.cs" />
     <Compile Include="DiffMarginBase.cs" />
     <Compile Include="Settings\DiffModificationEditorFormatDefinition.cs" />
@@ -224,6 +225,8 @@
     <Compile Include="ScrollDiffMargin.cs" />
     <Compile Include="ScrollDiffMarginFactory2010.cs" />
     <Compile Include="ScrollDiffMarginFactory2013.cs" />
+    <Compile Include="Settings\CompareToIndex.cs" />
+    <Compile Include="Settings\DiffMarginEnabled.cs" />
     <Compile Include="TextViewCommandFilter.cs" />
     <Compile Include="ViewModel\DiffMarginViewModelBase.cs" />
     <Compile Include="ViewModel\EditorDiffMarginViewModel.cs" />

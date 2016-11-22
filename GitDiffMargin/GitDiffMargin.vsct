@@ -80,6 +80,39 @@
           <ToolTipText>Copy Old Text</ToolTipText>
         </Strings>
       </Button>
+
+      <Button guid="GitDiffMarginCommand" id="ToggleCompareToIndex" priority="0x0201" type="Button">
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <Strings>
+          <!-- Uncommenting the following line exposes the command for key binding -->
+          <!--<LocCanonicalName>GitDiffMargin.ToggleCompareToIndex</LocCanonicalName>-->
+          <ButtonText>Compare to Index</ButtonText>
+          <MenuText>Toggle Compare to Index</MenuText>
+          <ToolTipText>Toggle Compare to Index</ToolTipText>
+        </Strings>
+      </Button>
+
+      <Button guid="GitDiffMarginCommand" id="CompareToIndex" priority="0x0202" type="Button">
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <Strings>
+          <!-- Uncommenting the following line exposes the command for key binding -->
+          <!--<LocCanonicalName>GitDiffMargin.CompareToIndex</LocCanonicalName>-->
+          <ButtonText>Compare to Index</ButtonText>
+          <MenuText>Compare to Index</MenuText>
+          <ToolTipText>Compare to Index</ToolTipText>
+        </Strings>
+      </Button>
+
+      <Button guid="GitDiffMarginCommand" id="CompareToHead" priority="0x0203" type="Button">
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <Strings>
+          <!-- Uncommenting the following line exposes the command for key binding -->
+          <!--<LocCanonicalName>GitDiffMargin.CompareToHead</LocCanonicalName>-->
+          <ButtonText>Compare to Head</ButtonText>
+          <MenuText>Compare to Head</MenuText>
+          <ToolTipText>Compare to Head</ToolTipText>
+        </Strings>
+      </Button>
     </Buttons>
 
     <Bitmaps>
@@ -100,6 +133,10 @@
       <IDSymbol name="RollbackChange" value="2" />
       <IDSymbol name="ShowDiff" value="3" />
       <IDSymbol name="CopyOldText" value="4" />
+
+      <IDSymbol name="ToggleCompareToIndex" value="50"/>
+      <IDSymbol name="CompareToIndex" value="51"/>
+      <IDSymbol name="CompareToHead" value="52"/>
 
       <IDSymbol name="GitDiffToolbar" value="100"/>
       <IDSymbol name="GitDiffToolbarGroup" value="150"/>

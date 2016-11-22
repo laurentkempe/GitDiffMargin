@@ -91,6 +91,21 @@
                             return OLECMDF.OLECMDF_SUPPORTED;
                     }
 
+                case GitDiffMarginCommand.ToggleCompareToIndex:
+                    if (!_textView.Options.GetOptionValue(GitDiffMarginTextViewOptions.DiffMarginEnabledId))
+                        return OLECMDF.OLECMDF_SUPPORTED;
+                    else if (!_textView.Options.GetOptionValue(GitDiffMarginTextViewOptions.CompareToIndexId))
+                        return OLECMDF.OLECMDF_SUPPORTED | OLECMDF.OLECMDF_ENABLED;
+                    else
+                        return OLECMDF.OLECMDF_SUPPORTED | OLECMDF.OLECMDF_ENABLED | OLECMDF.OLECMDF_LATCHED;
+
+                case GitDiffMarginCommand.CompareToIndex:
+                case GitDiffMarginCommand.CompareToHead:
+                    if (!_textView.Options.GetOptionValue(GitDiffMarginTextViewOptions.DiffMarginEnabledId))
+                        return OLECMDF.OLECMDF_SUPPORTED;
+                    else
+                        return OLECMDF.OLECMDF_SUPPORTED | OLECMDF.OLECMDF_ENABLED;
+
                 case GitDiffMarginCommand.GitDiffToolbar:
                 case GitDiffMarginCommand.GitDiffToolbarGroup:
                     // these aren't actually commands, but IDs of the command bars and groups
@@ -159,6 +174,36 @@
                         return true;
                     }
 
+                case GitDiffMarginCommand.ToggleCompareToIndex:
+                    if (diffViewModel != null)
+                    {
+                        // The margin will not update if the pop-up is visible
+                        diffViewModel.ShowPopup = false;
+                    }
+
+                    ToggleCompareToIndex();
+                    return true;
+
+                case GitDiffMarginCommand.CompareToIndex:
+                    if (diffViewModel != null)
+                    {
+                        // The margin will not update if the pop-up is visible
+                        diffViewModel.ShowPopup = false;
+                    }
+
+                    CompareToIndex();
+                    return true;
+
+                case GitDiffMarginCommand.CompareToHead:
+                    if (diffViewModel != null)
+                    {
+                        // The margin will not update if the pop-up is visible
+                        diffViewModel.ShowPopup = false;
+                    }
+
+                    CompareToHead();
+                    return true;
+
                 case GitDiffMarginCommand.GitDiffToolbar:
                 case GitDiffMarginCommand.GitDiffToolbarGroup:
                     // these aren't actually commands, but IDs of the command bars and groups
@@ -195,6 +240,25 @@
 
             viewModel = margin.VisualElement.DataContext as EditorDiffMarginViewModel;
             return viewModel != null;
+        }
+
+        private void ToggleCompareToIndex()
+        {
+            bool currentCompareToIndex = _textView.Options.GetOptionValue(GitDiffMarginTextViewOptions.CompareToIndexId);
+            if (currentCompareToIndex)
+                CompareToHead();
+            else
+                CompareToIndex();
+        }
+
+        private void CompareToIndex()
+        {
+            _textView.Options.SetOptionValue(GitDiffMarginTextViewOptions.CompareToIndexId, true);
+        }
+
+        private void CompareToHead()
+        {
+            _textView.Options.SetOptionValue(GitDiffMarginTextViewOptions.CompareToIndexId, false);
         }
     }
 }
