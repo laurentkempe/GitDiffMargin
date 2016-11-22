@@ -3,7 +3,7 @@
 
 Git Diff Margin displays live Git changes of the currently edited file on Visual Studio margin and scroll bar.
 
-* Supports Visual Studio 2010 through Visual Studio 2015 and Visual Studio 15 preview
+* Supports Visual Studio 2010 through Visual Studio 2015 and Visual Studio 2017 RC
 * Quickly view all current file changes on
     * Left margin
     * Scroll Bars in map and bar mode with and without source overview
@@ -21,11 +21,9 @@ Git Diff Margin displays live Git changes of the currently edited file on Visual
 
 ![Screenshot](http://i1.visualstudiogallery.msdn.s-msft.com/cf49cf30-2ca6-4ea0-b7cc-6a8e0dadc1a8/image/file/142621/1/gitdiffmargin-preview.png)
 
-Perfect companion of [Visual Studio Tools for Git](http://visualstudiogallery.msdn.microsoft.com/abafc7d6-dcaa-40f4-8a5e-d6724bdb980c)
-
 ## Installation
 
-Grab it from inside of Visual Studio's Extension Manager, or via the [Extension Gallery link](http://visualstudiogallery.msdn.microsoft.com/cf49cf30-2ca6-4ea0-b7cc-6a8e0dadc1a8)
+Grab it from inside of Visual Studio's Extension Manager, or via the [Extension Gallery link](https://marketplace.visualstudio.com/items?itemName=LaurentKempe.GitDiffMargin)
 
 Or use the [Chocolatey installation](https://chocolatey.org/packages/GitDiffMargin)
 
