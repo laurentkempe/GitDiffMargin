@@ -28,8 +28,10 @@ namespace GitDiffMargin.Core
         double EditorChangeLeft { get; }
         double EditorChangeWidth { get; }
         double ScrollChangeWidth { get; }
+        bool IgnoreWhiteSpaces { get; }
         void MoveToChange(int lineNumber);
         bool RollBack(HunkRangeInfo hunkRangeInfo);
         ITextDocument GetTextDocument();
+        void ToggleIgnoreWhiteSpace();
     }
 }
