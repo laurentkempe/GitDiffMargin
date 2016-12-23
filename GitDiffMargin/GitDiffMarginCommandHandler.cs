@@ -7,6 +7,8 @@
     using GitDiffMargin.ViewModel;
     using Microsoft.VisualStudio.Editor;
     using Microsoft.VisualStudio.Text.Editor;
+    using Tvl.VisualStudio.Shell;
+    using Tvl.VisualStudio.Text;
     using IVsTextView = Microsoft.VisualStudio.TextManager.Interop.IVsTextView;
     using OLECMDEXECOPT = Microsoft.VisualStudio.OLE.Interop.OLECMDEXECOPT;
     using OLECMDF = Microsoft.VisualStudio.OLE.Interop.OLECMDF;
@@ -28,7 +30,7 @@
             _textView = textView;
         }
 
-        protected override OLECMDF QueryCommandStatus(ref Guid commandGroup, uint commandId)
+        protected override OLECMDF QueryCommandStatus(ref Guid commandGroup, uint commandId, OleCommandText oleCommandText)
         {
             if (commandGroup == typeof(GitDiffMarginCommand).GUID)
             {
