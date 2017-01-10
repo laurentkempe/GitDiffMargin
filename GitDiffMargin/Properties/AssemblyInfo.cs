@@ -31,8 +31,8 @@ using Tvl.VisualStudio.Shell;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("3.2.0.0")]
-[assembly: AssemblyFileVersion("3.2.0.0")]
+[assembly: AssemblyVersion("3.2.1.0")]
+[assembly: AssemblyFileVersion("3.2.1.0")]
 
 #if true // Use this block if Visual Studio 2010 still needs to be supported
 [assembly: Guid("c279cada-3e46-4971-9355-50f43053d1b3")]
