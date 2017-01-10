@@ -1,4 +1,4 @@
-# Git Diff Margin [![Build status](https://ci.appveyor.com/api/projects/status/42u2e3db3exo546p)](https://ci.appveyor.com/project/laurentkempe/gitdiffmargin)
+# Git Diff Margin [![Build status](https://ci.appveyor.com/api/projects/status/n2j1hcqpdel0xj0c/branch/master?svg=true)](https://ci.appveyor.com/project/laurentkempe/gitdiffmargin/branch/master)
 
 
 Git Diff Margin displays live Git changes of the currently edited file on Visual Studio margin and scroll bar.
