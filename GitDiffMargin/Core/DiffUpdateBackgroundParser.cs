@@ -55,7 +55,6 @@ namespace GitDiffMargin.Core
                     }
                     catch (Exception ex)
                     {
-                        // Failure to handle TPL exception in .NET 4 would bring down Visual Studio 2010
                         if (ErrorHandler.IsCriticalException(ex))
                             throw;
                     }
