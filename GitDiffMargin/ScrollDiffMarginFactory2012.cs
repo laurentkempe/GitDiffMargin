@@ -6,12 +6,12 @@ using Microsoft.VisualStudio.Utilities;
 namespace GitDiffMargin
 {
     [Export(typeof(IWpfTextViewMarginProvider))]
-    [Name(ScrollDiffMargin.MarginNameConst + "2010")]
+    [Name(ScrollDiffMargin.MarginNameConst + "2012")]
     [ContentType("text")]
     [TextViewRole(PredefinedTextViewRoles.Editable)]
     [MarginContainer(PredefinedMarginNames.VerticalScrollBarContainer)]
     [Order(After = PredefinedMarginNames.VerticalScrollBar)]
-    internal sealed class ScrollDiffMarginFactory2010 : DiffMarginFactoryBase
+    internal sealed class ScrollDiffMarginFactory2012 : DiffMarginFactoryBase
     {
         public override IWpfTextViewMargin CreateMargin(IWpfTextViewHost textViewHost, IWpfTextViewMargin containerMargin)
         {

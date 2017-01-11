@@ -4,7 +4,7 @@
     <Name>Git Diff Margin</Name>
     <Author>Laurent Kempé</Author>
     <Version>3.2.2.0</Version>
-    <Description xml:space="preserve">Git Diff Margin displays live changes of the currently edited file on Visual Studio 2010+ margin and scroll bar.</Description>
+    <Description xml:space="preserve">Git Diff Margin displays live changes of the currently edited file on Visual Studio 2012+ margin and scroll bar.</Description>
     <MoreInfoUrl>https://github.com/laurentkempe/GitDiffMargin</MoreInfoUrl>
     <GettingStartedGuide>http://visualstudiogallery.msdn.microsoft.com/cf49cf30-2ca6-4ea0-b7cc-6a8e0dadc1a8</GettingStartedGuide>
     <Locale>1033</Locale>
@@ -12,12 +12,6 @@
     <PreviewImage>Resources/GitDiffMargin-Preview.png</PreviewImage>
     <License>License.md</License>
     <SupportedProducts>
-      <VisualStudio Version="10.0">
-        <Edition>Pro</Edition>
-        <Edition>Premium</Edition>
-        <Edition>Ultimate</Edition>
-        <Edition>IntegratedShell</Edition>
-      </VisualStudio>
       <VisualStudio Version="11.0">
         <Edition>Pro</Edition>
         <Edition>Premium</Edition>
