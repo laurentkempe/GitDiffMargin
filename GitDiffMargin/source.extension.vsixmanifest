@@ -1,53 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Vsix Version="1.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2010">
-  <Identifier Id="GitDiffMargin..5ef9f816-d9ce-45cd-a8fa-cd67a807df0e">
-    <Name>Git Diff Margin</Name>
-    <Author>Laurent Kempé</Author>
-    <Version>3.2.2.0</Version>
-    <Description xml:space="preserve">Git Diff Margin displays live changes of the currently edited file on Visual Studio 2010+ margin and scroll bar.</Description>
-    <MoreInfoUrl>https://github.com/laurentkempe/GitDiffMargin</MoreInfoUrl>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+  <Metadata>
+    <Identity Id="GitDiffMargin..5ef9f816-d9ce-45cd-a8fa-cd67a807df0e" Version="3.2.2.0" Language="en-US" Publisher="Laurent Kempé" />
+    <DisplayName>Git Diff Margin</DisplayName>
+    <Description>Git Diff Margin displays live changes of the currently edited file on Visual Studio 2012+ margin and scroll bar.</Description>
+    <MoreInfo>https://github.com/laurentkempe/GitDiffMargin</MoreInfo>
+    <License>License.md</License>
     <GettingStartedGuide>http://visualstudiogallery.msdn.microsoft.com/cf49cf30-2ca6-4ea0-b7cc-6a8e0dadc1a8</GettingStartedGuide>
-    <Locale>1033</Locale>
+    <ReleaseNotes>https://github.com/laurentkempe/GitDiffMargin/releases/tag/v3.2.2</ReleaseNotes>
     <Icon>Resources/GitDiffMargin-Thumb.png</Icon>
     <PreviewImage>Resources/GitDiffMargin-Preview.png</PreviewImage>
-    <License>License.md</License>
-    <SupportedProducts>
-      <VisualStudio Version="10.0">
-        <Edition>Pro</Edition>
-        <Edition>Premium</Edition>
-        <Edition>Ultimate</Edition>
-        <Edition>IntegratedShell</Edition>
-      </VisualStudio>
-      <VisualStudio Version="11.0">
-        <Edition>Pro</Edition>
-        <Edition>Premium</Edition>
-        <Edition>Ultimate</Edition>
-        <Edition>IntegratedShell</Edition>
-      </VisualStudio>
-      <VisualStudio Version="12.0">
-        <Edition>Pro</Edition>
-        <Edition>Premium</Edition>
-        <Edition>Ultimate</Edition>
-        <Edition>IntegratedShell</Edition>
-      </VisualStudio>
-      <VisualStudio Version="14.0">
-        <Edition>Pro</Edition>
-        <Edition>Premium</Edition>
-        <Edition>Ultimate</Edition>
-        <Edition>IntegratedShell</Edition>
-      </VisualStudio>
-      <VisualStudio Version="15.0">
-        <Edition>Pro</Edition>
-        <Edition>Premium</Edition>
-        <Edition>Ultimate</Edition>
-        <Edition>IntegratedShell</Edition>
-      </VisualStudio>
-    </SupportedProducts>
-    <SupportedFrameworkRuntimeEdition MinVersion="4.0" MaxVersion="4.0" />
-  </Identifier>
-  <References />
-  <Content>
-    <MefComponent>|%CurrentProject%|</MefComponent>
-    <VsPackage>|%CurrentProject%;PkgdefProjectOutputGroup|</VsPackage>
-  </Content>
-</Vsix>
+    <!--<Tags></Tags>-->
+  </Metadata>
+  <Installation>
+    <InstallationTarget Version="[11.0,15.0)" Id="Microsoft.VisualStudio.Pro" />
+  </Installation>
+  <Dependencies>
+  </Dependencies>
+  <Assets>
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%|" />
+    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+  </Assets>
+</PackageManifest>

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using Tvl.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
@@ -35,10 +35,6 @@ using Tvl.VisualStudio.Shell;
 [assembly: AssemblyFileVersion("3.2.2.0")]
 [assembly: AssemblyInformationalVersion("3.2.2.0")]
 
-#if true // Use this block if Visual Studio 2010 still needs to be supported
-[assembly: Guid("c279cada-3e46-4971-9355-50f43053d1b3")]
-[assembly: ProvideBindingPath]
-#else // Switch to this block when we only need Visual Studio 2012 or newer
 [assembly: ProvideCodeBase(
     AssemblyName = "Tvl.VisualStudio.Shell.Utility.10",
     Version = "1.0.0.0",
@@ -47,4 +43,3 @@ using Tvl.VisualStudio.Shell;
     AssemblyName = "Tvl.VisualStudio.Text.Utility.10",
     Version = "1.0.0.0",
     CodeBase = "$PackageFolder$\\Tvl.VisualStudio.Text.Utility.10.dll")]
-#endif

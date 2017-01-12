@@ -1,17 +1,14 @@
-﻿extern alias vs11;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using LibGit2Sharp;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
-using __VSDIFFSERVICEOPTIONS = vs11::Microsoft.VisualStudio.Shell.Interop.__VSDIFFSERVICEOPTIONS;
-using IVsDifferenceService = vs11::Microsoft.VisualStudio.Shell.Interop.IVsDifferenceService;
-using SVsDifferenceService = vs11::Microsoft.VisualStudio.Shell.Interop.SVsDifferenceService;
+using __VSDIFFSERVICEOPTIONS = Microsoft.VisualStudio.Shell.Interop.__VSDIFFSERVICEOPTIONS;
+using IVsDifferenceService = Microsoft.VisualStudio.Shell.Interop.IVsDifferenceService;
+using SVsDifferenceService = Microsoft.VisualStudio.Shell.Interop.SVsDifferenceService;
 
 namespace GitDiffMargin.Git
 {
@@ -141,19 +138,6 @@ namespace GitDiffMargin.Git
             return completeContent;
         }
 
-        // http://msdn.microsoft.com/en-us/library/17w5ykft.aspx
-        private const string UnquotedParameterPattern = @"[^ \t""]+";
-        private const string QuotedParameterPattern = @"""(?:[^\\""]|\\[\\""]|\\[^\\""])*""";
-
-        // Two alternatives:
-        //   Unquoted (Quoted Unquoted)* Quoted?
-        //   Quoted (Unquoted Quoted)* Unquoted?
-        private const string ParameterPattern =
-            "^(?:" +
-            "(?:" + UnquotedParameterPattern + "(?:" + QuotedParameterPattern + UnquotedParameterPattern + ")*" + "(?:" + QuotedParameterPattern + ")?" + ")" +
-            "|" + "(?:" + QuotedParameterPattern + "(?:" + UnquotedParameterPattern + QuotedParameterPattern + ")*" + "(?:" + UnquotedParameterPattern + ")?" + ")" +
-            ")";
-
         public void StartExternalDiff(ITextDocument textDocument)
         {
             if (textDocument == null || string.IsNullOrEmpty(textDocument.FilePath)) return;
@@ -187,89 +171,50 @@ namespace GitDiffMargin.Git
                     File.WriteAllText(tempFileName, oldBlob.GetContentText(new FilteringOptions(relativePath)));
 
                 IVsDifferenceService differenceService = _serviceProvider.GetService(typeof(SVsDifferenceService)) as IVsDifferenceService;
-                if (differenceService != null)
+                string leftFileMoniker = tempFileName;
+                // The difference service will automatically load the text from the file open in the editor, even if
+                // it has changed.
+                string rightFileMoniker = filename;
+
+                string actualFilename = objectName;
+                string tempPrefix = Path.GetRandomFileName().Substring(0, 5);
+                string caption = string.Format("{0}_{1} vs. {1}", tempPrefix, actualFilename);
+
+                string tooltip = null;
+
+                string leftLabel;
+                if (indexEntry != null)
                 {
-                    string leftFileMoniker = tempFileName;
-                    // The difference service will automatically load the text from the file open in the editor, even if
-                    // it has changed.
-                    string rightFileMoniker = filename;
-
-                    string actualFilename = objectName;
-                    string tempPrefix = Path.GetRandomFileName().Substring(0, 5);
-                    string caption = string.Format("{0}_{1} vs. {1}", tempPrefix, actualFilename);
-
-                    string tooltip = null;
-
-                    string leftLabel;
-                    if (indexEntry != null)
-                    {
-                        // determine if the file has been staged
-                        string revision;
-                        var stagedMask = FileStatus.NewInIndex | FileStatus.ModifiedInIndex;
-                        if ((repo.RetrieveStatus(relativePath) & stagedMask) != 0)
-                            revision = "index";
-                        else
-                            revision = repo.Head.Tip.Sha.Substring(0, 7);
-
-                        leftLabel = string.Format("{0}@{1}", objectName, revision);
-                    }
-                    else if (oldBlob != null)
-                    {
-                        // file was added
-                        leftLabel = null;
-                    }
+                    // determine if the file has been staged
+                    string revision;
+                    var stagedMask = FileStatus.NewInIndex | FileStatus.ModifiedInIndex;
+                    if ((repo.RetrieveStatus(relativePath) & stagedMask) != 0)
+                        revision = "index";
                     else
-                    {
-                        // we just compared to head
-                        leftLabel = string.Format("{0}@{1}", objectName, repo.Head.Tip.Sha.Substring(0, 7));
-                    }
+                        revision = repo.Head.Tip.Sha.Substring(0, 7);
 
-                    string rightLabel = filename;
-
-                    string inlineLabel = null;
-                    string roles = null;
-                    __VSDIFFSERVICEOPTIONS grfDiffOptions = __VSDIFFSERVICEOPTIONS.VSDIFFOPT_LeftFileIsTemporary;
-                    differenceService.OpenComparisonWindow2(leftFileMoniker, rightFileMoniker, caption, tooltip, leftLabel, rightLabel, inlineLabel, roles, (uint)grfDiffOptions);
-
-                    // Since the file is marked as temporary, we can delete it now
-                    File.Delete(tempFileName);
+                    leftLabel = string.Format("{0}@{1}", objectName, revision);
+                }
+                else if (oldBlob != null)
+                {
+                    // file was added
+                    leftLabel = null;
                 }
                 else
                 {
-                    // Can't use __VSDIFFSERVICEOPTIONS, so mark the temporary file(s) read only on disk
-                    File.SetAttributes(tempFileName, File.GetAttributes(tempFileName) | FileAttributes.ReadOnly);
-
-                    string remoteFile;
-                    if (textDocument.IsDirty)
-                    {
-                        remoteFile = Path.GetTempFileName();
-                        File.WriteAllBytes(remoteFile, GetCompleteContent(textDocument, textDocument.TextBuffer.CurrentSnapshot));
-                        File.SetAttributes(remoteFile, File.GetAttributes(remoteFile) | FileAttributes.ReadOnly);
-                    }
-                    else
-                    {
-                        remoteFile = filename;
-                    }
-
-                    var diffGuiTool = repo.Config.Get<string>("diff.guitool");
-                    if (diffGuiTool == null)
-                    {
-                        diffGuiTool = repo.Config.Get<string>("diff.tool");
-                        if (diffGuiTool == null)
-                            return;
-                    }
-
-                    var diffCmd = repo.Config.Get<string>("difftool." + diffGuiTool.Value + ".cmd");
-                    if (diffCmd == null || diffCmd.Value == null)
-                        return;
-
-                    var cmd = diffCmd.Value.Replace("$LOCAL", tempFileName).Replace("$REMOTE", remoteFile);
-
-                    string fileName = Regex.Match(cmd, ParameterPattern).Value;
-                    string arguments = cmd.Substring(fileName.Length);
-                    ProcessStartInfo startInfo = new ProcessStartInfo(fileName, arguments);
-                    Process.Start(startInfo);
+                    // we just compared to head
+                    leftLabel = string.Format("{0}@{1}", objectName, repo.Head.Tip.Sha.Substring(0, 7));
                 }
+
+                string rightLabel = filename;
+
+                string inlineLabel = null;
+                string roles = null;
+                __VSDIFFSERVICEOPTIONS grfDiffOptions = __VSDIFFSERVICEOPTIONS.VSDIFFOPT_LeftFileIsTemporary;
+                differenceService.OpenComparisonWindow2(leftFileMoniker, rightFileMoniker, caption, tooltip, leftLabel, rightLabel, inlineLabel, roles, (uint)grfDiffOptions);
+
+                // Since the file is marked as temporary, we can delete it now
+                File.Delete(tempFileName);
             }
         }
 
