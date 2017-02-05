@@ -11,63 +11,63 @@
              Width="4"
              MinWidth="4"
              MaxWidth="4">
-    <UserControl.Resources>
-        <ControlTemplate x:Key="ChangeTemplate" d:DataContext="{d:DesignInstance viewModel:DiffViewModel}">
-            <Rectangle Width="{Binding Width, Mode=OneWay}"
-                       Height="{Binding Height, Mode=OneWay}"
-                       Margin="0"
-                       HorizontalAlignment="Left"
-                       Fill="{Binding DiffBrush}" />
-        </ControlTemplate>
-        <ControlTemplate x:Key="DeletionTemplate" d:DataContext="{d:DesignInstance viewModel:DiffViewModel}">
-            <Polygon Width="{Binding Width, Mode=OneWay}"
-                     Height="{Binding Height, Mode=OneWay}"
-                     Points="0,0 1,1 0,2 0,0"
-                     Fill="{Binding DiffBrush}"
-                     Stretch="Fill" />
-        </ControlTemplate>
-    </UserControl.Resources>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="4" MinWidth="4" MaxWidth="4" />
-        </Grid.ColumnDefinitions>
-        <Canvas HorizontalAlignment="Stretch" />
-        <ItemsControl Grid.Column="0"
-                      HorizontalAlignment="Stretch"
-                      VerticalAlignment="Stretch"
-                      ItemsSource="{Binding DiffViewModels, Mode=OneWay}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemContainerStyle>
-                <Style TargetType="ContentPresenter" d:DataContext="{d:DesignInstance viewModel:DiffViewModel}">
-                    <Setter Property="VerticalAlignment" Value="Top" />
-                    <Setter Property="Canvas.Top" Value="{Binding Top, Mode=OneWay}" />
-                    <Setter Property="Height" Value="{Binding Height, Mode=OneWay}" />
+  <UserControl.Resources>
+    <ControlTemplate x:Key="ChangeTemplate" d:DataContext="{d:DesignInstance viewModel:DiffViewModel}">
+      <Rectangle Width="{Binding Width, Mode=OneWay}"
+                 Height="{Binding Height, Mode=OneWay}"
+                 Margin="0"
+                 HorizontalAlignment="Left"
+                 Fill="{Binding DiffBrush}" />
+    </ControlTemplate>
+    <ControlTemplate x:Key="DeletionTemplate" d:DataContext="{d:DesignInstance viewModel:DiffViewModel}">
+      <Polygon Width="{Binding Width, Mode=OneWay}"
+               Height="{Binding Height, Mode=OneWay}"
+               Points="0,0 1,1 0,2 0,0"
+               Fill="{Binding DiffBrush}"
+               Stretch="Fill" />
+    </ControlTemplate>
+  </UserControl.Resources>
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="4" MinWidth="4" MaxWidth="4" />
+    </Grid.ColumnDefinitions>
+    <Canvas HorizontalAlignment="Stretch" />
+    <ItemsControl Grid.Column="0"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  ItemsSource="{Binding DiffViewModels, Mode=OneWay}">
+      <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate>
+          <Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        </ItemsPanelTemplate>
+      </ItemsControl.ItemsPanel>
+      <ItemsControl.ItemContainerStyle>
+        <Style TargetType="ContentPresenter" d:DataContext="{d:DesignInstance viewModel:DiffViewModel}">
+          <Setter Property="VerticalAlignment" Value="Top" />
+          <Setter Property="Canvas.Top" Value="{Binding Top, Mode=OneWay}" />
+          <Setter Property="Height" Value="{Binding Height, Mode=OneWay}" />
+        </Style>
+      </ItemsControl.ItemContainerStyle>
+      <ItemsControl.ItemTemplate>
+        <DataTemplate>
+          <Grid>
+            <Control Name="diffControl" IsHitTestVisible="False">
+              <Control.Style>
+                <Style TargetType="{x:Type Control}">
+                  <Style.Triggers>
+                    <DataTrigger Value="true" Binding="{Binding IsDeletion}">
+                      <Setter Property="Template" Value="{StaticResource DeletionTemplate}" />
+                    </DataTrigger>
+                    <DataTrigger Value="false" Binding="{Binding IsDeletion}">
+                      <Setter Property="Template" Value="{StaticResource ChangeTemplate}" />
+                    </DataTrigger>
+                  </Style.Triggers>
                 </Style>
-            </ItemsControl.ItemContainerStyle>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Grid>
-                        <Control Name="diffControl" IsHitTestVisible="False">
-                            <Control.Style>
-                                <Style TargetType="{x:Type Control}">
-                                    <Style.Triggers>
-                                        <DataTrigger Value="true" Binding="{Binding IsDeletion}">
-                                            <Setter Property="Template" Value="{StaticResource DeletionTemplate}" />
-                                        </DataTrigger>
-                                        <DataTrigger Value="false" Binding="{Binding IsDeletion}">
-                                            <Setter Property="Template" Value="{StaticResource ChangeTemplate}" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Control.Style>
-                        </Control>
-                    </Grid>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-    </Grid>
+              </Control.Style>
+            </Control>
+          </Grid>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+  </Grid>
 </UserControl>

@@ -12,12 +12,13 @@ namespace GitDiffMargin.Core
 {
     public class DiffUpdateBackgroundParser : BackgroundParser
     {
-        private readonly FileSystemWatcher _watcher;
         private readonly IGitCommands _commands;
-        private readonly ITextDocument _textDocument;
         private readonly ITextBuffer _documentBuffer;
+        private readonly ITextDocument _textDocument;
+        private readonly FileSystemWatcher _watcher;
 
-        internal DiffUpdateBackgroundParser(ITextBuffer textBuffer, ITextBuffer documentBuffer, TaskScheduler taskScheduler, ITextDocumentFactoryService textDocumentFactoryService, IGitCommands commands)
+        internal DiffUpdateBackgroundParser(ITextBuffer textBuffer, ITextBuffer documentBuffer,
+            TaskScheduler taskScheduler, ITextDocumentFactoryService textDocumentFactoryService, IGitCommands commands)
             : base(textBuffer, taskScheduler, textDocumentFactoryService)
         {
             _documentBuffer = documentBuffer;
@@ -25,7 +26,6 @@ namespace GitDiffMargin.Core
             ReparseDelay = TimeSpan.FromMilliseconds(500);
 
             if (TextDocumentFactoryService.TryGetTextDocument(_documentBuffer, out _textDocument))
-            {
                 if (_commands.IsGitRepository(_textDocument.FilePath))
                 {
                     _textDocument.FileActionOccurred += OnFileActionOccurred;
@@ -41,7 +41,11 @@ namespace GitDiffMargin.Core
                         _watcher.EnableRaisingEvents = true;
                     }
                 }
-            }
+        }
+
+        public override string Name
+        {
+            get { return "Git Diff Analyzer"; }
         }
 
         private void HandleFileSystemChanged(object sender, FileSystemEventArgs e)
@@ -77,17 +81,7 @@ namespace GitDiffMargin.Core
         private void OnFileActionOccurred(object sender, TextDocumentFileActionEventArgs e)
         {
             if ((e.FileActionType & FileActionTypes.ContentSavedToDisk) != 0)
-            {
                 MarkDirty(true);
-            }
-        }
-
-        public override string Name
-        {
-            get
-            {
-                return "Git Diff Analyzer";
-            }
         }
 
         protected override void ReParseImpl()
@@ -118,13 +112,9 @@ namespace GitDiffMargin.Core
             if (disposing)
             {
                 if (_textDocument != null)
-                {
                     _textDocument.FileActionOccurred -= OnFileActionOccurred;
-                }
                 if (_watcher != null)
-                {
                     _watcher.Dispose();
-                }
             }
         }
     }

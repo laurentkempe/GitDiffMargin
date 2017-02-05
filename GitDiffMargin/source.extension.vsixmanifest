@@ -1,7 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011"
+                 xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="GitDiffMargin..5ef9f816-d9ce-45cd-a8fa-cd67a807df0e" Version="3.3.3.0" Language="en-US" Publisher="Laurent Kempé" />
+    <Identity Id="GitDiffMargin..5ef9f816-d9ce-45cd-a8fa-cd67a807df0e" Version="3.3.3.0" Language="en-US"
+              Publisher="Laurent Kempé" />
     <DisplayName>Git Diff Margin</DisplayName>
     <Description>Git Diff Margin displays live changes of the currently edited file on Visual Studio 2012+ margin and scroll bar.</Description>
     <MoreInfo>https://github.com/laurentkempe/GitDiffMargin</MoreInfo>
@@ -16,10 +19,13 @@
     <InstallationTarget Version="[11.0,16.0)" Id="Microsoft.VisualStudio.Community" />
   </Installation>
   <Prerequisites>
-    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,16.0)" DisplayName="Visual Studio core editor" />
+    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,16.0)"
+                  DisplayName="Visual Studio core editor" />
   </Prerequisites>
   <Assets>
-    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%|" />
-    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="%CurrentProject%"
+           Path="|%CurrentProject%|" />
+    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%"
+           Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
   </Assets>
 </PackageManifest>

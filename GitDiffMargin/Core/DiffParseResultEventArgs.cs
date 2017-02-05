@@ -17,10 +17,7 @@ namespace GitDiffMargin.Core
 
         public IEnumerable<HunkRangeInfo> Diff
         {
-            get
-            {
-                return _diff;
-            }
+            get { return _diff; }
         }
     }
 }

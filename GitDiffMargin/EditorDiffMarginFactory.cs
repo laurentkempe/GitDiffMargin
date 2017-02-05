@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.Utilities;
 
 namespace GitDiffMargin
 {
-    [Export(typeof (IWpfTextViewMarginProvider))]
+    [Export(typeof(IWpfTextViewMarginProvider))]
     [Name(EditorDiffMargin.MarginNameConst)]
     [Order(After = PredefinedMarginNames.Spacer, Before = PredefinedMarginNames.Outlining)]
     [MarginContainer(PredefinedMarginNames.LeftSelection)]
@@ -16,7 +16,8 @@ namespace GitDiffMargin
     [TextViewRole(PredefinedTextViewRoles.Editable)]
     internal sealed class EditorDiffMarginFactory : DiffMarginFactoryBase
     {
-        public override IWpfTextViewMargin CreateMargin(IWpfTextViewHost textViewHost, IWpfTextViewMargin containerMargin)
+        public override IWpfTextViewMargin CreateMargin(IWpfTextViewHost textViewHost,
+            IWpfTextViewMargin containerMargin)
         {
             var marginCore = TryGetMarginCore(textViewHost);
             if (marginCore == null)

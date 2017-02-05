@@ -13,10 +13,11 @@ namespace GitDiffMargin.ViewModel
     internal class EditorDiffMarginViewModel : DiffMarginViewModelBase
     {
         private readonly Action<DiffViewModel, HunkRangeInfo> _updateDiffDimensions;
-        private RelayCommand<DiffViewModel> _previousChangeCommand;
         private RelayCommand<DiffViewModel> _nextChangeCommand;
+        private RelayCommand<DiffViewModel> _previousChangeCommand;
 
-        internal EditorDiffMarginViewModel(IMarginCore marginCore, Action<DiffViewModel, HunkRangeInfo> updateDiffDimensions) :
+        internal EditorDiffMarginViewModel(IMarginCore marginCore,
+            Action<DiffViewModel, HunkRangeInfo> updateDiffDimensions) :
             base(marginCore)
         {
             if (updateDiffDimensions == null)
@@ -27,12 +28,21 @@ namespace GitDiffMargin.ViewModel
 
         public RelayCommand<DiffViewModel> PreviousChangeCommand
         {
-            get { return _previousChangeCommand ?? (_previousChangeCommand = new RelayCommand<DiffViewModel>(PreviousChange, PreviousChangeCanExecute)); }
+            get
+            {
+                return _previousChangeCommand ??
+                       (_previousChangeCommand =
+                           new RelayCommand<DiffViewModel>(PreviousChange, PreviousChangeCanExecute));
+            }
         }
 
         public RelayCommand<DiffViewModel> NextChangeCommand
         {
-            get { return _nextChangeCommand ?? (_nextChangeCommand = new RelayCommand<DiffViewModel>(NextChange, NextChangeCanExecute)); }
+            get
+            {
+                return _nextChangeCommand ??
+                       (_nextChangeCommand = new RelayCommand<DiffViewModel>(NextChange, NextChangeCanExecute));
+            }
         }
 
         private bool PreviousChangeCanExecute(DiffViewModel currentEditorDiffViewModel)
@@ -42,7 +52,7 @@ namespace GitDiffMargin.ViewModel
 
         private bool NextChangeCanExecute(DiffViewModel currentEditorDiffViewModel)
         {
-            return DiffViewModels.IndexOf(currentEditorDiffViewModel) < (DiffViewModels.Count - 1);
+            return DiffViewModels.IndexOf(currentEditorDiffViewModel) < DiffViewModels.Count - 1;
         }
 
         private void PreviousChange(DiffViewModel currentEditorDiffViewModel)
@@ -58,11 +68,11 @@ namespace GitDiffMargin.ViewModel
         public void MoveToChange(DiffViewModel currentDiffViewModel, int indexModifier)
         {
             var diffViewModelIndex = DiffViewModels.IndexOf(currentDiffViewModel) + indexModifier;
-            var diffViewModel  = DiffViewModels[diffViewModelIndex];
+            var diffViewModel = DiffViewModels[diffViewModelIndex];
 
             MarginCore.MoveToChange(diffViewModel.LineNumber);
 
-            ((EditorDiffViewModel)currentDiffViewModel).ShowPopup = false;
+            ((EditorDiffViewModel) currentDiffViewModel).ShowPopup = false;
         }
 
         protected override void HandleHunksChanged(object sender, HunksChangedEventArgs e)

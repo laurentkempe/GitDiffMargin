@@ -10,6 +10,18 @@ namespace GitDiffMargin.Unit.Tests.Git
     public class HunkRangeTests
     {
         [Test]
+        public void HunkRange_HunkNewFileWith3AsContextLines_ExpectHunkNewFile()
+        {
+            //Arrange
+            //Act
+            var hunkRange = new HunkRange(@"12,11", 3);
+
+            //Assert
+            hunkRange.StartingLineNumber.ShouldBe(14);
+            hunkRange.NumberOfLines.ShouldBe(5);
+        }
+
+        [Test]
         public void HunkRange_HunkOriginalFile_ExpectHunkOriginalFile()
         {
             //Arrange
@@ -43,18 +55,6 @@ namespace GitDiffMargin.Unit.Tests.Git
             //Assert
             hunkRange.StartingLineNumber.ShouldBe(41);
             hunkRange.NumberOfLines.ShouldBe(20);
-        }
-
-        [Test]
-        public void HunkRange_HunkNewFileWith3AsContextLines_ExpectHunkNewFile()
-        {
-            //Arrange
-            //Act
-            var hunkRange = new HunkRange(@"12,11", 3);
-
-            //Assert
-            hunkRange.StartingLineNumber.ShouldBe(14);
-            hunkRange.NumberOfLines.ShouldBe(5);
         }
 
         [Test]

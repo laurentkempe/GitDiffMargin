@@ -13,7 +13,8 @@ namespace GitDiffMargin
     [Order(After = PredefinedMarginNames.VerticalScrollBar)]
     internal sealed class ScrollDiffMarginFactory2012 : DiffMarginFactoryBase
     {
-        public override IWpfTextViewMargin CreateMargin(IWpfTextViewHost textViewHost, IWpfTextViewMargin containerMargin)
+        public override IWpfTextViewMargin CreateMargin(IWpfTextViewHost textViewHost,
+            IWpfTextViewMargin containerMargin)
         {
             // Visual Studio uses assembly binding redirection for the Shell assembly.
             if (typeof(ErrorHandler).Assembly.GetName().Version.Major >= 12)

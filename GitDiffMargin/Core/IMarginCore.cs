@@ -9,10 +9,6 @@ namespace GitDiffMargin.Core
 {
     internal interface IMarginCore
     {
-        event EventHandler BrushesChanged;
-
-        event EventHandler<HunksChangedEventArgs> HunksChanged;
-
         IWpfTextView TextView { get; }
         IGitCommands GitCommands { get; }
         FontFamily FontFamily { get; }
@@ -28,6 +24,9 @@ namespace GitDiffMargin.Core
         double EditorChangeLeft { get; }
         double EditorChangeWidth { get; }
         double ScrollChangeWidth { get; }
+        event EventHandler BrushesChanged;
+
+        event EventHandler<HunksChangedEventArgs> HunksChanged;
         void MoveToChange(int lineNumber);
         bool RollBack(HunkRangeInfo hunkRangeInfo);
         ITextDocument GetTextDocument();

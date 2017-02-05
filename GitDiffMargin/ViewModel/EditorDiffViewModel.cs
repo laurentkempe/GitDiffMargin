@@ -10,9 +10,9 @@ using GalaSoft.MvvmLight.Command;
 using GitDiffMargin.Core;
 using GitDiffMargin.Git;
 using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using IOleCommandTarget = Microsoft.VisualStudio.OLE.Interop.IOleCommandTarget;
 
 #endregion
 
@@ -20,17 +20,20 @@ namespace GitDiffMargin.ViewModel
 {
     internal class EditorDiffViewModel : DiffViewModel
     {
-        private bool _isDiffTextVisible;
-        private bool _showPopup;
-        private bool _reverted;
         private ICommand _copyOldTextCommand;
-        private ICommand _rollbackCommand;
-        private ICommand _showPopUpCommand;
 
         private EditorDiffMarginViewModel _diffMarginViewModel;
+        private bool _isDiffTextVisible;
+        private bool _reverted;
+        private ICommand _rollbackCommand;
+
+        private ICommand _showDifferenceCommand;
+        private bool _showPopup;
+        private ICommand _showPopUpCommand;
         private IVsToolbarTrayHost _toolbarTrayHost;
 
-        internal EditorDiffViewModel(HunkRangeInfo hunkRangeInfo, IMarginCore marginCore, Action<DiffViewModel, HunkRangeInfo> updateDiffDimensions)
+        internal EditorDiffViewModel(HunkRangeInfo hunkRangeInfo, IMarginCore marginCore,
+            Action<DiffViewModel, HunkRangeInfo> updateDiffDimensions)
             : base(hunkRangeInfo, marginCore, updateDiffDimensions)
         {
             ShowPopup = false;
@@ -40,28 +43,6 @@ namespace GitDiffMargin.ViewModel
             IsDiffTextVisible = GetIsDiffTextVisible();
 
             UpdateDimensions();
-        }
-
-        private bool GetIsDiffTextVisible()
-        {
-            return HunkRangeInfo.IsDeletion || HunkRangeInfo.IsModification;
-        }
-
-        private string GetDiffText()
-        {
-            if (HunkRangeInfo.OriginalText != null && HunkRangeInfo.OriginalText.Any())
-            {
-                return HunkRangeInfo.IsModification || HunkRangeInfo.IsDeletion ? String.Join(Environment.NewLine, HunkRangeInfo.OriginalText) : string.Empty;
-            }
-
-            return string.Empty;
-        }
-
-        protected override void UpdateDimensions()
-        {
-            if (_reverted) return;
-
-            base.UpdateDimensions();
         }
 
         public FontFamily FontFamily
@@ -76,26 +57,17 @@ namespace GitDiffMargin.ViewModel
 
         public FontStyle FontStyle
         {
-            get
-            {
-                return MarginCore.FontStyle;
-            }
+            get { return MarginCore.FontStyle; }
         }
 
         public FontWeight FontWeight
         {
-            get
-            {
-                return MarginCore.FontWeight;
-            }
+            get { return MarginCore.FontWeight; }
         }
 
         public double FontSize
         {
-            get
-            {
-                return MarginCore.FontSize;
-            }
+            get { return MarginCore.FontSize; }
         }
 
         //public double MaxWidth
@@ -116,23 +88,20 @@ namespace GitDiffMargin.ViewModel
 
         public Brush Background
         {
-            get
-            {
-                return MarginCore.Background;
-            }
+            get { return MarginCore.Background; }
         }
 
         public Brush Foreground
         {
-            get
-            {
-                return MarginCore.Foreground;
-            }
+            get { return MarginCore.Foreground; }
         }
 
         public ICommand ShowPopUpCommand
         {
-            get { return _showPopUpCommand ?? (_showPopUpCommand = new RelayCommand<EditorDiffMarginViewModel>(ShowPopUp)); }
+            get
+            {
+                return _showPopUpCommand ?? (_showPopUpCommand = new RelayCommand<EditorDiffMarginViewModel>(ShowPopUp));
+            }
         }
 
         public object ToolBarTray
@@ -148,7 +117,7 @@ namespace GitDiffMargin.ViewModel
                 object uiObject;
                 ErrorHandler.ThrowOnFailure(toolbarTray.GetUIObject(out uiObject));
 
-                IVsUIWpfElement wpfElement = uiObject as IVsUIWpfElement;
+                var wpfElement = uiObject as IVsUIWpfElement;
 
                 object frameworkElement;
                 ErrorHandler.ThrowOnFailure(wpfElement.GetFrameworkElement(out frameworkElement));
@@ -166,16 +135,19 @@ namespace GitDiffMargin.ViewModel
                 _showPopup = value;
                 if (value)
                 {
-                    IVsUIShell4 uiShell = Package.GetGlobalService(typeof(SVsUIShell)) as IVsUIShell4;
+                    var uiShell = Package.GetGlobalService(typeof(SVsUIShell)) as IVsUIShell4;
                     if (uiShell != null)
                     {
-                        IOleCommandTarget commandTarget = MarginCore.TextView.Properties.GetProperty<GitDiffMarginCommandHandler>(typeof(GitDiffMarginCommandHandler));
+                        IOleCommandTarget commandTarget =
+                            MarginCore.TextView.Properties.GetProperty<GitDiffMarginCommandHandler>(
+                                typeof(GitDiffMarginCommandHandler));
 
                         IVsToolbarTrayHost toolbarTrayHost;
                         ErrorHandler.ThrowOnFailure(uiShell.CreateToolbarTray(commandTarget, out toolbarTrayHost));
 
-                        Guid toolBarGuid = typeof(GitDiffMarginCommand).GUID;
-                        ErrorHandler.ThrowOnFailure(toolbarTrayHost.AddToolbar(ref toolBarGuid, (int)GitDiffMarginCommand.GitDiffToolbar));
+                        var toolBarGuid = typeof(GitDiffMarginCommand).GUID;
+                        ErrorHandler.ThrowOnFailure(toolbarTrayHost.AddToolbar(ref toolBarGuid,
+                            (int) GitDiffMarginCommand.GitDiffToolbar));
 
                         _toolbarTrayHost = toolbarTrayHost;
                     }
@@ -192,7 +164,7 @@ namespace GitDiffMargin.ViewModel
             }
         }
 
-        public string DiffText { get; private set; }
+        public string DiffText { get; }
 
         public bool IsDiffTextVisible
         {
@@ -205,11 +177,49 @@ namespace GitDiffMargin.ViewModel
             }
         }
 
-        private ICommand _showDifferenceCommand;
-
         public ICommand ShowDifferenceCommand
         {
-            get { return _showDifferenceCommand ?? (_showDifferenceCommand = new RelayCommand(ShowDifference, ShowDifferenceCanExecute)); }
+            get
+            {
+                return _showDifferenceCommand ??
+                       (_showDifferenceCommand = new RelayCommand(ShowDifference, ShowDifferenceCanExecute));
+            }
+        }
+
+        public ICommand CopyOldTextCommand
+        {
+            get
+            {
+                return _copyOldTextCommand ??
+                       (_copyOldTextCommand = new RelayCommand(CopyOldText, CopyOldTextCanExecute));
+            }
+        }
+
+        public ICommand RollbackCommand
+        {
+            get { return _rollbackCommand ?? (_rollbackCommand = new RelayCommand(Rollback, RollbackCanExecute)); }
+        }
+
+        private bool GetIsDiffTextVisible()
+        {
+            return HunkRangeInfo.IsDeletion || HunkRangeInfo.IsModification;
+        }
+
+        private string GetDiffText()
+        {
+            if (HunkRangeInfo.OriginalText != null && HunkRangeInfo.OriginalText.Any())
+                return HunkRangeInfo.IsModification || HunkRangeInfo.IsDeletion
+                    ? string.Join(Environment.NewLine, HunkRangeInfo.OriginalText)
+                    : string.Empty;
+
+            return string.Empty;
+        }
+
+        protected override void UpdateDimensions()
+        {
+            if (_reverted) return;
+
+            base.UpdateDimensions();
         }
 
         private bool ShowDifferenceCanExecute()
@@ -221,19 +231,7 @@ namespace GitDiffMargin.ViewModel
         {
             var document = MarginCore.GetTextDocument();
             if (document != null)
-            {
                 MarginCore.GitCommands.StartExternalDiff(document);
-            } 
-        }
-
-        public ICommand CopyOldTextCommand
-        {
-            get { return _copyOldTextCommand ?? (_copyOldTextCommand = new RelayCommand(CopyOldText, CopyOldTextCanExecute)); }
-        }
-
-        public ICommand RollbackCommand
-        {
-            get { return _rollbackCommand ?? (_rollbackCommand = new RelayCommand(Rollback, RollbackCanExecute)); }
         }
 
         private bool CopyOldTextCanExecute()
