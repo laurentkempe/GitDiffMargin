@@ -8,7 +8,8 @@ namespace GitDiffMargin.ViewModel
     {
         private readonly Action<DiffViewModel, HunkRangeInfo> _updateDiffDimensions;
 
-        internal ScrollDiffMarginViewModel(IMarginCore marginCore, Action<DiffViewModel, HunkRangeInfo> updateDiffDimensions) :
+        internal ScrollDiffMarginViewModel(IMarginCore marginCore,
+            Action<DiffViewModel, HunkRangeInfo> updateDiffDimensions) :
             base(marginCore)
         {
             if (updateDiffDimensions == null)

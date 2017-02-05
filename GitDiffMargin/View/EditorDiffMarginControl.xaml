@@ -12,13 +12,14 @@
              mc:Ignorable="d">
   <UserControl.Resources>
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <ControlTemplate x:Key="ChangeTemplate" d:DataContext="{d:DesignInstance viewModel:EditorDiffViewModel}">
-            <Rectangle Width="{Binding Width, Mode=OneWay}" HorizontalAlignment="Left" Margin="{Binding Margin, Mode=OneWay}" Fill="{Binding DiffBrush}" />
-        </ControlTemplate>
-        <ControlTemplate x:Key="DeletionTemplate" d:DataContext="{d:DesignInstance viewModel:EditorDiffViewModel}">
-            <Polygon Points="0,0 1,1 0,2 0,0" Fill="{Binding DiffBrush}" Width="9" Height="{Binding Height}" Stretch="Fill" />
-        </ControlTemplate>
-    </UserControl.Resources>
+    <ControlTemplate x:Key="ChangeTemplate" d:DataContext="{d:DesignInstance viewModel:EditorDiffViewModel}">
+      <Rectangle Width="{Binding Width, Mode=OneWay}" HorizontalAlignment="Left" Margin="{Binding Margin, Mode=OneWay}"
+                 Fill="{Binding DiffBrush}" />
+    </ControlTemplate>
+    <ControlTemplate x:Key="DeletionTemplate" d:DataContext="{d:DesignInstance viewModel:EditorDiffViewModel}">
+      <Polygon Points="0,0 1,1 0,2 0,0" Fill="{Binding DiffBrush}" Width="9" Height="{Binding Height}" Stretch="Fill" />
+    </ControlTemplate>
+  </UserControl.Resources>
   <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="9" MinWidth="9" />
@@ -41,22 +42,23 @@
       </ItemsControl.ItemContainerStyle>
       <ItemsControl.ItemTemplate>
         <DataTemplate>
-            <Grid Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
-                  d:DataContext="{d:DesignInstance viewModel:EditorDiffViewModel}">
-              <Button Name="diffControl" Command="{Binding ShowPopUpCommand}" CommandParameter="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}">
-                  <Button.Style>
-                      <Style TargetType="{x:Type Button}">
-                          <Style.Triggers>
-                              <DataTrigger Binding="{Binding IsDeletion}" Value="true">
-                                  <Setter Property="Template" Value="{StaticResource DeletionTemplate}" />
-                              </DataTrigger>
-                              <DataTrigger Binding="{Binding IsDeletion}" Value="false">
-                                  <Setter Property="Template" Value="{StaticResource ChangeTemplate}" />
-                              </DataTrigger>
-                          </Style.Triggers>
-                      </Style>
-                  </Button.Style>
-              </Button>
+          <Grid Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                d:DataContext="{d:DesignInstance viewModel:EditorDiffViewModel}">
+            <Button Name="diffControl" Command="{Binding ShowPopUpCommand}"
+                    CommandParameter="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}">
+              <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                  <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsDeletion}" Value="true">
+                      <Setter Property="Template" Value="{StaticResource DeletionTemplate}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding IsDeletion}" Value="false">
+                      <Setter Property="Template" Value="{StaticResource ChangeTemplate}" />
+                    </DataTrigger>
+                  </Style.Triggers>
+                </Style>
+              </Button.Style>
+            </Button>
             <Popup AllowsTransparency="True"
                    HorizontalOffset="8"
                    IsOpen="{Binding ShowPopup, Mode=TwoWay}"
@@ -69,9 +71,9 @@
                           Background="White"
                           BorderBrush="Black"
                           BorderThickness="1,1,1,1">
-                    <ContentControl Content="{Binding ToolBarTray, Mode=OneWay}"/>
+                    <ContentControl Content="{Binding ToolBarTray, Mode=OneWay}" />
                   </Border>
-                 <Border Background="{Binding Background, Mode=OneWay}"
+                  <Border Background="{Binding Background, Mode=OneWay}"
                           BorderBrush="{Binding Foreground, Mode=OneWay}"
                           BorderThickness="1,1,1,1"
                           Margin="0,-1,0,0"
@@ -89,8 +91,7 @@
                              Background="{Binding Background, Mode=OneWay}"
                              Foreground="{Binding Foreground, Mode=OneWay}"
                              VerticalScrollBarVisibility="Auto"
-                             HorizontalScrollBarVisibility="Auto"
-                             />
+                             HorizontalScrollBarVisibility="Auto" />
                   </Border>
                 </StackPanel>
               </Border>

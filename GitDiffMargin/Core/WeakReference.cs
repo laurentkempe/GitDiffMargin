@@ -47,15 +47,9 @@ namespace GitDiffMargin.Core
 
         public new T Target
         {
-            get
-            {
-                return (T)base.Target;
-            }
+            get { return (T) base.Target; }
 
-            set
-            {
-                base.Target = value;
-            }
+            set { base.Target = value; }
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿namespace GitDiffMargin.View
 {
     /// <summary>
-    ///   Interaction logic for EditorDiffMarginControl.xaml
+    ///     Interaction logic for EditorDiffMarginControl.xaml
     /// </summary>
     public partial class EditorDiffMarginControl
     {

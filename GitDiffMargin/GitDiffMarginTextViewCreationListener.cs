@@ -1,22 +1,23 @@
-﻿namespace GitDiffMargin
-{
-    using System.ComponentModel.Composition;
-    using Microsoft.VisualStudio.Editor;
-    using Microsoft.VisualStudio.Shell;
-    using Microsoft.VisualStudio.Text.Editor;
-    using Microsoft.VisualStudio.TextManager.Interop;
-    using Microsoft.VisualStudio.Utilities;
+﻿using System.ComponentModel.Composition;
+using Microsoft.VisualStudio.Editor;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.TextManager.Interop;
+using Microsoft.VisualStudio.Utilities;
 
+namespace GitDiffMargin
+{
     [Export(typeof(IVsTextViewCreationListener))]
     [ContentType("text")]
     [TextViewRole(PredefinedTextViewRoles.Editable)]
     internal class GitDiffMarginTextViewCreationListener : IVsTextViewCreationListener
     {
-        private readonly SVsServiceProvider _serviceProvider;
         private readonly IVsEditorAdaptersFactoryService _editorAdaptersFactoryService;
+        private readonly SVsServiceProvider _serviceProvider;
 
         [ImportingConstructor]
-        public GitDiffMarginTextViewCreationListener(SVsServiceProvider serviceProvider, IVsEditorAdaptersFactoryService editorAdaptersFactoryService)
+        public GitDiffMarginTextViewCreationListener(SVsServiceProvider serviceProvider,
+            IVsEditorAdaptersFactoryService editorAdaptersFactoryService)
         {
             _serviceProvider = serviceProvider;
             _editorAdaptersFactoryService = editorAdaptersFactoryService;
@@ -28,7 +29,7 @@
             if (textView == null)
                 return;
 
-            GitDiffMarginCommandHandler filter = new GitDiffMarginCommandHandler(textViewAdapter, _editorAdaptersFactoryService, textView);
+            var filter = new GitDiffMarginCommandHandler(textViewAdapter, _editorAdaptersFactoryService, textView);
             filter.Enabled = true;
             textView.Properties.AddProperty(typeof(GitDiffMarginCommandHandler), filter);
         }

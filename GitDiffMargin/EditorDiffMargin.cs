@@ -18,17 +18,17 @@ namespace GitDiffMargin
 
         public const string MarginNameConst = "EditorDiffMargin";
 
-        protected override string MarginName
-        {
-            get { return MarginNameConst; }
-        }
-
         internal EditorDiffMargin(IWpfTextView textView, IMarginCore marginCore)
             : base(textView)
         {
             ViewModel = new EditorDiffMarginViewModel(marginCore, UpdateDiffDimensions);
 
             UserControl = new EditorDiffMarginControl {DataContext = ViewModel, Width = MarginWidth};
+        }
+
+        protected override string MarginName
+        {
+            get { return MarginNameConst; }
         }
 
         private void UpdateDiffDimensions(DiffViewModel diffViewModel, HunkRangeInfo hunkRangeInfo)
@@ -49,10 +49,7 @@ namespace GitDiffMargin
         private bool? UpdateNormalDiffDimensions(DiffViewModel diffViewModel, HunkRangeInfo hunkRangeInfo)
         {
             if (hunkRangeInfo.NewHunkRange.NumberOfLines <= 0)
-            {
-                // if visible, it would have been as a deletion
                 return false;
-            }
 
             var snapshot = TextView.TextBuffer.CurrentSnapshot;
 
@@ -62,9 +59,7 @@ namespace GitDiffMargin
                 || startLineNumber >= snapshot.LineCount
                 || endLineNumber < 0
                 || endLineNumber >= snapshot.LineCount)
-            {
                 return false;
-            }
 
             var startLine = snapshot.GetLineFromLineNumber(startLineNumber);
             var endLine = snapshot.GetLineFromLineNumber(endLineNumber);
@@ -83,16 +78,10 @@ namespace GitDiffMargin
                 return false;
 
             if (TextView.TextViewLines.LastVisibleLine.EndIncludingLineBreak < startLineView.Start)
-            {
-                // starts after the last visible line
                 return false;
-            }
 
             if (TextView.TextViewLines.FirstVisibleLine.Start > endLineView.EndIncludingLineBreak)
-            {
-                // ends before the first visible line
                 return false;
-            }
 
             double startTop;
             switch (startLineView.VisibilityState)
@@ -140,10 +129,7 @@ namespace GitDiffMargin
         private bool? UpdateDeletedDiffDimensions(DiffViewModel diffViewModel, HunkRangeInfo hunkRangeInfo)
         {
             if (hunkRangeInfo.NewHunkRange.NumberOfLines != 0)
-            {
-                // unexpected number of lines for a deletion hunk
                 return false;
-            }
 
             var snapshot = TextView.TextBuffer.CurrentSnapshot;
 
@@ -164,16 +150,10 @@ namespace GitDiffMargin
                 return false;
 
             if (TextView.TextViewLines.LastVisibleLine.EndIncludingLineBreak < followingLineView.Start)
-            {
-                // starts after the last visible line
                 return false;
-            }
 
             if (TextView.TextViewLines.FirstVisibleLine.Start > followingLineView.EndIncludingLineBreak)
-            {
-                // ends before the first visible line
                 return false;
-            }
 
             double followingTop;
             switch (followingLineView.VisibilityState)
@@ -194,9 +174,9 @@ namespace GitDiffMargin
                     return false;
             }
 
-            double center = followingTop;
-            double height = TextView.LineHeight;
-            diffViewModel.Top = center - (height / 2.0);
+            var center = followingTop;
+            var height = TextView.LineHeight;
+            diffViewModel.Top = center - height / 2.0;
             diffViewModel.Height = TextView.LineHeight;
             return true;
         }

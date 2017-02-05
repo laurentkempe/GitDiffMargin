@@ -6,7 +6,8 @@ namespace GitDiffMargin.ViewModel
 {
     internal sealed class ScrollDiffViewModel : DiffViewModel
     {
-        internal ScrollDiffViewModel(HunkRangeInfo hunkRangeInfo, IMarginCore marginCore, Action<DiffViewModel, HunkRangeInfo> updateDiffDimensions)
+        internal ScrollDiffViewModel(HunkRangeInfo hunkRangeInfo, IMarginCore marginCore,
+            Action<DiffViewModel, HunkRangeInfo> updateDiffDimensions)
             : base(hunkRangeInfo, marginCore, updateDiffDimensions)
         {
             UpdateDimensions();
@@ -20,11 +21,7 @@ namespace GitDiffMargin.ViewModel
 
         public override double Width
         {
-            get
-            {
-                return MarginCore.ScrollChangeWidth;
-            }
+            get { return MarginCore.ScrollChangeWidth; }
         }
-
     }
 }
