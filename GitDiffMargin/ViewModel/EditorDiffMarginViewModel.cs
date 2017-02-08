@@ -15,6 +15,7 @@ namespace GitDiffMargin.ViewModel
         private readonly Action<DiffViewModel, HunkRangeInfo> _updateDiffDimensions;
         private RelayCommand<DiffViewModel> _previousChangeCommand;
         private RelayCommand<DiffViewModel> _nextChangeCommand;
+        private RelayCommand _toggleIgnoreWhiteSpacesCommand;
 
         internal EditorDiffMarginViewModel(IMarginCore marginCore, Action<DiffViewModel, HunkRangeInfo> updateDiffDimensions) :
             base(marginCore)
@@ -25,6 +26,8 @@ namespace GitDiffMargin.ViewModel
             _updateDiffDimensions = updateDiffDimensions;
         }
 
+        public bool IgnoreWhiteSpaces => MarginCore.IgnoreWhiteSpaces;
+
         public RelayCommand<DiffViewModel> PreviousChangeCommand
         {
             get { return _previousChangeCommand ?? (_previousChangeCommand = new RelayCommand<DiffViewModel>(PreviousChange, PreviousChangeCanExecute)); }
@@ -33,6 +36,11 @@ namespace GitDiffMargin.ViewModel
         public RelayCommand<DiffViewModel> NextChangeCommand
         {
             get { return _nextChangeCommand ?? (_nextChangeCommand = new RelayCommand<DiffViewModel>(NextChange, NextChangeCanExecute)); }
+        }
+
+        public RelayCommand ToggleIgnoreWhiteSpacesCommand
+        {
+            get { return _toggleIgnoreWhiteSpacesCommand ?? (_toggleIgnoreWhiteSpacesCommand = new RelayCommand(ToggleIgnoreWhiteSpaces, CanExecuteToggleIgnoreWhiteSpaces)); }
         }
 
         private bool PreviousChangeCanExecute(DiffViewModel currentEditorDiffViewModel)
@@ -53,6 +61,16 @@ namespace GitDiffMargin.ViewModel
         private void NextChange(DiffViewModel currentEditorDiffViewModel)
         {
             MoveToChange(currentEditorDiffViewModel, +1);
+        }
+
+        private void ToggleIgnoreWhiteSpaces()
+        {
+            MarginCore.ToggleIgnoreWhiteSpace();
+        }
+
+        private bool CanExecuteToggleIgnoreWhiteSpaces()
+        {
+            return true;
         }
 
         public void MoveToChange(DiffViewModel currentDiffViewModel, int indexModifier)

@@ -80,6 +80,17 @@
           <ToolTipText>Copy Old Text</ToolTipText>
         </Strings>
       </Button>
+
+      <Button guid="GitDiffMarginCommand" id="IgnoreWhitespaces" priority="0x106" type="Button">
+        <Parent guid="GitDiffMarginCommand" id="GitDiffToolbarGroup" />
+        <Icon guid="IgnoreWhitespaces" id="1" />
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <Strings>
+          <ButtonText>Ignore whitespaces</ButtonText>
+          <MenuText>Ignore whitespaces</MenuText>
+          <ToolTipText>Ignore whitespaces</ToolTipText>
+        </Strings>
+      </Button>
     </Buttons>
 
     <Bitmaps>
@@ -88,6 +99,7 @@
       <Bitmap guid="IconRollback" href="Resources\Rollback.png"/>
       <Bitmap guid="IconShowDifference" href="Resources\ShowDifference.png"/>
       <Bitmap guid="IconCopyOldText" href="Resources\CopyOldText.png"/>
+      <Bitmap guid="IgnoreWhitespaces" href="Resources\Ignore_whitespaces.png" />
     </Bitmaps>
   </Commands>
 
@@ -100,6 +112,7 @@
       <IDSymbol name="RollbackChange" value="2" />
       <IDSymbol name="ShowDiff" value="3" />
       <IDSymbol name="CopyOldText" value="4" />
+      <IDSymbol name="IgnoreWhitespaces" value="5" />
 
       <IDSymbol name="GitDiffToolbar" value="100"/>
       <IDSymbol name="GitDiffToolbarGroup" value="150"/>
@@ -110,5 +123,6 @@
     <GuidSymbol name="IconRollback" value="{E4584E6D-3BB3-4141-80A7-9E22D028C41E}" />
     <GuidSymbol name="IconShowDifference" value="{E8011DB3-8E2C-4EEA-8C3D-0D33FB66EB12}" />
     <GuidSymbol name="IconCopyOldText" value="{269FF401-0A36-4E4B-8301-66FB58AA9835}" />
+    <GuidSymbol name="IgnoreWhitespaces" value="{72992790-BB19-4EC3-A4CE-7C2E6D9E539D}" />
   </Symbols>
 </CommandTable>

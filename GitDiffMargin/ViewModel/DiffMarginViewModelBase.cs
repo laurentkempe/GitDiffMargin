@@ -24,6 +24,8 @@ namespace GitDiffMargin.ViewModel
             MarginCore.HunksChanged += HandleHunksChanged;
         }
 
+        public bool HasDiffs { get; private set; }
+
         public ObservableCollection<DiffViewModel> DiffViewModels { get; private set; }
 
         public void RefreshDiffViewModelPositions()
@@ -38,7 +40,16 @@ namespace GitDiffMargin.ViewModel
         {
             DiffViewModels.Clear();
 
-            foreach (var diffViewModel in e.Hunks.Select(CreateDiffViewModel))
+            HasDiffs = e.Hunks.Any();
+
+            var hunks = e.Hunks;
+
+            if (MarginCore.IgnoreWhiteSpaces)
+            {
+                hunks = hunks.Where(hunk => !hunk.IsWhiteSpaceChange);
+            }
+
+            foreach (var diffViewModel in hunks.Select(CreateDiffViewModel))
             {
                 DiffViewModels.Add(diffViewModel);
             }
