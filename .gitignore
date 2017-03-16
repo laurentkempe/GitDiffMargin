@@ -9,7 +9,7 @@ obj/
 [Tt]est[Rr]esult*/
 
 # Roslyn IntelliSense Cache
-*.sln.ide/
+.vs/
 
 # User-specific files
 *.suo
