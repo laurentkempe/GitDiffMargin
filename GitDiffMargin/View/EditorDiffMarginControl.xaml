@@ -43,7 +43,10 @@
         <DataTemplate>
             <Grid Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
                   d:DataContext="{d:DesignInstance viewModel:EditorDiffViewModel}">
-              <Button Name="diffControl" Command="{Binding ShowPopUpCommand}" CommandParameter="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}">
+              <Button Name="diffControl"
+                      Tag="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}"
+                      Click="Button_Click"
+                      MouseDoubleClick="Button_MouseDoubleClick">
                   <Button.Style>
                       <Style TargetType="{x:Type Button}">
                           <Style.Triggers>
