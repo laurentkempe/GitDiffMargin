@@ -60,8 +60,9 @@
             <Popup AllowsTransparency="True"
                    HorizontalOffset="8"
                    IsOpen="{Binding ShowPopup, Mode=TwoWay}"
-                   Placement="MousePoint"
+                   Placement="Custom"
                    PlacementTarget="{Binding ElementName=diffControl}"
+                   CustomPopupPlacementCallback="HandleCustomPopupPlacement"
                    StaysOpen="False">
               <Border Background="Transparent">
                 <StackPanel Orientation="Vertical">
