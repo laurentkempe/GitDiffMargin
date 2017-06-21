@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
+using System.Text;
 using LibGit2Sharp;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
@@ -168,7 +169,7 @@ namespace GitDiffMargin.Git
 
                 var tempFileName = Path.GetTempFileName();
                 if (oldBlob != null)
-                    File.WriteAllText(tempFileName, oldBlob.GetContentText(new FilteringOptions(relativePath)));
+                    File.WriteAllText(tempFileName, oldBlob.GetContentText(new FilteringOptions(relativePath)), GetEncoding(filename));
 
                 IVsDifferenceService differenceService = _serviceProvider.GetService(typeof(SVsDifferenceService)) as IVsDifferenceService;
                 string leftFileMoniker = tempFileName;
@@ -250,6 +251,36 @@ namespace GitDiffMargin.Git
 
                 return Path.GetFullPath(workingDirectory);
             }
+        }
+
+        static Encoding GetEncoding(string file)
+        {
+            if (File.Exists(file))
+            {
+                var encoding = Encoding.UTF8;
+                if (HasPreamble(file, encoding))
+                {
+                    return encoding;
+                }
+            }
+
+            return Encoding.Default;
+        }
+
+        static bool HasPreamble(string file, Encoding encoding)
+        {
+            using (var stream = File.OpenRead(file))
+            {
+                foreach (var b in encoding.GetPreamble())
+                {
+                    if (b != stream.ReadByte())
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
         }
     }
 }
