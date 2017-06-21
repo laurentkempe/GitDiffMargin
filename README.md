@@ -42,3 +42,5 @@ Thanks to Rick Sladkey [@ricksladkey](https://github.com/ricksladkey) for the fi
 Thanks to [@Iristyle](https://github.com/Iristyle) for the chocolatey package
  
 Thanks to [@heinzbeinz](https://github.com/heinzbeinz) for the support of Visual Studio 15 preview
+
+Thanks to [@jcansdale](https://github.com/jcansdale) for bugfix
