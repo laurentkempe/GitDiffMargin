@@ -39,8 +39,8 @@ Thanks to Sam Harwell [@sharwell](https://github.com/sharwell) for all the impro
 
 Thanks to Rick Sladkey [@ricksladkey](https://github.com/ricksladkey) for the fixes
 
-Thanks to [@Iristyle](https://github.com/Iristyle) for the chocolatey package
+Thanks to Ethan J. Brown [@Iristyle](https://github.com/Iristyle) for the chocolatey package
  
 Thanks to [@heinzbeinz](https://github.com/heinzbeinz) for the support of Visual Studio 15 preview
 
-Thanks to [@jcansdale](https://github.com/jcansdale) for bugfix
+Thanks to Jamie Cansdale [@jcansdale](https://github.com/jcansdale) for bugfix
