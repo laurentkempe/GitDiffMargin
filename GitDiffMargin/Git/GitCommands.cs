@@ -26,10 +26,10 @@ namespace GitDiffMargin.Git
 
         private const int ContextLines = 0;
 
-        public IEnumerable<HunkRangeInfo> GetGitDiffFor(ITextDocument textDocument, ITextSnapshot snapshot)
+        public IEnumerable<HunkRangeInfo> GetGitDiffFor(ITextDocument textDocument, string originalPath, ITextSnapshot snapshot)
         {
             var filename = textDocument.FilePath;
-            var repositoryPath = GetGitRepository(Path.GetFullPath(filename));
+            var repositoryPath = GetGitRepository(Path.GetFullPath(filename), ref originalPath);
             if (repositoryPath == null)
                 yield break;
 
@@ -39,7 +39,7 @@ namespace GitDiffMargin.Git
                 if (workingDirectory == null)
                     yield break;
 
-                var retrieveStatus = repo.RetrieveStatus(filename);
+                var retrieveStatus = repo.RetrieveStatus(originalPath);
                 if (retrieveStatus == FileStatus.Nonexistent)
                 {
                     // this occurs if a file within the repository itself (not the working copy) is opened.
@@ -63,7 +63,7 @@ namespace GitDiffMargin.Git
 
                 using (var currentContent = new MemoryStream(content))
                 {
-                    var relativeFilepath = filename;
+                    var relativeFilepath = originalPath;
                     if (relativeFilepath.StartsWith(workingDirectory, StringComparison.OrdinalIgnoreCase))
                         relativeFilepath = relativeFilepath.Substring(workingDirectory.Length);
 
@@ -139,20 +139,19 @@ namespace GitDiffMargin.Git
             return completeContent;
         }
 
-        public void StartExternalDiff(ITextDocument textDocument)
+        public void StartExternalDiff(ITextDocument textDocument, string originalPath)
         {
             if (textDocument == null || string.IsNullOrEmpty(textDocument.FilePath)) return;
 
             var filename = textDocument.FilePath;
-
-            var repositoryPath = GetGitRepository(Path.GetFullPath(filename));
+            var repositoryPath = GetGitRepository(Path.GetFullPath(filename), ref originalPath);
             if (repositoryPath == null)
                 return;
 
             using (var repo = new Repository(repositoryPath))
             {
                 string workingDirectory = repo.Info.WorkingDirectory;
-                string relativePath = Path.GetFullPath(filename);
+                string relativePath = originalPath;
                 if (relativePath.StartsWith(workingDirectory, StringComparison.OrdinalIgnoreCase))
                     relativePath = relativePath.Substring(workingDirectory.Length);
 
@@ -174,7 +173,7 @@ namespace GitDiffMargin.Git
                 IVsDifferenceService differenceService = _serviceProvider.GetService(typeof(SVsDifferenceService)) as IVsDifferenceService;
                 string leftFileMoniker = tempFileName;
                 // The difference service will automatically load the text from the file open in the editor, even if
-                // it has changed.
+                // it has changed. Don't use the original path here.
                 string rightFileMoniker = filename;
 
                 string actualFilename = objectName;
@@ -207,7 +206,7 @@ namespace GitDiffMargin.Git
                     leftLabel = string.Format("{0}@{1}", objectName, repo.Head.Tip.Sha.Substring(0, 7));
                 }
 
-                string rightLabel = filename;
+                string rightLabel = originalPath;
 
                 string inlineLabel = null;
                 string roles = null;
@@ -220,26 +219,63 @@ namespace GitDiffMargin.Git
         }
 
         /// <inheritdoc/>
-        public bool IsGitRepository(string path)
+        public bool TryGetOriginalPath(string path, out string originalPath)
         {
-            return GetGitRepository(path) != null;
+            originalPath = null;
+            if (GetGitRepository(path, ref originalPath) == null)
+            {
+                originalPath = path;
+                return false;
+            }
+
+            return true;
         }
 
         /// <inheritdoc/>
-        public string GetGitRepository(string path)
+        public bool IsGitRepository(string path, string originalPath)
         {
-            if (!Directory.Exists(path) && !File.Exists(path))
+            return GetGitRepository(path, originalPath) != null;
+        }
+
+        /// <inheritdoc/>
+        public string GetGitRepository(string path, string originalPath)
+        {
+            if (originalPath == null)
+                throw new ArgumentNullException(nameof(originalPath));
+
+            return GetGitRepository(path, ref originalPath);
+        }
+
+        private string GetGitRepository(string path, ref string originalPath)
+        {
+            if (originalPath == null)
+            {
+                originalPath = path;
+                if (!Directory.Exists(path) && !File.Exists(path))
+                    return null;
+
+                var discoveredPath = Repository.Discover(Path.GetFullPath(path));
+                if (discoveredPath != null)
+                    return discoveredPath;
+
+                originalPath = AdjustPath(path);
+                if (originalPath == path)
+                    return null;
+            }
+
+            if (!Directory.Exists(path) && !File.Exists(originalPath))
                 return null;
 
-            var discoveredPath = Repository.Discover(Path.GetFullPath(path));
-            // https://github.com/libgit2/libgit2sharp/issues/818#issuecomment-54760613
-            return discoveredPath;
+            return Repository.Discover(Path.GetFullPath(originalPath));
         }
 
         /// <inheritdoc/>
-        public string GetGitWorkingCopy(string path)
+        public string GetGitWorkingCopy(string path, string originalPath)
         {
-            var repositoryPath = GetGitRepository(path);
+            if (originalPath == null)
+                throw new ArgumentNullException(nameof(originalPath));
+
+            var repositoryPath = GetGitRepository(path, originalPath);
             if (repositoryPath == null)
                 return null;
 
@@ -281,6 +317,12 @@ namespace GitDiffMargin.Git
             }
 
             return true;
+        }
+
+        private string AdjustPath(string fullPath)
+        {
+            // No adjustments are made yet
+            return fullPath;
         }
     }
 }

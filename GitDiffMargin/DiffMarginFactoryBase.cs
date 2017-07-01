@@ -48,12 +48,15 @@ namespace GitDiffMargin
             if (fullPath == null)
                 return null;
 
-            var repositoryPath = GitCommands.GetGitRepository(fullPath);
+            if (!GitCommands.TryGetOriginalPath(fullPath, out string originalPath))
+                return null;
+
+            var repositoryPath = GitCommands.GetGitRepository(fullPath, originalPath);
             if (repositoryPath == null)
                 return null;
 
             return textViewHost.TextView.Properties.GetOrCreateSingletonProperty(
-                        () => new MarginCore(textViewHost.TextView, TextDocumentFactoryService, ClassificationFormatMapService, EditorFormatMapService, GitCommands));
+                        () => new MarginCore(textViewHost.TextView, originalPath, TextDocumentFactoryService, ClassificationFormatMapService, EditorFormatMapService, GitCommands));
         }
 
         private static string GetFullPath(string filename)
