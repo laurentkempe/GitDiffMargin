@@ -5,11 +5,18 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using LibGit2Sharp;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using __VSDIFFSERVICEOPTIONS = Microsoft.VisualStudio.Shell.Interop.__VSDIFFSERVICEOPTIONS;
+using __VSENUMPROJFLAGS = Microsoft.VisualStudio.Shell.Interop.__VSENUMPROJFLAGS;
+using IEnumHierarchies = Microsoft.VisualStudio.Shell.Interop.IEnumHierarchies;
 using IVsDifferenceService = Microsoft.VisualStudio.Shell.Interop.IVsDifferenceService;
+using IVsHierarchy = Microsoft.VisualStudio.Shell.Interop.IVsHierarchy;
+using IVsProject = Microsoft.VisualStudio.Shell.Interop.IVsProject;
+using IVsSolution = Microsoft.VisualStudio.Shell.Interop.IVsSolution;
 using SVsDifferenceService = Microsoft.VisualStudio.Shell.Interop.SVsDifferenceService;
+using SVsSolution = Microsoft.VisualStudio.Shell.Interop.SVsSolution;
 
 namespace GitDiffMargin.Git
 {
@@ -321,8 +328,87 @@ namespace GitDiffMargin.Git
 
         private string AdjustPath(string fullPath)
         {
-            // No adjustments are made yet
-            return fullPath;
+            // Right now the only extension is for *.csproj and *.vbproj, which are opened from a temporary location
+            switch (Path.GetExtension(fullPath).ToLowerInvariant())
+            {
+            case ".csproj":
+            case ".vbproj":
+                break;
+
+            default:
+                return fullPath;
+            }
+
+            // CPS will open the file in %TEMP%\{random name}\{ProjectFileName}
+            string directoryName = Path.GetDirectoryName(fullPath);
+            if (string.IsNullOrEmpty(directoryName))
+                return fullPath;
+
+            directoryName = Path.GetDirectoryName(directoryName);
+            if (!Path.GetTempPath().Equals(directoryName + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+                return fullPath;
+
+            IVsSolution solution = _serviceProvider.GetService(typeof(SVsSolution)) as IVsSolution;
+            if (solution == null)
+                return fullPath;
+
+            if (!ErrorHandler.Succeeded(solution.GetProjectEnum((uint)__VSENUMPROJFLAGS.EPF_LOADEDINSOLUTION, Guid.Empty, out IEnumHierarchies ppenum))
+                || ppenum == null)
+            {
+                return fullPath;
+            }
+
+            List<string> projectFiles = new List<string>();
+            IVsHierarchy[] hierarchies = new IVsHierarchy[1];
+            while (true)
+            {
+                int hr = ppenum.Next((uint)hierarchies.Length, hierarchies, out uint fetched);
+                if (!ErrorHandler.Succeeded(hr))
+                    return fullPath;
+
+                for (uint i = 0; i < fetched; i++)
+                {
+                    if (!(hierarchies[0] is IVsProject project))
+                        continue;
+
+                    if (!ErrorHandler.Succeeded(project.GetMkDocument((uint)VSConstants.VSITEMID.Root, out string projectFilePath)))
+                        continue;
+
+                    if (!Path.GetFileName(projectFilePath).Equals(Path.GetFileName(fullPath), StringComparison.Ordinal))
+                        continue;
+
+                    projectFiles.Add(projectFilePath);
+                }
+
+                if (hr != VSConstants.S_OK)
+                {
+                    // No more projects
+                    break;
+                }
+            }
+
+            switch (projectFiles.Count)
+            {
+            case 0:
+                // No matching project file found in solution
+                return fullPath;
+
+            case 1:
+                // Exactly one matching project file found in solution
+                return projectFiles[0];
+
+            default:
+                // Multiple project files found in solution; try to find one with a matching file size
+                long desiredSize = new FileInfo(fullPath).Length;
+                foreach (var projectFilePath in projectFiles)
+                {
+                    if (File.Exists(projectFilePath) && new FileInfo(projectFilePath).Length == desiredSize)
+                        return projectFilePath;
+                }
+
+                // No results found
+                return fullPath;
+            }
         }
     }
 }
