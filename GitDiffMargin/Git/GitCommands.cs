@@ -328,14 +328,11 @@ namespace GitDiffMargin.Git
 
         private string AdjustPath(string fullPath)
         {
-            // Right now the only extension is for *.csproj and *.vbproj, which are opened from a temporary location
-            switch (Path.GetExtension(fullPath).ToLowerInvariant())
+            // Right now the only adjustment is for CPS-based project systems which open their project files in a
+            // temporary location. There are several of these, such as .csproj, .vbproj, .shproj, and .fsproj, and more
+            // could appear in the future.
+            if (!fullPath.EndsWith("proj", StringComparison.Ordinal))
             {
-            case ".csproj":
-            case ".vbproj":
-                break;
-
-            default:
                 return fullPath;
             }
 
