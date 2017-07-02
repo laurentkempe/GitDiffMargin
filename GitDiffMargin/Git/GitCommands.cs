@@ -59,9 +59,13 @@ namespace GitDiffMargin.Git
                     yield break;
                 }
 
-                if (retrieveStatus == FileStatus.Unaltered && !textDocument.IsDirty)
+                if (retrieveStatus == FileStatus.Unaltered
+                    && !textDocument.IsDirty
+                    && Path.GetFullPath(filename) == originalPath)
                 {
-                    // truly unaltered
+                    // Truly unaltered. The `IsDirty` check isn't valid for cases where the textDocument is a view of a
+                    // temporary copy of the file, since the temporary copy could have been made using unsaved changes
+                    // and still appear "not dirty".
                     yield break;
                 }
 
