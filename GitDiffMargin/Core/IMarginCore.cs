@@ -14,6 +14,7 @@ namespace GitDiffMargin.Core
         event EventHandler<HunksChangedEventArgs> HunksChanged;
 
         IWpfTextView TextView { get; }
+        string OriginalPath { get; }
         IGitCommands GitCommands { get; }
         FontFamily FontFamily { get; }
         FontStretch FontStretch { get; }

@@ -27,7 +27,7 @@ namespace GitDiffMargin.Core
 
         private bool _isDisposed;
 
-        public MarginCore(IWpfTextView textView, ITextDocumentFactoryService textDocumentFactoryService, IClassificationFormatMapService classificationFormatMapService, IEditorFormatMapService editorFormatMapService, IGitCommands gitCommands)
+        public MarginCore(IWpfTextView textView, string originalPath, ITextDocumentFactoryService textDocumentFactoryService, IClassificationFormatMapService classificationFormatMapService, IEditorFormatMapService editorFormatMapService, IGitCommands gitCommands)
         {
             _textView = textView;
 
@@ -38,7 +38,7 @@ namespace GitDiffMargin.Core
 
             _gitCommands = gitCommands;
 
-            _parser = new DiffUpdateBackgroundParser(textView.TextBuffer, textView.TextDataModel.DocumentBuffer, TaskScheduler.Default, textDocumentFactoryService, GitCommands);
+            _parser = new DiffUpdateBackgroundParser(textView.TextBuffer, textView.TextDataModel.DocumentBuffer, originalPath, TaskScheduler.Default, textDocumentFactoryService, GitCommands);
             _parser.ParseComplete += HandleParseComplete;
             _parser.RequestParse(false);
 
@@ -57,6 +57,11 @@ namespace GitDiffMargin.Core
             {
                 return _textView;
             }
+        }
+
+        public string OriginalPath
+        {
+            get;
         }
 
         public IGitCommands GitCommands

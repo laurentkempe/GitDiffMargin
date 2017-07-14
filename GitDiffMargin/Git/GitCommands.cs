@@ -5,11 +5,18 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using LibGit2Sharp;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using __VSDIFFSERVICEOPTIONS = Microsoft.VisualStudio.Shell.Interop.__VSDIFFSERVICEOPTIONS;
+using __VSENUMPROJFLAGS = Microsoft.VisualStudio.Shell.Interop.__VSENUMPROJFLAGS;
+using IEnumHierarchies = Microsoft.VisualStudio.Shell.Interop.IEnumHierarchies;
 using IVsDifferenceService = Microsoft.VisualStudio.Shell.Interop.IVsDifferenceService;
+using IVsHierarchy = Microsoft.VisualStudio.Shell.Interop.IVsHierarchy;
+using IVsProject = Microsoft.VisualStudio.Shell.Interop.IVsProject;
+using IVsSolution = Microsoft.VisualStudio.Shell.Interop.IVsSolution;
 using SVsDifferenceService = Microsoft.VisualStudio.Shell.Interop.SVsDifferenceService;
+using SVsSolution = Microsoft.VisualStudio.Shell.Interop.SVsSolution;
 
 namespace GitDiffMargin.Git
 {
@@ -26,10 +33,10 @@ namespace GitDiffMargin.Git
 
         private const int ContextLines = 0;
 
-        public IEnumerable<HunkRangeInfo> GetGitDiffFor(ITextDocument textDocument, ITextSnapshot snapshot)
+        public IEnumerable<HunkRangeInfo> GetGitDiffFor(ITextDocument textDocument, string originalPath, ITextSnapshot snapshot)
         {
             var filename = textDocument.FilePath;
-            var repositoryPath = GetGitRepository(Path.GetFullPath(filename));
+            var repositoryPath = GetGitRepository(Path.GetFullPath(filename), ref originalPath);
             if (repositoryPath == null)
                 yield break;
 
@@ -39,7 +46,7 @@ namespace GitDiffMargin.Git
                 if (workingDirectory == null)
                     yield break;
 
-                var retrieveStatus = repo.RetrieveStatus(filename);
+                var retrieveStatus = repo.RetrieveStatus(originalPath);
                 if (retrieveStatus == FileStatus.Nonexistent)
                 {
                     // this occurs if a file within the repository itself (not the working copy) is opened.
@@ -52,9 +59,13 @@ namespace GitDiffMargin.Git
                     yield break;
                 }
 
-                if (retrieveStatus == FileStatus.Unaltered && !textDocument.IsDirty)
+                if (retrieveStatus == FileStatus.Unaltered
+                    && !textDocument.IsDirty
+                    && Path.GetFullPath(filename) == originalPath)
                 {
-                    // truly unaltered
+                    // Truly unaltered. The `IsDirty` check isn't valid for cases where the textDocument is a view of a
+                    // temporary copy of the file, since the temporary copy could have been made using unsaved changes
+                    // and still appear "not dirty".
                     yield break;
                 }
 
@@ -63,7 +74,7 @@ namespace GitDiffMargin.Git
 
                 using (var currentContent = new MemoryStream(content))
                 {
-                    var relativeFilepath = filename;
+                    var relativeFilepath = originalPath;
                     if (relativeFilepath.StartsWith(workingDirectory, StringComparison.OrdinalIgnoreCase))
                         relativeFilepath = relativeFilepath.Substring(workingDirectory.Length);
 
@@ -139,20 +150,19 @@ namespace GitDiffMargin.Git
             return completeContent;
         }
 
-        public void StartExternalDiff(ITextDocument textDocument)
+        public void StartExternalDiff(ITextDocument textDocument, string originalPath)
         {
             if (textDocument == null || string.IsNullOrEmpty(textDocument.FilePath)) return;
 
             var filename = textDocument.FilePath;
-
-            var repositoryPath = GetGitRepository(Path.GetFullPath(filename));
+            var repositoryPath = GetGitRepository(Path.GetFullPath(filename), ref originalPath);
             if (repositoryPath == null)
                 return;
 
             using (var repo = new Repository(repositoryPath))
             {
                 string workingDirectory = repo.Info.WorkingDirectory;
-                string relativePath = Path.GetFullPath(filename);
+                string relativePath = originalPath;
                 if (relativePath.StartsWith(workingDirectory, StringComparison.OrdinalIgnoreCase))
                     relativePath = relativePath.Substring(workingDirectory.Length);
 
@@ -174,7 +184,7 @@ namespace GitDiffMargin.Git
                 IVsDifferenceService differenceService = _serviceProvider.GetService(typeof(SVsDifferenceService)) as IVsDifferenceService;
                 string leftFileMoniker = tempFileName;
                 // The difference service will automatically load the text from the file open in the editor, even if
-                // it has changed.
+                // it has changed. Don't use the original path here.
                 string rightFileMoniker = filename;
 
                 string actualFilename = objectName;
@@ -207,7 +217,7 @@ namespace GitDiffMargin.Git
                     leftLabel = string.Format("{0}@{1}", objectName, repo.Head.Tip.Sha.Substring(0, 7));
                 }
 
-                string rightLabel = filename;
+                string rightLabel = originalPath;
 
                 string inlineLabel = null;
                 string roles = null;
@@ -220,26 +230,63 @@ namespace GitDiffMargin.Git
         }
 
         /// <inheritdoc/>
-        public bool IsGitRepository(string path)
+        public bool TryGetOriginalPath(string path, out string originalPath)
         {
-            return GetGitRepository(path) != null;
+            originalPath = null;
+            if (GetGitRepository(path, ref originalPath) == null)
+            {
+                originalPath = path;
+                return false;
+            }
+
+            return true;
         }
 
         /// <inheritdoc/>
-        public string GetGitRepository(string path)
+        public bool IsGitRepository(string path, string originalPath)
         {
-            if (!Directory.Exists(path) && !File.Exists(path))
+            return GetGitRepository(path, originalPath) != null;
+        }
+
+        /// <inheritdoc/>
+        public string GetGitRepository(string path, string originalPath)
+        {
+            if (originalPath == null)
+                throw new ArgumentNullException(nameof(originalPath));
+
+            return GetGitRepository(path, ref originalPath);
+        }
+
+        private string GetGitRepository(string path, ref string originalPath)
+        {
+            if (originalPath == null)
+            {
+                originalPath = path;
+                if (!Directory.Exists(path) && !File.Exists(path))
+                    return null;
+
+                var discoveredPath = Repository.Discover(Path.GetFullPath(path));
+                if (discoveredPath != null)
+                    return discoveredPath;
+
+                originalPath = AdjustPath(path);
+                if (originalPath == path)
+                    return null;
+            }
+
+            if (!Directory.Exists(path) && !File.Exists(originalPath))
                 return null;
 
-            var discoveredPath = Repository.Discover(Path.GetFullPath(path));
-            // https://github.com/libgit2/libgit2sharp/issues/818#issuecomment-54760613
-            return discoveredPath;
+            return Repository.Discover(Path.GetFullPath(originalPath));
         }
 
         /// <inheritdoc/>
-        public string GetGitWorkingCopy(string path)
+        public string GetGitWorkingCopy(string path, string originalPath)
         {
-            var repositoryPath = GetGitRepository(path);
+            if (originalPath == null)
+                throw new ArgumentNullException(nameof(originalPath));
+
+            var repositoryPath = GetGitRepository(path, originalPath);
             if (repositoryPath == null)
                 return null;
 
@@ -281,6 +328,88 @@ namespace GitDiffMargin.Git
             }
 
             return true;
+        }
+
+        private string AdjustPath(string fullPath)
+        {
+            // Right now the only adjustment is for CPS-based project systems which open their project files in a
+            // temporary location. There are several of these, such as .csproj, .vbproj, .shproj, and .fsproj, and more
+            // could appear in the future.
+            if (!fullPath.EndsWith("proj", StringComparison.Ordinal))
+            {
+                return fullPath;
+            }
+
+            // CPS will open the file in %TEMP%\{random name}\{ProjectFileName}
+            string directoryName = Path.GetDirectoryName(fullPath);
+            if (string.IsNullOrEmpty(directoryName))
+                return fullPath;
+
+            directoryName = Path.GetDirectoryName(directoryName);
+            if (!Path.GetTempPath().Equals(directoryName + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+                return fullPath;
+
+            IVsSolution solution = _serviceProvider.GetService(typeof(SVsSolution)) as IVsSolution;
+            if (solution == null)
+                return fullPath;
+
+            if (!ErrorHandler.Succeeded(solution.GetProjectEnum((uint)__VSENUMPROJFLAGS.EPF_LOADEDINSOLUTION, Guid.Empty, out IEnumHierarchies ppenum))
+                || ppenum == null)
+            {
+                return fullPath;
+            }
+
+            List<string> projectFiles = new List<string>();
+            IVsHierarchy[] hierarchies = new IVsHierarchy[1];
+            while (true)
+            {
+                int hr = ppenum.Next((uint)hierarchies.Length, hierarchies, out uint fetched);
+                if (!ErrorHandler.Succeeded(hr))
+                    return fullPath;
+
+                for (uint i = 0; i < fetched; i++)
+                {
+                    if (!(hierarchies[0] is IVsProject project))
+                        continue;
+
+                    if (!ErrorHandler.Succeeded(project.GetMkDocument((uint)VSConstants.VSITEMID.Root, out string projectFilePath)))
+                        continue;
+
+                    if (!Path.GetFileName(projectFilePath).Equals(Path.GetFileName(fullPath), StringComparison.Ordinal))
+                        continue;
+
+                    projectFiles.Add(projectFilePath);
+                }
+
+                if (hr != VSConstants.S_OK)
+                {
+                    // No more projects
+                    break;
+                }
+            }
+
+            switch (projectFiles.Count)
+            {
+            case 0:
+                // No matching project file found in solution
+                return fullPath;
+
+            case 1:
+                // Exactly one matching project file found in solution
+                return projectFiles[0];
+
+            default:
+                // Multiple project files found in solution; try to find one with a matching file size
+                long desiredSize = new FileInfo(fullPath).Length;
+                foreach (var projectFilePath in projectFiles)
+                {
+                    if (File.Exists(projectFilePath) && new FileInfo(projectFilePath).Length == desiredSize)
+                        return projectFilePath;
+                }
+
+                // No results found
+                return fullPath;
+            }
         }
     }
 }

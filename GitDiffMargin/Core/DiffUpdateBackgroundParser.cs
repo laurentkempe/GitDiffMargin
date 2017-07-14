@@ -16,8 +16,9 @@ namespace GitDiffMargin.Core
         private readonly IGitCommands _commands;
         private readonly ITextDocument _textDocument;
         private readonly ITextBuffer _documentBuffer;
+        private readonly string _originalPath;
 
-        internal DiffUpdateBackgroundParser(ITextBuffer textBuffer, ITextBuffer documentBuffer, TaskScheduler taskScheduler, ITextDocumentFactoryService textDocumentFactoryService, IGitCommands commands)
+        internal DiffUpdateBackgroundParser(ITextBuffer textBuffer, ITextBuffer documentBuffer, string originalPath, TaskScheduler taskScheduler, ITextDocumentFactoryService textDocumentFactoryService, IGitCommands commands)
             : base(textBuffer, taskScheduler, textDocumentFactoryService)
         {
             _documentBuffer = documentBuffer;
@@ -26,11 +27,12 @@ namespace GitDiffMargin.Core
 
             if (TextDocumentFactoryService.TryGetTextDocument(_documentBuffer, out _textDocument))
             {
-                if (_commands.IsGitRepository(_textDocument.FilePath))
+                _originalPath = originalPath;
+                if (_commands.IsGitRepository(_textDocument.FilePath, _originalPath))
                 {
                     _textDocument.FileActionOccurred += OnFileActionOccurred;
 
-                    var repositoryDirectory = _commands.GetGitRepository(_textDocument.FilePath);
+                    var repositoryDirectory = _commands.GetGitRepository(_textDocument.FilePath, _originalPath);
                     if (repositoryDirectory != null)
                     {
                         _watcher = new FileSystemWatcher(repositoryDirectory);
@@ -100,7 +102,7 @@ namespace GitDiffMargin.Core
                 ITextDocument textDocument;
                 if (!TextDocumentFactoryService.TryGetTextDocument(_documentBuffer, out textDocument)) return;
 
-                var diff = _commands.GetGitDiffFor(textDocument, snapshot);
+                var diff = _commands.GetGitDiffFor(textDocument, _originalPath, snapshot);
                 var result = new DiffParseResultEventArgs(snapshot, stopwatch.Elapsed, diff.ToList());
                 OnParseComplete(result);
             }
