@@ -1,4 +1,4 @@
-# Git Diff Margin [![Build status](https://ci.appveyor.com/api/projects/status/n2j1hcqpdel0xj0c/branch/master?svg=true)](https://ci.appveyor.com/project/laurentkempe/gitdiffmargin/branch/master) [![Gitter](https://img.shields.io/gitter/room/inferred/freebuilder.svg?style=flat-square)](https://gitter.im/GitDiffMargin/Lobby)
+ Git Diff Margin [![Build status](https://ci.appveyor.com/api/projects/status/n2j1hcqpdel0xj0c/branch/master?svg=true)](https://ci.appveyor.com/project/laurentkempe/gitdiffmargin/branch/master) [![Gitter](https://img.shields.io/gitter/room/inferred/freebuilder.svg?style=flat-square)](https://gitter.im/GitDiffMargin/Lobby)
 
 
 Git Diff Margin displays live Git changes of the currently edited file on Visual Studio margin and scroll bar.
@@ -27,11 +27,15 @@ Git Diff Margin version 3.2.2 is the latest release supporting Visual Studio 201
 
 Grab it from inside of Visual Studio's Extension Manager, or via the [Extension Gallery link](https://marketplace.visualstudio.com/items?itemName=LaurentKempe.GitDiffMargin)
 
-Or use the [Chocolatey installation](https://chocolatey.org/packages/GitDiffMargin)
-
 ## Video
 
 You might see a little video on the [following page](https://www.flickr.com/photos/laurentkempe/14879945429/).
+
+## Feedback
+
+* Please use the [**Issue Tracker**](https://github.com/laurentkempe/GitDiffMargin/issues) to report bugs and feature requests.
+* Write a [**review**](https://marketplace.visualstudio.com/items?itemName=LaurentKempe.GitDiffMargin#review-details).
+* Tweet me [![Follow on Titter](https://img.shields.io/twitter/url/http/realvizu.svg?style=social&label=@laurentkempe)](https://twitter.com/laurentkempe)
 
 ## Credits
 
