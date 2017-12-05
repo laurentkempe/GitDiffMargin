@@ -4,6 +4,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModel="clr-namespace:GitDiffMargin.ViewModel"
+             xmlns:view="clr-namespace:GitDiffMargin.View"
              Cursor="Hand"
              ClipToBounds="True"
              d:DataContext="{d:DesignInstance viewModel:EditorDiffMarginViewModel}"
@@ -65,7 +66,14 @@
                    IsOpen="{Binding ShowPopup, Mode=TwoWay}"
                    Placement="MousePoint"
                    PlacementTarget="{Binding ElementName=diffControl}"
-                   StaysOpen="False">
+                   StaysOpen="False"
+                   view:PopupAllowKeyboardInput.IsEnabled="True">
+              <Popup.CommandBindings>
+                <CommandBinding Command="Close" Executed="Popup_Close" />
+              </Popup.CommandBindings>
+              <Popup.InputBindings>
+                <KeyBinding Key="Escape" Command="Close" />
+              </Popup.InputBindings>
               <Border Background="Transparent">
                 <StackPanel Orientation="Vertical">
                   <Border HorizontalAlignment="Left"
@@ -92,8 +100,7 @@
                              Background="{Binding Background, Mode=OneWay}"
                              Foreground="{Binding Foreground, Mode=OneWay}"
                              VerticalScrollBarVisibility="Auto"
-                             HorizontalScrollBarVisibility="Auto"
-                             />
+                             HorizontalScrollBarVisibility="Auto" />
                   </Border>
                 </StackPanel>
               </Border>

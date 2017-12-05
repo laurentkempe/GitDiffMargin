@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Threading; 
 using GitDiffMargin.ViewModel;
@@ -41,6 +42,13 @@ namespace GitDiffMargin.View
             var editorDiffViewModel = (EditorDiffViewModel)button?.DataContext;
 
             editorDiffViewModel?.ShowDifferenceCommand.Execute(null);
+        }
+
+        private void Popup_Close(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (!(sender is Popup popup)) return;
+
+            popup.IsOpen = false;
         }
 
         private static void DoubleClick(object sender, EventArgs e)
