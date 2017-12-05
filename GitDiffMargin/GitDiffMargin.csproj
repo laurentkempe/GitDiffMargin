@@ -226,6 +226,7 @@
     <Compile Include="View\EditorDiffMarginControl.xaml.cs">
       <DependentUpon>EditorDiffMarginControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\PopupKeyboardBehavior.cs" />
     <Compile Include="View\ScrollDiffMarginControl.xaml.cs">
       <DependentUpon>ScrollDiffMarginControl.xaml</DependentUpon>
     </Compile>
