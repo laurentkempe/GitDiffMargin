@@ -35,7 +35,7 @@ You might see a little video on the [following page](https://www.flickr.com/phot
 
 * Please use the [**Issue Tracker**](https://github.com/laurentkempe/GitDiffMargin/issues) to report bugs and feature requests
 * Write a [**review**](https://marketplace.visualstudio.com/items?itemName=LaurentKempe.GitDiffMargin#review-details)
-* Tweet me [![Follow on Titter](https://img.shields.io/twitter/url/http/realvizu.svg?style=social&label=@laurentkempe)](https://twitter.com/laurentkempe)
+* Tweet me [![Follow on Twitter](https://img.shields.io/twitter/url/http/realvizu.svg?style=social&label=@laurentkempe)](https://twitter.com/laurentkempe)
 
 ## Credits
 
