@@ -19,7 +19,7 @@ Git Diff Margin displays live Git changes of the currently edited file on Visual
 * Support Visual Studio 2013 Dark, Light and Blue Theme
 * Support zoom
 
-![Screenshot](https://farm9.staticflickr.com/8330/8116990137_bd669ee9fc.jpg)
+![Screenshot](https://farm4.staticflickr.com/3893/15335334635_a88dc1f271.jpg)
 
 Git Diff Margin version 3.2.2 is the latest release supporting Visual Studio 2010 it uses LibGit2Sharp v0.23.1 and is not being maintained. You can [download it here](https://github.com/laurentkempe/GitDiffMargin/releases/tag/v3.2.2).
 
