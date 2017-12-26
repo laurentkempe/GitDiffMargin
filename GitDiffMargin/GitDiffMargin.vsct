@@ -80,6 +80,16 @@
           <ToolTipText>Copy Old Text</ToolTipText>
         </Strings>
       </Button>
+
+      <Button guid="GitDiffMarginCommand" id="ShowPopup" priority="0x0106" type="Button">
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <Strings>
+          <LocCanonicalName>GitDiffMargin.ShowPopup</LocCanonicalName>
+          <ButtonText>ShowPopup</ButtonText>
+          <MenuText>Show popup</MenuText>
+          <ToolTipText>Show popup</ToolTipText>
+        </Strings>
+      </Button>
     </Buttons>
 
     <Bitmaps>
@@ -100,6 +110,7 @@
       <IDSymbol name="RollbackChange" value="2" />
       <IDSymbol name="ShowDiff" value="3" />
       <IDSymbol name="CopyOldText" value="4" />
+      <IDSymbol name="ShowPopup" value="5" />
 
       <IDSymbol name="GitDiffToolbar" value="100"/>
       <IDSymbol name="GitDiffToolbarGroup" value="150"/>
