@@ -98,6 +98,19 @@
                     // these aren't actually commands, but IDs of the command bars and groups
                     break;
 
+                case GitDiffMarginCommand.IgnoreWhiteSpaces:
+                    {
+                        EditorDiffMarginViewModel viewModel;
+                        if (!TryGetMarginViewModel(out viewModel) || !viewModel.HasDiffs)
+                            return 0;
+
+                        if (viewModel.IgnoreWhiteSpaces)
+                            return OLECMDF.OLECMDF_SUPPORTED | OLECMDF.OLECMDF_ENABLED | OLECMDF.OLECMDF_LATCHED;
+                        else
+                            return OLECMDF.OLECMDF_SUPPORTED | OLECMDF.OLECMDF_ENABLED;
+                    }
+                    break;
+
                 default:
                     break;
                 }
@@ -164,6 +177,14 @@
                 case GitDiffMarginCommand.GitDiffToolbar:
                 case GitDiffMarginCommand.GitDiffToolbarGroup:
                     // these aren't actually commands, but IDs of the command bars and groups
+                    break;
+
+                case GitDiffMarginCommand.IgnoreWhiteSpaces:
+                    {
+                        ICommand command = viewModel.ToggleIgnoreWhiteSpacesCommand;
+                        command.Execute(null);
+                        return true;
+                    }
                     break;
 
                 default:

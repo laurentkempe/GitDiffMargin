@@ -250,6 +250,7 @@
       <Link>LICENSE.md</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="Resources\Ignore_whitespaces.png" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

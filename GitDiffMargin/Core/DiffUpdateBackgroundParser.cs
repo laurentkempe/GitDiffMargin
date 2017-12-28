@@ -92,6 +92,11 @@ namespace GitDiffMargin.Core
             }
         }
 
+        public void Restart()
+        {
+            MarkDirty(true);
+        }
+
         protected override void ReParseImpl()
         {
             try

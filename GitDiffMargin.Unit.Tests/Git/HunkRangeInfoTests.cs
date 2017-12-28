@@ -9,7 +9,7 @@ using Shouldly;
 
 namespace GitDiffMargin.Unit.Tests.Git
 {
-    // ReSharper disable InconsistentNaming 
+    // ReSharper disable InconsistentNaming
 
     [TestFixture(0)]
     public class HunkRangeInfoTests
@@ -111,7 +111,59 @@ namespace GitDiffMargin.Unit.Tests.Git
             //Assert
             isDeletion.ShouldBe(true);
         }
+
+        [Test]
+        public void IsWhiteSpaceChange_NonPrintableCharsAddedOrRemoved_ExpectTrue()
+        {
+            //Arrange
+            var hunkRangeInfo = new HunkRangeInfo(new HunkRange("-7,3", _contextLines), new HunkRange("+6,0", _contextLines), new [] { "-a test text", "-a test text\r\n", "+a t e s t t e x t", "+a\ttest\ttext" });
+
+            //Act
+            var isWhiteSpaceChange = hunkRangeInfo.IsWhiteSpaceChange;
+
+            //Assert
+            isWhiteSpaceChange.ShouldBe(true);
+        }
+
+        [Test]
+        public void IsWhiteSpaceChange_PrintableCharsAddedOrRemoved_ExpectFalse()
+        {
+            //Arrange
+            var hunkRangeInfo = new HunkRangeInfo(new HunkRange("-7,3", _contextLines), new HunkRange("+6,0", _contextLines), new [] { "-a test text", "-a test text\r\n", "+a test text", "+a\ttest\ttextchanged" });
+
+            //Act
+            var isWhiteSpaceChange = hunkRangeInfo.IsWhiteSpaceChange;
+
+            //Assert
+            isWhiteSpaceChange.ShouldBe(false);
+        }
+
+        [Test]
+        public void IsWhiteSpaceChange_EmptyLineRemoved_ExpectTrue()
+        {
+            //Arrange
+            var hunkRangeInfo = new HunkRangeInfo(new HunkRange("-7,3", _contextLines), new HunkRange("+6,0", _contextLines), new[] { "- "});
+
+            //Act
+            var isWhiteSpaceChange = hunkRangeInfo.IsWhiteSpaceChange;
+
+            //Assert
+            isWhiteSpaceChange.ShouldBe(true);
+        }
+
+        [Test]
+        public void IsWhiteSpaceChange_EmptyLineAdded_ExpectTrue()
+        {
+            //Arrange
+            var hunkRangeInfo = new HunkRangeInfo(new HunkRange("-7,3", _contextLines), new HunkRange("+6,0", _contextLines), new[] { "+ " });
+
+            //Act
+            var isWhiteSpaceChange = hunkRangeInfo.IsWhiteSpaceChange;
+
+            //Assert
+            isWhiteSpaceChange.ShouldBe(true);
+        }
     }
 
-    // ReSharper restore InconsistentNaming 
+    // ReSharper restore InconsistentNaming
 }

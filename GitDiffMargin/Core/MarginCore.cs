@@ -193,6 +193,8 @@ namespace GitDiffMargin.Core
 
         public event EventHandler<HunksChangedEventArgs> HunksChanged;
 
+        public bool IgnoreWhiteSpaces { get; private set; }
+
         public void MoveToChange(int lineNumber)
         {
             var diffLine = _textView.TextSnapshot.GetLineFromLineNumber(lineNumber);
@@ -211,7 +213,7 @@ namespace GitDiffMargin.Core
             else
             {
                 _textView.VisualElement.Dispatcher.BeginInvoke(action);
-            } 
+            }
         }
 
         private void HandleFormatMappingChanged(object sender, FormatItemsEventArgs e)
@@ -321,6 +323,13 @@ namespace GitDiffMargin.Core
             ITextDocument document;
             _textView.TextDataModel.DocumentBuffer.Properties.TryGetProperty(typeof(ITextDocument), out document);
             return document;
+        }
+
+        public void ToggleIgnoreWhiteSpace()
+        {
+            IgnoreWhiteSpaces = !IgnoreWhiteSpaces;
+
+            _parser.Restart();
         }
 
         private void HandleParseComplete(object sender, ParseResultEventArgs e)
