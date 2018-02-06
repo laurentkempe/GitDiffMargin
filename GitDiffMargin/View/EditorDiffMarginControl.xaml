@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="GitDiffMargin.View.EditorDiffMarginControl"
+<UserControl x:Class="GitDiffMargin.View.EditorDiffMarginControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -64,8 +64,9 @@
             <Popup AllowsTransparency="True"
                    HorizontalOffset="8"
                    IsOpen="{Binding ShowPopup, Mode=TwoWay}"
-                   Placement="MousePoint"
+                   Placement="Custom"
                    PlacementTarget="{Binding ElementName=diffControl}"
+                   CustomPopupPlacementCallback="{x:Static view:EditorDiffMarginControl.CustomPopupPlacementCallback}"
                    StaysOpen="False"
                    view:PopupAllowKeyboardInput.IsEnabled="True">
               <Popup.CommandBindings>
@@ -80,7 +81,8 @@
                           Background="White"
                           BorderBrush="Black"
                           BorderThickness="1,1,1,1">
-                    <ContentControl Content="{Binding ToolBarTray, Mode=OneWay}"/>
+                    <ContentControl Content="{Binding ToolBarTray, Mode=OneWay}"
+                                    Focusable="True" />
                   </Border>
                  <Border Background="{Binding Background, Mode=OneWay}"
                           BorderBrush="{Binding Foreground, Mode=OneWay}"

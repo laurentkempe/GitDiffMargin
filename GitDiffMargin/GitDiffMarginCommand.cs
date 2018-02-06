@@ -10,6 +10,7 @@
         RollbackChange = 2,
         ShowDiff = 3,
         CopyOldText = 4,
+        ShowPopup = 5,
 
         GitDiffToolbar = 100,
 

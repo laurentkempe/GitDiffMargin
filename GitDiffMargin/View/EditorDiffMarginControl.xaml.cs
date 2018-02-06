@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using System.Windows.Threading; 
+using System.Windows.Threading;
 using GitDiffMargin.ViewModel;
 
 namespace GitDiffMargin.View
@@ -62,6 +62,15 @@ namespace GitDiffMargin.View
 
             var editorDiffViewModel = button.DataContext as EditorDiffViewModel;
             editorDiffViewModel?.ShowPopUpCommand.Execute(editorDiffMarginViewModel);
+        }
+
+        public static CustomPopupPlacementCallback CustomPopupPlacementCallback => CustomPopupPlacementCallbackImpl;
+
+        private static CustomPopupPlacement[] CustomPopupPlacementCallbackImpl(Size popupSize, Size targetSize, Point offset)
+        {
+            var verticalPlacement = new CustomPopupPlacement(offset, PopupPrimaryAxis.Vertical);
+            var horizontalPlacement = new CustomPopupPlacement(offset, PopupPrimaryAxis.Horizontal);
+            return new[] {verticalPlacement, horizontalPlacement};
         }
     }
 }

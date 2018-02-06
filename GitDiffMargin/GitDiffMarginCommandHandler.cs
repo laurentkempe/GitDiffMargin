@@ -36,6 +36,19 @@
             {
                 switch ((GitDiffMarginCommand)commandId)
                 {
+                case GitDiffMarginCommand.ShowPopup:
+                    {
+                    EditorDiffMarginViewModel viewModel;
+                    if (!TryGetMarginViewModel(out viewModel))
+                        return 0;
+                    
+                    var diffViewModel = GetCurrentDiffViewModel(viewModel);
+
+                    if (diffViewModel != null)
+                        return OLECMDF.OLECMDF_SUPPORTED | OLECMDF.OLECMDF_ENABLED;
+                    else
+                        return OLECMDF.OLECMDF_SUPPORTED;
+                }
                 case GitDiffMarginCommand.PreviousChange:
                 case GitDiffMarginCommand.NextChange:
                     {
@@ -117,6 +130,18 @@
 
                 switch ((GitDiffMarginCommand)commandId)
                 {
+                case GitDiffMarginCommand.ShowPopup:
+                {                  
+                    diffViewModel = GetCurrentDiffViewModel(viewModel);
+
+                    if (diffViewModel != null)
+                    {
+                        diffViewModel.ShowPopup = true;
+                        return true;
+                    }
+
+                    return false;
+                }
                 case GitDiffMarginCommand.PreviousChange:
                 case GitDiffMarginCommand.NextChange:
                     {
@@ -181,6 +206,13 @@
             return (GitDiffMarginCommand) commandId == GitDiffMarginCommand.NextChange ?
                 viewModel.DiffViewModels.OfType<EditorDiffViewModel>().FirstOrDefault(model => model.LineNumber > lineNumber) :
                 viewModel.DiffViewModels.OfType<EditorDiffViewModel>().LastOrDefault(model => model.LineNumber < lineNumber);
+        }
+
+        private EditorDiffViewModel GetCurrentDiffViewModel(DiffMarginViewModelBase viewModel)
+        {
+            var lineNumber = _textView.Caret.Position.BufferPosition.GetContainingLine().LineNumber;
+
+            return viewModel.DiffViewModels.OfType<EditorDiffViewModel>().FirstOrDefault(model => model.LineNumber == lineNumber);
         }
 
         private bool TryGetMarginViewModel(out EditorDiffMarginViewModel viewModel)
