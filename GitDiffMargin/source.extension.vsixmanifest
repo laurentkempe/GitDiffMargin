@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="GitDiffMargin..5ef9f816-d9ce-45cd-a8fa-cd67a807df0e" Version="3.7.0.0" Language="en-US" Publisher="Laurent Kempé" />
+        <Identity Id="GitDiffMargin..5ef9f816-d9ce-45cd-a8fa-cd67a807df0e" Version="3.7.1.0" Language="en-US" Publisher="Laurent Kempé" />
         <DisplayName>Git Diff Margin</DisplayName>
         <Description xml:space="preserve">Git Diff Margin displays live changes of the currently edited file on Visual Studio 2012+ margin and scroll bar.</Description>
         <MoreInfo>https://github.com/laurentkempe/GitDiffMargin</MoreInfo>
         <License>License.md</License>
         <GettingStartedGuide>http://visualstudiogallery.msdn.microsoft.com/cf49cf30-2ca6-4ea0-b7cc-6a8e0dadc1a8</GettingStartedGuide>
-        <ReleaseNotes>https://github.com/laurentkempe/GitDiffMargin/releases/tag/v3.7.0</ReleaseNotes>
+        <ReleaseNotes>https://github.com/laurentkempe/GitDiffMargin/releases/tag/v3.7.1</ReleaseNotes>
         <Icon>Resources/GitDiffMargin-Thumb.png</Icon>
         <PreviewImage>Resources/GitDiffMargin-Preview.png</PreviewImage>
         <!--<Tags></Tags>-->
