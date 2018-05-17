@@ -323,6 +323,11 @@ namespace GitDiffMargin.Core
             return document;
         }
 
+        public void FocusTextView()
+        {
+            TextView.VisualElement.Focus();
+        }
+
         private void HandleParseComplete(object sender, ParseResultEventArgs e)
         {
             var diffResult = e as DiffParseResultEventArgs;

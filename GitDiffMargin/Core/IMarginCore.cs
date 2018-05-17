@@ -32,5 +32,6 @@ namespace GitDiffMargin.Core
         void MoveToChange(int lineNumber);
         bool RollBack(HunkRangeInfo hunkRangeInfo);
         ITextDocument GetTextDocument();
+        void FocusTextView();
     }
 }

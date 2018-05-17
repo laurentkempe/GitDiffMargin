@@ -49,6 +49,9 @@ namespace GitDiffMargin.View
             if (!(sender is Popup popup)) return;
 
             popup.IsOpen = false;
+
+            var editorDiffViewModel = (EditorDiffMarginViewModel) DataContext;
+            editorDiffViewModel.FocusTextView();
         }
 
         private static void DoubleClick(object sender, EventArgs e)

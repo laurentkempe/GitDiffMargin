@@ -35,6 +35,11 @@ namespace GitDiffMargin.ViewModel
             get { return _nextChangeCommand ?? (_nextChangeCommand = new RelayCommand<DiffViewModel>(NextChange, NextChangeCanExecute)); }
         }
 
+        public void FocusTextView()
+        {
+            MarginCore.FocusTextView();
+        }
+
         private bool PreviousChangeCanExecute(DiffViewModel currentEditorDiffViewModel)
         {
             return DiffViewModels.IndexOf(currentEditorDiffViewModel) > 0;
