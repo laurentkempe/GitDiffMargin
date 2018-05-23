@@ -68,8 +68,6 @@ namespace GitDiffMargin.View
                     }
                 };
             };
-
-            popup.Closed += (sender, args) => Keyboard.Focus(element);
         }
     }
 }
