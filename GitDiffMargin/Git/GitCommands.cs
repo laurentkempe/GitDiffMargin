@@ -59,7 +59,22 @@ namespace GitDiffMargin.Git
                     yield break;
                 }
 
-                if (retrieveStatus == FileStatus.Unaltered
+                // Determine 'from' tree.
+                var currentBranch = repo.Head.FriendlyName;
+                var baseCommitEntry = repo.Config.Get<string>(string.Format("branch.{0}.diffmarginbase", currentBranch));
+                Commit from = null;
+                if (baseCommitEntry != null)
+                {
+                    var baseCommit = repo.Lookup<Commit>(baseCommitEntry.Value);
+                    if (baseCommit != null)
+                    {
+                        // Found a merge base to diff from.
+                        from = baseCommit;
+                    }
+                }
+
+                if (from == null
+                    && retrieveStatus == FileStatus.Unaltered
                     && !textDocument.IsDirty
                     && Path.GetFullPath(filename) == originalPath)
                 {
@@ -97,7 +112,7 @@ namespace GitDiffMargin.Git
                     {
                         suppressRollback = false;
 
-                        Commit from = repo.Head.Tip;
+                        from = from ?? repo.Head.Tip;
                         TreeEntry fromEntry = from[relativeFilepath];
                         if (fromEntry == null)
                         {
