@@ -199,7 +199,8 @@ namespace GitDiffMargin.Core
 
             _textView.VisualElement.Focus();
             _textView.Caret.MoveTo(diffLine.Start);
-            _textView.Caret.EnsureVisible();
+            _textView.ViewScroller.EnsureSpanVisible(diffLine.ExtentIncludingLineBreak,
+                EnsureSpanVisibleOptions.AlwaysCenter);
         }
 
         private void CheckBeginInvokeOnUi(Action action)
