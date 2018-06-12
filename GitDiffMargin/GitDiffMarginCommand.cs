@@ -2,7 +2,7 @@
 {
     using System.Runtime.InteropServices;
 
-    [Guid("691DB887-6D82-46A9-B0AF-407C7F0E39BE")]
+    [Guid(GitDiffMarginCommandHandler.GitDiffMarginCommandSet)]
     public enum GitDiffMarginCommand
     {
         PreviousChange = 0,

@@ -21,6 +21,8 @@
     </Prerequisites>
     <Assets>
         <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="GitDiffMargin" Path="|GitDiffMargin|" />
+        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="GitDiffMargin.LegacyCommands" TargetVersion="[15.0,15.0.27131)" Path="|GitDiffMargin.LegacyCommands|" />
+        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="GitDiffMargin.Commands" TargetVersion="[15.0.27428,16.0)" Path="|GitDiffMargin.Commands|" />
         <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="GitDiffMargin" Path="|GitDiffMargin;PkgdefProjectOutputGroup|" />
     </Assets>
 </PackageManifest>

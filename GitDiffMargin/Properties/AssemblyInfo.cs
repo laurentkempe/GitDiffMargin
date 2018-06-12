@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
 
@@ -43,3 +44,6 @@ using Microsoft.VisualStudio.Shell;
     AssemblyName = "Tvl.VisualStudio.Text.Utility.10",
     Version = "1.0.0.0",
     CodeBase = "$PackageFolder$\\Tvl.VisualStudio.Text.Utility.10.dll")]
+
+[assembly: InternalsVisibleTo("GitDiffMargin.Commands")]
+[assembly: InternalsVisibleTo("GitDiffMargin.LegacyCommands")]

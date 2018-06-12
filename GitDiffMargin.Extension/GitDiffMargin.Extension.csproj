@@ -52,6 +52,14 @@
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="15.5.72" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GitDiffMargin.Commands\GitDiffMargin.Commands.csproj">
+      <Project>{afee8d6f-0358-4628-8cac-d10668c95057}</Project>
+      <Name>GitDiffMargin.Commands</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GitDiffMargin.LegacyCommands\GitDiffMargin.LegacyCommands.csproj">
+      <Project>{359ba5c3-6964-4fa4-941f-fb97e250c521}</Project>
+      <Name>GitDiffMargin.LegacyCommands</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GitDiffMargin\GitDiffMargin.csproj">
       <Project>{233b6f13-7687-4823-870b-a8f44b79d4f0}</Project>
       <Name>GitDiffMargin</Name>
