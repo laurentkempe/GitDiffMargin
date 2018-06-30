@@ -61,8 +61,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="LibGit2Sharp" Version="0.25.2" />
-    <PackageReference Include="LibGit2Sharp.NativeBinaries" Version="1.0.217" />
+    <PackageReference Include="LibGit2Sharp" Version="0.24.1" />
+    <PackageReference Include="LibGit2Sharp.NativeBinaries" Version="1.0.205" />
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="15.5.72" PrivateAssets="all" />
     <PackageReference Include="MvvmLightLibs" Version="5.2.0.0" />
     <PackageReference Include="Tvl.VisualStudio.Text.Utility.10" version="1.0.0" />
@@ -115,8 +115,8 @@
     <Compile Include="Core\WeakReference.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="$(NuGetPackageRoot)libgit2sharp.nativebinaries\1.0.217\runtimes\win7-x86\native\git2-6311e88.dll">
-      <Link>git2-6311e88.dll</Link>
+    <Content Include="$(NuGetPackageRoot)libgit2sharp.nativebinaries\1.0.205\runtimes\win7-x86\native\git2-dd2d538.dll">
+      <Link>git2-dd2d538.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
