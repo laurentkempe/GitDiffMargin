@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Tvl.VisualStudio.Text.Utility.10" version="1.0.0" />
+    <PackageReference Include="MvvmLightLibs" Version="5.2.0.0" />
 
     <!-- This is a development-only dependency. -->
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="15.5.72" PrivateAssets="all" />
@@ -63,7 +64,6 @@
     -->
     <PackageReference Include="LibGit2Sharp" Version="0.24.1" PrivateAssets="all" />
     <PackageReference Include="LibGit2Sharp.NativeBinaries" Version="1.0.205" ExcludeAssets="build" PrivateAssets="all" />
-    <PackageReference Include="MvvmLightLibs" Version="5.2.0.0" PrivateAssets="all" />
     <PackageReference Include="VSSDK.Editor.11" Version="11.0.4" PrivateAssets="all" />
     <PackageReference Include="VSSDK.Shell.11" Version="11.0.4" PrivateAssets="all" />
   </ItemGroup>
@@ -115,25 +115,21 @@
     <Content Include="$(NuGetPackageRoot)libgit2sharp.nativebinaries\1.0.205\runtimes\win7-x86\native\git2-dd2d538.dll">
       <Link>git2-dd2d538.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Resources\GitDiffMargin-Preview.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Resources\GitDiffMargin-Thumb.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="..\LICENSE.md">
       <Link>LICENSE.md</Link>
-      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Git-Logo-2Color.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Resources\Rollback.png" />
     <Content Include="Resources\ShowDifference.png" />
@@ -141,7 +137,6 @@
     <Content Include="Resources\CopyOldText.png" />
     <Content Include="Resources\Git-Icon-1788C.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Resources\PreviousArrow.png" />
   </ItemGroup>
