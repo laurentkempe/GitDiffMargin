@@ -20,5 +20,5 @@ build_script:
 - msbuild /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m
 
 artifacts:
-- path: '\GitDiffMargin\bin\Release\GitDiffMargin.vsix'
+- path: '\GitDiffMargin.Extension\bin\Release\GitDiffMargin.vsix'
   name: build

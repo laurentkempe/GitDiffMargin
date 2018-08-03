@@ -1,4 +1,4 @@
-﻿namespace GitDiffMargin
+﻿namespace GitDiffMargin.LegacyCommands
 {
     using System.ComponentModel.Composition;
     using Microsoft.VisualStudio.Editor;
@@ -10,13 +10,13 @@
     [Export(typeof(IVsTextViewCreationListener))]
     [ContentType("text")]
     [TextViewRole(PredefinedTextViewRoles.Editable)]
-    internal class GitDiffMarginTextViewCreationListener : IVsTextViewCreationListener
+    internal class LegacyCommandHandlerTextViewCreationListener : IVsTextViewCreationListener
     {
         private readonly SVsServiceProvider _serviceProvider;
         private readonly IVsEditorAdaptersFactoryService _editorAdaptersFactoryService;
 
         [ImportingConstructor]
-        public GitDiffMarginTextViewCreationListener(SVsServiceProvider serviceProvider, IVsEditorAdaptersFactoryService editorAdaptersFactoryService)
+        public LegacyCommandHandlerTextViewCreationListener(SVsServiceProvider serviceProvider, IVsEditorAdaptersFactoryService editorAdaptersFactoryService)
         {
             _serviceProvider = serviceProvider;
             _editorAdaptersFactoryService = editorAdaptersFactoryService;

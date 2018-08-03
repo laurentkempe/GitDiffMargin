@@ -15,6 +15,8 @@
 
     internal sealed class GitDiffMarginCommandHandler : TextViewCommandFilter
     {
+        internal const string GitDiffMarginCommandSet = "691DB887-6D82-46A9-B0AF-407C7F0E39BE";
+
         private readonly IVsEditorAdaptersFactoryService _editorAdaptersFactoryService;
         private readonly ITextView _textView;
 
