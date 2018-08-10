@@ -35,7 +35,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="VSSDK.Editor.11" Version="11.0.4" />
-    <PackageReference Include="VSSDK.Shell.11" Version="11.0.4" PrivateAssets="all" />
+    <PackageReference Include="VSSDK.Shell.11" Version="11.0.4" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LegacyCommandHandlerTextViewCreationListener.cs" />
