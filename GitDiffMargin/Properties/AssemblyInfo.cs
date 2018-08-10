@@ -2,7 +2,6 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.Shell;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
@@ -35,15 +34,6 @@ using Microsoft.VisualStudio.Shell;
 [assembly: AssemblyVersion("3.8.0.0")]
 [assembly: AssemblyFileVersion("3.8.0.0")]
 [assembly: AssemblyInformationalVersion("3.8.0.0")]
-
-[assembly: ProvideCodeBase(
-    AssemblyName = "Tvl.VisualStudio.Shell.Utility.10",
-    Version = "1.0.0.0",
-    CodeBase = "$PackageFolder$\\Tvl.VisualStudio.Shell.Utility.10.dll")]
-[assembly: ProvideCodeBase(
-    AssemblyName = "Tvl.VisualStudio.Text.Utility.10",
-    Version = "1.0.0.0",
-    CodeBase = "$PackageFolder$\\Tvl.VisualStudio.Text.Utility.10.dll")]
 
 [assembly: InternalsVisibleTo("GitDiffMargin.Commands")]
 [assembly: InternalsVisibleTo("GitDiffMargin.LegacyCommands")]

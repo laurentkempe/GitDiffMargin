@@ -9,6 +9,8 @@
 
     [ProvideMenuResource("Menus.ctmenu", 1)]
 
+    // https://github.com/laurentkempe/GitDiffMargin/issues/165
+    [ProvideBindingPath]
     public class GitDiffMarginPackage : Package
     {
     }
