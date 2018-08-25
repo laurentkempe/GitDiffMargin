@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -85,8 +84,6 @@ namespace GitDiffMargin.Core
         {
             try
             {
-                var stopwatch = Stopwatch.StartNew();
-
                 var snapshot = TextBuffer.CurrentSnapshot;
                 if (!TextDocumentFactoryService.TryGetTextDocument(_documentBuffer, out var textDocument)) return;
 
