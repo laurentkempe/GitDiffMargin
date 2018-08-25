@@ -30,8 +30,8 @@ namespace GitDiffMargin
 
             // play nice with other source control providers
             ITextView textView = textViewHost.TextView;
-            var textDataModel = textView != null ? textView.TextDataModel : null;
-            var documentBuffer = textDataModel != null ? textDataModel.DocumentBuffer : null;
+            var textDataModel = textView?.TextDataModel;
+            var documentBuffer = textDataModel?.DocumentBuffer;
             if (documentBuffer == null)
                 return null;
 
