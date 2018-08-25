@@ -83,8 +83,6 @@ namespace GitDiffMargin.Core
             }
         }
 
-        public virtual string Name => string.Empty;
-
         protected ITextDocumentFactoryService TextDocumentFactoryService { get; }
 
         public void Dispose()

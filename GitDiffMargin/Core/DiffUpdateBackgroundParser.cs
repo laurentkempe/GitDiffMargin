@@ -44,8 +44,6 @@ namespace GitDiffMargin.Core
             _watcher.EnableRaisingEvents = true;
         }
 
-        public override string Name => "Git Diff Analyzer";
-
         private void HandleFileSystemChanged(object sender, FileSystemEventArgs e)
         {
             void HandleFileSystemChanged()
