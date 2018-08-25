@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -112,7 +112,7 @@ namespace GitDiffMargin.Core
             if (disposing)
             {
                 if (_textDocument != null) _textDocument.FileActionOccurred -= OnFileActionOccurred;
-                if (_watcher != null) _watcher.Dispose();
+                _watcher?.Dispose();
             }
         }
     }

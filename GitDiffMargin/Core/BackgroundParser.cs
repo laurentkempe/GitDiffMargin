@@ -49,7 +49,8 @@ namespace GitDiffMargin.Core
             _textBuffer = new WeakReference<ITextBuffer>(textBuffer);
 
             _taskScheduler = taskScheduler ?? throw new ArgumentNullException(nameof(taskScheduler));
-            TextDocumentFactoryService = textDocumentFactoryService ?? throw new ArgumentNullException(nameof(textDocumentFactoryService));
+            TextDocumentFactoryService = textDocumentFactoryService ??
+                                         throw new ArgumentNullException(nameof(textDocumentFactoryService));
 
             textBuffer.PostChanged += TextBufferPostChanged;
 
@@ -115,14 +116,12 @@ namespace GitDiffMargin.Core
 
         protected abstract void ReParseImpl();
 
-        protected virtual void OnParseComplete(ParseResultEventArgs e)
+        protected void OnParseComplete(ParseResultEventArgs e)
         {
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
 
-            var t = ParseComplete;
-            if (t != null)
-                t(this, e);
+            ParseComplete?.Invoke(this, e);
         }
 
         protected void MarkDirty(bool resetTimer)

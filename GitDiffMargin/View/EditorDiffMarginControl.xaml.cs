@@ -3,10 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Threading;
 using GitDiffMargin.ViewModel;
-using Microsoft.VisualStudio.Shell.Interop;
 
 namespace GitDiffMargin.View
 {
@@ -82,12 +80,9 @@ namespace GitDiffMargin.View
         private void Popup_OnOpened(object sender, EventArgs e)
         {
             var popup = sender as Popup;
-            if (popup == null) return;
+            var contentControl = popup?.FindName("Commands") as ContentControl;
 
-            var contentControl = (ContentControl)popup.FindName("Commands");
-            if (contentControl == null) return;
-
-            contentControl.Focus();
+            contentControl?.Focus();
         }
     }
 }

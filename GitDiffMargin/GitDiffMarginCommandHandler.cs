@@ -21,7 +21,8 @@ namespace GitDiffMargin
             IVsEditorAdaptersFactoryService editorAdaptersFactoryService, ITextView textView)
             : base(textViewAdapter)
         {
-            _editorAdaptersFactoryService = editorAdaptersFactoryService ?? throw new ArgumentNullException(nameof(editorAdaptersFactoryService));
+            _editorAdaptersFactoryService = editorAdaptersFactoryService ??
+                                            throw new ArgumentNullException(nameof(editorAdaptersFactoryService));
             _textView = textView ?? throw new ArgumentNullException(nameof(textView));
         }
 
@@ -219,10 +220,8 @@ namespace GitDiffMargin
             viewModel = null;
 
             var textViewHost = _editorAdaptersFactoryService.GetWpfTextViewHost(TextViewAdapter);
-            if (textViewHost == null)
-                return false;
 
-            var margin = textViewHost.GetTextViewMargin(EditorDiffMargin.MarginNameConst) as EditorDiffMargin;
+            var margin = textViewHost?.GetTextViewMargin(EditorDiffMargin.MarginNameConst) as EditorDiffMargin;
             if (margin == null)
                 return false;
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
@@ -262,9 +262,7 @@ namespace GitDiffMargin.Core
 
         private void OnBrushesChanged(EventArgs e)
         {
-            var t = BrushesChanged;
-            if (t != null)
-                t(this, e);
+            BrushesChanged?.Invoke(this, e);
         }
 
         private static Brush GetBrush(ResourceDictionary properties)
@@ -300,9 +298,7 @@ namespace GitDiffMargin.Core
 
         private void OnHunksChanged(IEnumerable<HunkRangeInfo> hunkRangeInfos)
         {
-            var t = HunksChanged;
-            if (t != null)
-                t(this, new HunksChangedEventArgs(hunkRangeInfos));
+            HunksChanged?.Invoke(this, new HunksChangedEventArgs(hunkRangeInfos));
         }
     }
 }
