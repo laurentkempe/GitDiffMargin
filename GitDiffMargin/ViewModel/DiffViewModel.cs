@@ -63,8 +63,6 @@ namespace GitDiffMargin.ViewModel
 
         public int LineNumber => HunkRangeInfo.NewHunkRange.StartingLineNumber;
 
-        public int NumberOfLines { get { return HunkRangeInfo.NewHunkRange.NumberOfLines; } }
-
         public virtual bool IsVisible
         {
             get => _isVisible;
@@ -82,12 +80,14 @@ namespace GitDiffMargin.ViewModel
 
         public bool IsLineNumberBetweenDiff(int lineNumber)
         {
+            var numberOfLines = HunkRangeInfo.NewHunkRange.NumberOfLines;
+
             var diffStartLine = LineNumber;
-            var diffEndLine = diffStartLine + NumberOfLines - 1;
+            var diffEndLine = diffStartLine + numberOfLines - 1;
 
             if (IsDeletion)
             {
-                diffEndLine = diffStartLine + NumberOfLines + 2;
+                diffEndLine = diffStartLine + numberOfLines + 2;
             }
 
             return lineNumber >= diffStartLine && lineNumber <= diffEndLine;
