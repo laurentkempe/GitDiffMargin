@@ -318,8 +318,7 @@ namespace GitDiffMargin.Git
                 StringComparison.OrdinalIgnoreCase))
                 return fullPath;
 
-            var solution = _serviceProvider.GetService(typeof(SVsSolution)) as IVsSolution;
-            if (solution == null)
+            if (!(_serviceProvider.GetService(typeof(SVsSolution)) is IVsSolution solution))
                 return fullPath;
 
             if (!ErrorHandler.Succeeded(solution.GetProjectEnum((uint) __VSENUMPROJFLAGS.EPF_LOADEDINSOLUTION,

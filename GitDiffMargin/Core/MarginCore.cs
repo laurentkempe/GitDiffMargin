@@ -248,10 +248,7 @@ namespace GitDiffMargin.Core
 
         private void HandleParseComplete(object sender, ParseResultEventArgs e)
         {
-            var diffResult = e as DiffParseResultEventArgs;
-            if (diffResult == null) return;
-
-            CheckBeginInvokeOnUi(() => OnHunksChanged(diffResult.Diff));
+            if (e is DiffParseResultEventArgs diffResult) CheckBeginInvokeOnUi(() => OnHunksChanged(diffResult.Diff));
         }
 
         private void OnHunksChanged(IEnumerable<HunkRangeInfo> hunkRangeInfos)

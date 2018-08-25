@@ -107,8 +107,7 @@ namespace GitDiffMargin.ViewModel
                 _showPopup = value;
                 if (value)
                 {
-                    var uiShell = Package.GetGlobalService(typeof(SVsUIShell)) as IVsUIShell4;
-                    if (uiShell != null)
+                    if (Package.GetGlobalService(typeof(SVsUIShell)) is IVsUIShell4 uiShell)
                     {
                         IOleCommandTarget commandTarget =
                             MarginCore.TextView.Properties.GetProperty<GitDiffMarginCommandHandler>(

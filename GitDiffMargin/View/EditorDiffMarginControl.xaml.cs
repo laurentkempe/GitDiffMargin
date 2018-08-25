@@ -62,8 +62,7 @@ namespace GitDiffMargin.View
 
             var button = ClickWaitTimer.Tag as Button;
 
-            var editorDiffMarginViewModel = button?.Tag as EditorDiffMarginViewModel;
-            if (editorDiffMarginViewModel == null) return;
+            if (!(button?.Tag is EditorDiffMarginViewModel editorDiffMarginViewModel)) return;
 
             var editorDiffViewModel = button.DataContext as EditorDiffViewModel;
             editorDiffViewModel?.ShowPopUpCommand.Execute(editorDiffMarginViewModel);

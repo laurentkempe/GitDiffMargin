@@ -216,8 +216,7 @@ namespace GitDiffMargin
 
             var textViewHost = _editorAdaptersFactoryService.GetWpfTextViewHost(TextViewAdapter);
 
-            var margin = textViewHost?.GetTextViewMargin(EditorDiffMargin.MarginNameConst) as EditorDiffMargin;
-            if (margin == null)
+            if (!(textViewHost?.GetTextViewMargin(EditorDiffMargin.MarginNameConst) is EditorDiffMargin margin))
                 return false;
 
             viewModel = margin.VisualElement.DataContext as EditorDiffMarginViewModel;
