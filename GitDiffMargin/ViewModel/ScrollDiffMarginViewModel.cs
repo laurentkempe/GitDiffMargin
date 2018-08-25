@@ -12,10 +12,7 @@ namespace GitDiffMargin.ViewModel
             Action<DiffViewModel, HunkRangeInfo> updateDiffDimensions) :
             base(marginCore)
         {
-            if (updateDiffDimensions == null)
-                throw new ArgumentNullException(nameof(updateDiffDimensions));
-
-            _updateDiffDimensions = updateDiffDimensions;
+            _updateDiffDimensions = updateDiffDimensions ?? throw new ArgumentNullException(nameof(updateDiffDimensions));
         }
 
         protected override DiffViewModel CreateDiffViewModel(HunkRangeInfo hunkRangeInfo)

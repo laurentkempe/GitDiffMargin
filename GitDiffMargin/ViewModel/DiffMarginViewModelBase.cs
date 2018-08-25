@@ -13,10 +13,7 @@ namespace GitDiffMargin.ViewModel
 
         protected DiffMarginViewModelBase(IMarginCore marginCore)
         {
-            if (marginCore == null)
-                throw new ArgumentNullException(nameof(marginCore));
-
-            MarginCore = marginCore;
+            MarginCore = marginCore ?? throw new ArgumentNullException(nameof(marginCore));
 
             DiffViewModels = new ObservableCollection<DiffViewModel>();
 

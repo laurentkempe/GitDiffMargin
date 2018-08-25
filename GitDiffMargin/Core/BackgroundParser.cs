@@ -46,14 +46,10 @@ namespace GitDiffMargin.Core
         {
             if (textBuffer == null)
                 throw new ArgumentNullException(nameof(textBuffer));
-            if (taskScheduler == null)
-                throw new ArgumentNullException(nameof(taskScheduler));
-            if (textDocumentFactoryService == null)
-                throw new ArgumentNullException(nameof(textDocumentFactoryService));
-
             _textBuffer = new WeakReference<ITextBuffer>(textBuffer);
-            _taskScheduler = taskScheduler;
-            TextDocumentFactoryService = textDocumentFactoryService;
+
+            _taskScheduler = taskScheduler ?? throw new ArgumentNullException(nameof(taskScheduler));
+            TextDocumentFactoryService = textDocumentFactoryService ?? throw new ArgumentNullException(nameof(textDocumentFactoryService));
 
             textBuffer.PostChanged += TextBufferPostChanged;
 

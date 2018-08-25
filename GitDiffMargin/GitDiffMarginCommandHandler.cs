@@ -21,13 +21,8 @@ namespace GitDiffMargin
             IVsEditorAdaptersFactoryService editorAdaptersFactoryService, ITextView textView)
             : base(textViewAdapter)
         {
-            if (editorAdaptersFactoryService == null)
-                throw new ArgumentNullException(nameof(editorAdaptersFactoryService));
-            if (textView == null)
-                throw new ArgumentNullException(nameof(textView));
-
-            _editorAdaptersFactoryService = editorAdaptersFactoryService;
-            _textView = textView;
+            _editorAdaptersFactoryService = editorAdaptersFactoryService ?? throw new ArgumentNullException(nameof(editorAdaptersFactoryService));
+            _textView = textView ?? throw new ArgumentNullException(nameof(textView));
         }
 
         protected override OLECMDF QueryCommandStatus(ref Guid commandGroup, uint commandId,
