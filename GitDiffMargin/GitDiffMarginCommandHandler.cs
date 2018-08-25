@@ -1,4 +1,4 @@
-﻿namespace GitDiffMargin
+namespace GitDiffMargin
 {
     using System;
     using System.Linq;
@@ -212,9 +212,9 @@
 
         private EditorDiffViewModel GetCurrentDiffViewModel(DiffMarginViewModelBase viewModel)
         {
-            var lineNumber = _textView.Caret.Position.BufferPosition.GetContainingLine().LineNumber;
+            var caretLineNumber = _textView.Caret.Position.BufferPosition.GetContainingLine().LineNumber;
 
-            return viewModel.DiffViewModels.OfType<EditorDiffViewModel>().FirstOrDefault(model => model.LineNumber == lineNumber);
+            return viewModel.DiffViewModels.OfType<EditorDiffViewModel>().FirstOrDefault(diff => diff.IsLineNumberBetweenDiff(caretLineNumber));
         }
 
         private bool TryGetMarginViewModel(out EditorDiffMarginViewModel viewModel)
