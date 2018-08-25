@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -12,57 +11,55 @@ namespace GitDiffMargin.Core
 {
     public class DiffUpdateBackgroundParser : BackgroundParser
     {
-        private readonly FileSystemWatcher _watcher;
         private readonly IGitCommands _commands;
-        private readonly ITextDocument _textDocument;
         private readonly ITextBuffer _documentBuffer;
         private readonly string _originalPath;
+        private readonly ITextDocument _textDocument;
+        private readonly FileSystemWatcher _watcher;
 
-        internal DiffUpdateBackgroundParser(ITextBuffer textBuffer, ITextBuffer documentBuffer, string originalPath, TaskScheduler taskScheduler, ITextDocumentFactoryService textDocumentFactoryService, IGitCommands commands)
+        internal DiffUpdateBackgroundParser(ITextBuffer textBuffer, ITextBuffer documentBuffer, string originalPath,
+            TaskScheduler taskScheduler, ITextDocumentFactoryService textDocumentFactoryService, IGitCommands commands)
             : base(textBuffer, taskScheduler, textDocumentFactoryService)
         {
             _documentBuffer = documentBuffer;
             _commands = commands;
             ReparseDelay = TimeSpan.FromMilliseconds(500);
 
-            if (TextDocumentFactoryService.TryGetTextDocument(_documentBuffer, out _textDocument))
-            {
-                _originalPath = originalPath;
-                if (_commands.IsGitRepository(_textDocument.FilePath, _originalPath))
-                {
-                    _textDocument.FileActionOccurred += OnFileActionOccurred;
+            if (!TextDocumentFactoryService.TryGetTextDocument(_documentBuffer, out _textDocument)) return;
 
-                    var repositoryDirectory = _commands.GetGitRepository(_textDocument.FilePath, _originalPath);
-                    if (repositoryDirectory != null)
-                    {
-                        _watcher = new FileSystemWatcher(repositoryDirectory);
-                        _watcher.Changed += HandleFileSystemChanged;
-                        _watcher.Created += HandleFileSystemChanged;
-                        _watcher.Deleted += HandleFileSystemChanged;
-                        _watcher.Renamed += HandleFileSystemChanged;
-                        _watcher.EnableRaisingEvents = true;
-                    }
-                }
-            }
+            _originalPath = originalPath;
+
+            if (!_commands.IsGitRepository(_textDocument.FilePath, _originalPath)) return;
+
+            _textDocument.FileActionOccurred += OnFileActionOccurred;
+
+            var repositoryDirectory = _commands.GetGitRepository(_textDocument.FilePath, _originalPath);
+            if (repositoryDirectory == null) return;
+
+            _watcher = new FileSystemWatcher(repositoryDirectory);
+            _watcher.Changed += HandleFileSystemChanged;
+            _watcher.Created += HandleFileSystemChanged;
+            _watcher.Deleted += HandleFileSystemChanged;
+            _watcher.Renamed += HandleFileSystemChanged;
+            _watcher.EnableRaisingEvents = true;
         }
 
         private void HandleFileSystemChanged(object sender, FileSystemEventArgs e)
         {
-            Action action =
-                () =>
+            void HandleFileSystemChanged()
+            {
+                try
                 {
-                    try
-                    {
-                        ProcessFileSystemChange(e);
-                    }
-                    catch (Exception ex)
-                    {
-                        if (ErrorHandler.IsCriticalException(ex))
-                            throw;
-                    }
-                };
+                    ProcessFileSystemChange(e);
+                }
+                catch (Exception ex)
+                {
+                    if (ErrorHandler.IsCriticalException(ex)) throw;
+                }
+            }
 
-            Task.Factory.StartNew(action, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
+            Task.Factory.StartNew(HandleFileSystemChanged, CancellationToken.None, TaskCreationOptions.None,
+                TaskScheduler.Default);
         }
 
         private void ProcessFileSystemChange(FileSystemEventArgs e)
@@ -78,32 +75,18 @@ namespace GitDiffMargin.Core
 
         private void OnFileActionOccurred(object sender, TextDocumentFileActionEventArgs e)
         {
-            if ((e.FileActionType & FileActionTypes.ContentSavedToDisk) != 0)
-            {
-                MarkDirty(true);
-            }
-        }
-
-        public override string Name
-        {
-            get
-            {
-                return "Git Diff Analyzer";
-            }
+            if ((e.FileActionType & FileActionTypes.ContentSavedToDisk) != 0) MarkDirty(true);
         }
 
         protected override void ReParseImpl()
         {
             try
             {
-                var stopwatch = Stopwatch.StartNew();
-
                 var snapshot = TextBuffer.CurrentSnapshot;
-                ITextDocument textDocument;
-                if (!TextDocumentFactoryService.TryGetTextDocument(_documentBuffer, out textDocument)) return;
+                if (!TextDocumentFactoryService.TryGetTextDocument(_documentBuffer, out var textDocument)) return;
 
                 var diff = _commands.GetGitDiffFor(textDocument, _originalPath, snapshot);
-                var result = new DiffParseResultEventArgs(snapshot, stopwatch.Elapsed, diff.ToList());
+                var result = new DiffParseResultEventArgs(diff.ToList());
                 OnParseComplete(result);
             }
             catch (InvalidOperationException)
@@ -117,17 +100,10 @@ namespace GitDiffMargin.Core
         {
             base.Dispose(disposing);
 
-            if (disposing)
-            {
-                if (_textDocument != null)
-                {
-                    _textDocument.FileActionOccurred -= OnFileActionOccurred;
-                }
-                if (_watcher != null)
-                {
-                    _watcher.Dispose();
-                }
-            }
+            if (!disposing) return;
+
+            if (_textDocument != null) _textDocument.FileActionOccurred -= OnFileActionOccurred;
+            _watcher?.Dispose();
         }
     }
 }

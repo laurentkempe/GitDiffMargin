@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Security;
@@ -7,48 +7,42 @@ using GitDiffMargin.Git;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
-using Path = System.IO.Path;
 
 namespace GitDiffMargin
 {
     internal abstract class DiffMarginFactoryBase : IWpfTextViewMarginProvider
     {
-        [Import]
-        internal ITextDocumentFactoryService TextDocumentFactoryService { get; private set; }
+        [Import] internal ITextDocumentFactoryService TextDocumentFactoryService { get; private set; }
 
-        [Import]
-        internal IClassificationFormatMapService ClassificationFormatMapService { get; private set; }
+        [Import] internal IClassificationFormatMapService ClassificationFormatMapService { get; private set; }
 
-        [Import]
-        internal IEditorFormatMapService EditorFormatMapService { get; private set; }
+        [Import] internal IEditorFormatMapService EditorFormatMapService { get; private set; }
 
-        [Import]
-        internal IGitCommands GitCommands { get; private set; }
+        [Import] internal IGitCommands GitCommands { get; private set; }
 
-        public abstract IWpfTextViewMargin CreateMargin(IWpfTextViewHost wpfTextViewHost, IWpfTextViewMargin marginContainer);
+        public abstract IWpfTextViewMargin CreateMargin(IWpfTextViewHost wpfTextViewHost,
+            IWpfTextViewMargin marginContainer);
 
         protected IMarginCore TryGetMarginCore(IWpfTextViewHost textViewHost)
         {
-            MarginCore marginCore;
-            if (textViewHost.TextView.Properties.TryGetProperty(typeof(MarginCore), out marginCore))
+            if (textViewHost.TextView.Properties.TryGetProperty(typeof(MarginCore), out MarginCore marginCore))
                 return marginCore;
 
             // play nice with other source control providers
             ITextView textView = textViewHost.TextView;
-            ITextDataModel textDataModel = textView != null ? textView.TextDataModel : null;
-            ITextBuffer documentBuffer = textDataModel != null ? textDataModel.DocumentBuffer : null;
+            var textDataModel = textView?.TextDataModel;
+            var documentBuffer = textDataModel?.DocumentBuffer;
             if (documentBuffer == null)
                 return null;
 
-            ITextDocument textDocument;
-            if (!TextDocumentFactoryService.TryGetTextDocument(documentBuffer, out textDocument))
+            if (!TextDocumentFactoryService.TryGetTextDocument(documentBuffer, out var textDocument))
                 return null;
 
-            var fullPath= GetFullPath(textDocument.FilePath);
+            var fullPath = GetFullPath(textDocument.FilePath);
             if (fullPath == null)
                 return null;
 
-            if (!GitCommands.TryGetOriginalPath(fullPath, out string originalPath))
+            if (!GitCommands.TryGetOriginalPath(fullPath, out var originalPath))
                 return null;
 
             var repositoryPath = GitCommands.GetGitRepository(fullPath, originalPath);
@@ -56,7 +50,8 @@ namespace GitDiffMargin
                 return null;
 
             return textViewHost.TextView.Properties.GetOrCreateSingletonProperty(
-                        () => new MarginCore(textViewHost.TextView, originalPath, TextDocumentFactoryService, ClassificationFormatMapService, EditorFormatMapService, GitCommands));
+                () => new MarginCore(textViewHost.TextView, originalPath, TextDocumentFactoryService,
+                    ClassificationFormatMapService, EditorFormatMapService, GitCommands));
         }
 
         private static string GetFullPath(string filename)

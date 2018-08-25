@@ -1,9 +1,7 @@
-﻿using System.Windows.Controls;
-
-namespace GitDiffMargin.View
+﻿namespace GitDiffMargin.View
 {
     /// <summary>
-    /// Interaction logic for ScrollDiffMarginControl.xaml
+    ///     Interaction logic for ScrollDiffMarginControl.xaml
     /// </summary>
     public partial class ScrollDiffMarginControl
     {

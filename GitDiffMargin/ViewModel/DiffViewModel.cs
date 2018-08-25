@@ -1,6 +1,6 @@
 using System;
 using System.Windows;
-using System.Windows.Media;         
+using System.Windows.Media;
 using GalaSoft.MvvmLight;
 using GitDiffMargin.Core;
 using GitDiffMargin.Git;
@@ -9,14 +9,15 @@ namespace GitDiffMargin.ViewModel
 {
     internal abstract class DiffViewModel : ViewModelBase
     {
-        private double _height;
-        private double _top;
+        private readonly Action<DiffViewModel, HunkRangeInfo> _updateDiffDimensions;
         protected readonly HunkRangeInfo HunkRangeInfo;
         protected readonly IMarginCore MarginCore;
-        private readonly Action<DiffViewModel, HunkRangeInfo> _updateDiffDimensions;
+        private double _height;
         private bool _isVisible;
+        private double _top;
 
-        protected DiffViewModel(HunkRangeInfo hunkRangeInfo, IMarginCore marginCore, Action<DiffViewModel, HunkRangeInfo> updateDiffDimensions)
+        protected DiffViewModel(HunkRangeInfo hunkRangeInfo, IMarginCore marginCore,
+            Action<DiffViewModel, HunkRangeInfo> updateDiffDimensions)
         {
             HunkRangeInfo = hunkRangeInfo;
             MarginCore = marginCore;
@@ -27,7 +28,7 @@ namespace GitDiffMargin.ViewModel
 
         public double Height
         {
-            get { return _height; }
+            get => _height;
             set
             {
                 _height = value;
@@ -37,7 +38,7 @@ namespace GitDiffMargin.ViewModel
 
         public double Top
         {
-            get { return _top; }
+            get => _top;
             set
             {
                 _top = value;
@@ -45,45 +46,31 @@ namespace GitDiffMargin.ViewModel
             }
         }
 
-        public virtual double Width
-        {
-            get
-            {
-                return MarginCore.EditorChangeWidth;
-            }
-        }
+        public virtual double Width => MarginCore.EditorChangeWidth;
 
-        public Thickness Margin
-        {
-            get
-            {
-                return new Thickness(MarginCore.EditorChangeLeft, 0, 0, 0);
-            }
-        }
+        public Thickness Margin => new Thickness(MarginCore.EditorChangeLeft, 0, 0, 0);
 
-        public bool IsDeletion { get { return HunkRangeInfo.IsDeletion;} }
+        public bool IsDeletion => HunkRangeInfo.IsDeletion;
 
         public Brush DiffBrush
         {
             get
             {
-                if (HunkRangeInfo.IsAddition)
-                {
-                    return MarginCore.AdditionBrush;
-                }
+                if (HunkRangeInfo.IsAddition) return MarginCore.AdditionBrush;
                 return HunkRangeInfo.IsModification ? MarginCore.ModificationBrush : MarginCore.RemovedBrush;
             }
         }
 
-        public int LineNumber { get { return HunkRangeInfo.NewHunkRange.StartingLineNumber; } }
-
-        public int NumberOfLines { get { return HunkRangeInfo.NewHunkRange.NumberOfLines; } }
+        public int LineNumber => HunkRangeInfo.NewHunkRange.StartingLineNumber;
 
         public virtual bool IsVisible
         {
-            get { return _isVisible; }
-            set { _isVisible = value;
-                RaisePropertyChanged(() => IsVisible);}
+            get => _isVisible;
+            set
+            {
+                _isVisible = value;
+                RaisePropertyChanged(() => IsVisible);
+            }
         }
 
         public void RefreshPosition()
@@ -93,12 +80,14 @@ namespace GitDiffMargin.ViewModel
 
         public bool IsLineNumberBetweenDiff(int lineNumber)
         {
+            var numberOfLines = HunkRangeInfo.NewHunkRange.NumberOfLines;
+
             var diffStartLine = LineNumber;
-            var diffEndLine = diffStartLine + NumberOfLines - 1;
+            var diffEndLine = diffStartLine + numberOfLines - 1;
 
             if (IsDeletion)
             {
-                diffEndLine = diffStartLine + NumberOfLines + 2;
+                diffEndLine = diffStartLine + numberOfLines + 2;
             }
 
             return lineNumber >= diffStartLine && lineNumber <= diffEndLine;

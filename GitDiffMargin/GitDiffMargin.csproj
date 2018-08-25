@@ -31,6 +31,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -58,10 +59,8 @@
   <ItemGroup>
     <PackageReference Include="Tvl.VisualStudio.Text.Utility.10" version="1.0.0" />
     <PackageReference Include="MvvmLightLibs" Version="5.2.0.0" />
-
     <!-- This is a development-only dependency. -->
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="15.5.72" PrivateAssets="all" />
-
     <!--
       These are not development-only dependencies, but PrivateAssets is still used to avoid transitive dependencies when
       GitDiffMargin.Commands references this project using a ProjectReference.
@@ -95,7 +94,6 @@
     <Compile Include="Core\IMarginCore.cs" />
     <Compile Include="Core\MarginCore.cs" />
     <Compile Include="DiffMarginFactoryBase.cs" />
-    <Compile Include="Core\ParseResultEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScrollDiffMargin.cs" />
     <Compile Include="ScrollDiffMarginFactory2012.cs" />

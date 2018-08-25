@@ -9,27 +9,25 @@ namespace GitDiffMargin
 {
     internal sealed class ScrollDiffMargin : DiffMarginBase
     {
-        private readonly IVerticalScrollBar _scrollBar;
         private const double MarginWidth = 4.0;
 
         public const string MarginNameConst = "ScrollDiffMargin";
-
-        protected override string MarginName
-        {
-            get { return MarginNameConst; }
-        }
+        private readonly IVerticalScrollBar _scrollBar;
 
         internal ScrollDiffMargin(IWpfTextView textView, IMarginCore marginCore, IWpfTextViewMargin containerMargin)
             : base(textView)
         {
             var scrollBarMargin = containerMargin.GetTextViewMargin(PredefinedMarginNames.VerticalScrollBar);
             // ReSharper disable once SuspiciousTypeConversion.Global
-            _scrollBar = (IVerticalScrollBar)scrollBarMargin;
+            _scrollBar = (IVerticalScrollBar) scrollBarMargin;
 
             ViewModel = new ScrollDiffMarginViewModel(marginCore, UpdateDiffDimensions);
 
-            UserControl = new ScrollDiffMarginControl { DataContext = ViewModel, Width = MarginWidth, MaxWidth = MarginWidth, MinWidth = MarginWidth};
+            UserControl = new ScrollDiffMarginControl
+                {DataContext = ViewModel, Width = MarginWidth, MaxWidth = MarginWidth, MinWidth = MarginWidth};
         }
+
+        protected override string MarginName => MarginNameConst;
 
         private void UpdateDiffDimensions(DiffViewModel diffViewModel, HunkRangeInfo hunkRangeInfo)
         {
@@ -45,9 +43,7 @@ namespace GitDiffMargin
                 || startLineNumber >= snapshot.LineCount
                 || endLineNumber < 0
                 || endLineNumber >= snapshot.LineCount)
-            {
                 return;
-            }
 
             var startLine = snapshot.GetLineFromLineNumber(startLineNumber);
             var endLine = snapshot.GetLineFromLineNumber(endLineNumber);
@@ -58,7 +54,8 @@ namespace GitDiffMargin
             var mapBottom = _scrollBar.Map.GetCoordinateAtBufferPosition(endLine.End) + 0.5;
 
             diffViewModel.Top = Math.Round(_scrollBar.GetYCoordinateOfScrollMapPosition(mapTop)) - 2.0;
-            diffViewModel.Height = Math.Round(_scrollBar.GetYCoordinateOfScrollMapPosition(mapBottom)) - diffViewModel.Top + 2.0;
+            diffViewModel.Height = Math.Round(_scrollBar.GetYCoordinateOfScrollMapPosition(mapBottom)) -
+                                   diffViewModel.Top + 2.0;
         }
     }
 }

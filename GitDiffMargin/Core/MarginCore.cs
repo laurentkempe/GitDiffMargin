@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,36 +13,37 @@ namespace GitDiffMargin.Core
 {
     internal sealed class MarginCore : IMarginCore, IDisposable
     {
-        private readonly IWpfTextView _textView;
-
         private readonly IClassificationFormatMap _classificationFormatMap;
         private readonly IEditorFormatMap _editorFormatMap;
-        private readonly IGitCommands _gitCommands;
 
         private readonly DiffUpdateBackgroundParser _parser;
 
         private Brush _additionBrush;
+
+        private bool _isDisposed;
         private Brush _modificationBrush;
         private Brush _removedBrush;
 
-        private bool _isDisposed;
-
-        public MarginCore(IWpfTextView textView, string originalPath, ITextDocumentFactoryService textDocumentFactoryService, IClassificationFormatMapService classificationFormatMapService, IEditorFormatMapService editorFormatMapService, IGitCommands gitCommands)
+        public MarginCore(IWpfTextView textView, string originalPath,
+            ITextDocumentFactoryService textDocumentFactoryService,
+            IClassificationFormatMapService classificationFormatMapService,
+            IEditorFormatMapService editorFormatMapService, IGitCommands gitCommands)
         {
-            _textView = textView;
+            TextView = textView;
 
             _classificationFormatMap = classificationFormatMapService.GetClassificationFormatMap(textView);
 
             _editorFormatMap = editorFormatMapService.GetEditorFormatMap(textView);
             _editorFormatMap.FormatMappingChanged += HandleFormatMappingChanged;
 
-            _gitCommands = gitCommands;
+            GitCommands = gitCommands;
 
-            _parser = new DiffUpdateBackgroundParser(textView.TextBuffer, textView.TextDataModel.DocumentBuffer, originalPath, TaskScheduler.Default, textDocumentFactoryService, GitCommands);
+            _parser = new DiffUpdateBackgroundParser(textView.TextBuffer, textView.TextDataModel.DocumentBuffer,
+                originalPath, TaskScheduler.Default, textDocumentFactoryService, GitCommands);
             _parser.ParseComplete += HandleParseComplete;
             _parser.RequestParse(false);
 
-            _textView.Closed += (sender, e) =>
+            TextView.Closed += (sender, e) =>
             {
                 _editorFormatMap.FormatMappingChanged -= HandleFormatMappingChanged;
                 _parser.ParseComplete -= HandleParseComplete;
@@ -51,143 +52,68 @@ namespace GitDiffMargin.Core
             UpdateBrushes();
         }
 
-        public IWpfTextView TextView
+        public void Dispose()
         {
-            get
-            {
-                return _textView;
-            }
+            if (_isDisposed)
+                return;
+
+            _isDisposed = true;
+
+            _parser.Dispose();
         }
 
-        public string OriginalPath
-        {
-            get;
-        }
+        public IWpfTextView TextView { get; }
 
-        public IGitCommands GitCommands
-        {
-            get
-            {
-                return _gitCommands;
-            }
-        }
+        public string OriginalPath { get; }
 
-        public FontFamily FontFamily
-        {
-            get
-            {
-                if (_classificationFormatMap.DefaultTextProperties.TypefaceEmpty)
-                    return new FontFamily("Consolas");
+        public IGitCommands GitCommands { get; }
 
-                return _classificationFormatMap.DefaultTextProperties.Typeface.FontFamily;
-            }
-        }
+        public FontFamily FontFamily => _classificationFormatMap.DefaultTextProperties.TypefaceEmpty
+            ? new FontFamily("Consolas")
+            : _classificationFormatMap.DefaultTextProperties.Typeface.FontFamily;
 
-        public FontStretch FontStretch
-        {
-            get
-            {
-                if (_classificationFormatMap.DefaultTextProperties.TypefaceEmpty)
-                    return FontStretches.Normal;
+        public FontStretch FontStretch => _classificationFormatMap.DefaultTextProperties.TypefaceEmpty
+            ? FontStretches.Normal
+            : _classificationFormatMap.DefaultTextProperties.Typeface.Stretch;
 
-                return _classificationFormatMap.DefaultTextProperties.Typeface.Stretch;
-            }
-        }
+        public FontStyle FontStyle => _classificationFormatMap.DefaultTextProperties.TypefaceEmpty
+            ? FontStyles.Normal
+            : _classificationFormatMap.DefaultTextProperties.Typeface.Style;
 
-        public FontStyle FontStyle
-        {
-            get
-            {
-                if (_classificationFormatMap.DefaultTextProperties.TypefaceEmpty)
-                    return FontStyles.Normal;
+        public FontWeight FontWeight => _classificationFormatMap.DefaultTextProperties.TypefaceEmpty
+            ? FontWeights.Normal
+            : _classificationFormatMap.DefaultTextProperties.Typeface.Weight;
 
-                return _classificationFormatMap.DefaultTextProperties.Typeface.Style;
-            }
-        }
+        public double FontSize => _classificationFormatMap.DefaultTextProperties.FontRenderingEmSizeEmpty
+            ? 12.0
+            : _classificationFormatMap.DefaultTextProperties.FontRenderingEmSize;
 
-        public FontWeight FontWeight
-        {
-            get
-            {
-                if (_classificationFormatMap.DefaultTextProperties.TypefaceEmpty)
-                    return FontWeights.Normal;
-
-                return _classificationFormatMap.DefaultTextProperties.Typeface.Weight;
-            }
-        }
-
-        public double FontSize
-        {
-            get
-            {
-                if (_classificationFormatMap.DefaultTextProperties.FontRenderingEmSizeEmpty)
-                    return 12.0;
-
-                return _classificationFormatMap.DefaultTextProperties.FontRenderingEmSize;
-            }
-        }
-
-        public Brush Background
-        {
-            get
-            {
-                if (_classificationFormatMap.DefaultTextProperties.BackgroundBrushEmpty)
-                    return _textView.Background;
-
-                return _classificationFormatMap.DefaultTextProperties.BackgroundBrush;
-            }
-        }
+        public Brush Background => _classificationFormatMap.DefaultTextProperties.BackgroundBrushEmpty
+            ? TextView.Background
+            : _classificationFormatMap.DefaultTextProperties.BackgroundBrush;
 
         public Brush Foreground
         {
             get
             {
                 if (_classificationFormatMap.DefaultTextProperties.ForegroundBrushEmpty)
-                    return (Brush)Application.Current.Resources[VsBrushes.ToolWindowTextKey];
+                    return (Brush) Application.Current.Resources[VsBrushes.ToolWindowTextKey];
 
                 return _classificationFormatMap.DefaultTextProperties.ForegroundBrush;
             }
         }
 
-        public Brush AdditionBrush
-        {
+        public Brush AdditionBrush => _additionBrush ?? Brushes.Transparent;
 
-            get
-            {
-                return _additionBrush ?? Brushes.Transparent;
-            }
-        }
+        public Brush ModificationBrush => _modificationBrush ?? Brushes.Transparent;
 
-        public Brush ModificationBrush
-        {
-            get
-            {
-                return _modificationBrush ?? Brushes.Transparent;
-            }
-        }
+        public Brush RemovedBrush => _removedBrush ?? Brushes.Transparent;
 
-        public Brush RemovedBrush
-        {
-            get
-            {
-                return _removedBrush ?? Brushes.Transparent;
-            }
-        }
+        public double EditorChangeLeft => 2.5;
 
-        public double EditorChangeLeft
-        {
-            get { return 2.5; }
-        }
+        public double EditorChangeWidth => 5.0;
 
-        public double EditorChangeWidth
-        {
-            get { return 5.0; }
-        }
-
-        public double ScrollChangeWidth
-        {
-            get { return 3.0; }
-        }
+        public double ScrollChangeWidth => 3.0;
 
         public event EventHandler BrushesChanged;
 
@@ -195,84 +121,20 @@ namespace GitDiffMargin.Core
 
         public void MoveToChange(int lineNumber)
         {
-            var diffLine = _textView.TextSnapshot.GetLineFromLineNumber(lineNumber);
+            var diffLine = TextView.TextSnapshot.GetLineFromLineNumber(lineNumber);
 
-            _textView.VisualElement.Focus();
-            _textView.Caret.MoveTo(diffLine.Start);
-            _textView.ViewScroller.EnsureSpanVisible(diffLine.ExtentIncludingLineBreak,
+            TextView.VisualElement.Focus();
+            TextView.Caret.MoveTo(diffLine.Start);
+            TextView.ViewScroller.EnsureSpanVisible(diffLine.ExtentIncludingLineBreak,
                 EnsureSpanVisibleOptions.AlwaysCenter);
         }
 
-        private void CheckBeginInvokeOnUi(Action action)
-        {
-            if (_textView.VisualElement.Dispatcher.CheckAccess())
-            {
-                action();
-            }
-            else
-            {
-                _textView.VisualElement.Dispatcher.BeginInvoke(action);
-            } 
-        }
-
-        private void HandleFormatMappingChanged(object sender, FormatItemsEventArgs e)
-        {
-            if (e.ChangedItems.Contains(DiffFormatNames.Addition)
-                || e.ChangedItems.Contains(DiffFormatNames.Modification)
-                || e.ChangedItems.Contains(DiffFormatNames.Removed))
-            {
-                UpdateBrushes();
-            }
-        }
-
-        private void UpdateBrushes()
-        {
-            _additionBrush = GetBrush(_editorFormatMap.GetProperties(DiffFormatNames.Addition));
-            _modificationBrush = GetBrush(_editorFormatMap.GetProperties(DiffFormatNames.Modification));
-            _removedBrush = GetBrush(_editorFormatMap.GetProperties(DiffFormatNames.Removed));
-            OnBrushesChanged(EventArgs.Empty);
-        }
-
-        private void OnBrushesChanged(EventArgs e)
-        {
-            var t = BrushesChanged;
-            if (t != null)
-                t(this, e);
-        }
-
-        private static Brush GetBrush(ResourceDictionary properties)
-        {
-            if (properties == null)
-                return Brushes.Transparent;
-
-            if (properties.Contains(EditorFormatDefinition.BackgroundColorId))
-            {
-                var color = (Color)properties[EditorFormatDefinition.BackgroundColorId];
-                var brush = new SolidColorBrush(color);
-                if (brush.CanFreeze)
-                {
-                    brush.Freeze();
-                }
-                return brush;
-            }
-            if (properties.Contains(EditorFormatDefinition.BackgroundBrushId))
-            {
-                var brush = (Brush)properties[EditorFormatDefinition.BackgroundBrushId];
-                if (brush.CanFreeze)
-                {
-                    brush.Freeze();
-                }
-                return brush;
-            }
-
-            return Brushes.Transparent;
-        }
         public bool RollBack(HunkRangeInfo hunkRangeInfo)
         {
             if (hunkRangeInfo.SuppressRollback)
                 return false;
 
-            var snapshot = _textView.TextSnapshot;
+            var snapshot = TextView.TextSnapshot;
 
             if (snapshot != snapshot.TextBuffer.CurrentSnapshot)
                 return false;
@@ -288,24 +150,27 @@ namespace GitDiffMargin.Core
                 else
                 {
                     var startLine = snapshot.GetLineFromLineNumber(hunkRangeInfo.NewHunkRange.StartingLineNumber);
-                    var endLine = snapshot.GetLineFromLineNumber(hunkRangeInfo.NewHunkRange.StartingLineNumber + hunkRangeInfo.NewHunkRange.NumberOfLines - 1);
+                    var endLine = snapshot.GetLineFromLineNumber(
+                        hunkRangeInfo.NewHunkRange.StartingLineNumber + hunkRangeInfo.NewHunkRange.NumberOfLines - 1);
                     newSpan = Span.FromBounds(startLine.Start.Position, endLine.EndIncludingLineBreak.Position);
                 }
 
                 if (hunkRangeInfo.IsAddition)
                 {
                     var startLine = snapshot.GetLineFromLineNumber(hunkRangeInfo.NewHunkRange.StartingLineNumber);
-                    var endLine = snapshot.GetLineFromLineNumber(hunkRangeInfo.NewHunkRange.StartingLineNumber + hunkRangeInfo.NewHunkRange.NumberOfLines - 1);
+                    var endLine = snapshot.GetLineFromLineNumber(
+                        hunkRangeInfo.NewHunkRange.StartingLineNumber + hunkRangeInfo.NewHunkRange.NumberOfLines - 1);
                     edit.Delete(Span.FromBounds(startLine.Start.Position, endLine.EndIncludingLineBreak.Position));
                 }
                 else
                 {
                     var lineBreak = snapshot.GetLineFromLineNumber(0).GetLineBreakText();
-                    if (String.IsNullOrEmpty(lineBreak))
+                    if (string.IsNullOrEmpty(lineBreak))
                         lineBreak = Environment.NewLine;
 
-                    var originalText = String.Join(lineBreak, hunkRangeInfo.OriginalText);
-                    if (hunkRangeInfo.NewHunkRange.StartingLineNumber + hunkRangeInfo.NewHunkRange.NumberOfLines != snapshot.LineCount)
+                    var originalText = string.Join(lineBreak, hunkRangeInfo.OriginalText);
+                    if (hunkRangeInfo.NewHunkRange.StartingLineNumber + hunkRangeInfo.NewHunkRange.NumberOfLines !=
+                        snapshot.LineCount)
                         originalText += lineBreak;
 
                     edit.Replace(newSpan, originalText);
@@ -319,8 +184,8 @@ namespace GitDiffMargin.Core
 
         public ITextDocument GetTextDocument()
         {
-            ITextDocument document;
-            _textView.TextDataModel.DocumentBuffer.Properties.TryGetProperty(typeof(ITextDocument), out document);
+            TextView.TextDataModel.DocumentBuffer.Properties.TryGetProperty(typeof(ITextDocument),
+                out ITextDocument document);
             return document;
         }
 
@@ -329,29 +194,67 @@ namespace GitDiffMargin.Core
             TextView.VisualElement.Focus();
         }
 
-        private void HandleParseComplete(object sender, ParseResultEventArgs e)
+        private void CheckBeginInvokeOnUi(Action action)
         {
-            var diffResult = e as DiffParseResultEventArgs;
-            if (diffResult == null) return;
+            if (TextView.VisualElement.Dispatcher.CheckAccess())
+                action();
+            else
+                TextView.VisualElement.Dispatcher.BeginInvoke(action);
+        }
 
-            CheckBeginInvokeOnUi(() => OnHunksChanged(diffResult.Diff));
+        private void HandleFormatMappingChanged(object sender, FormatItemsEventArgs e)
+        {
+            if (e.ChangedItems.Contains(DiffFormatNames.Addition)
+                || e.ChangedItems.Contains(DiffFormatNames.Modification)
+                || e.ChangedItems.Contains(DiffFormatNames.Removed))
+                UpdateBrushes();
+        }
+
+        private void UpdateBrushes()
+        {
+            _additionBrush = GetBrush(_editorFormatMap.GetProperties(DiffFormatNames.Addition));
+            _modificationBrush = GetBrush(_editorFormatMap.GetProperties(DiffFormatNames.Modification));
+            _removedBrush = GetBrush(_editorFormatMap.GetProperties(DiffFormatNames.Removed));
+            OnBrushesChanged(EventArgs.Empty);
+        }
+
+        private void OnBrushesChanged(EventArgs e)
+        {
+            BrushesChanged?.Invoke(this, e);
+        }
+
+        private static Brush GetBrush(ResourceDictionary properties)
+        {
+            Brush GetBrush()
+            {
+                var brush = (Brush) properties[EditorFormatDefinition.BackgroundBrushId];
+                if (brush.CanFreeze) brush.Freeze();
+                return brush;
+            }
+
+            Brush GetSolidColorBrush()
+            {
+                var color = (Color) properties[EditorFormatDefinition.BackgroundColorId];
+                var brush = new SolidColorBrush(color);
+                if (brush.CanFreeze) brush.Freeze();
+                return brush;
+            }
+
+            if (properties == null) return Brushes.Transparent;
+
+            if (properties.Contains(EditorFormatDefinition.BackgroundColorId)) return GetSolidColorBrush();
+
+            return properties.Contains(EditorFormatDefinition.BackgroundBrushId) ? GetBrush() : Brushes.Transparent;
+        }
+
+        private void HandleParseComplete(object sender, DiffParseResultEventArgs e)
+        {
+            if (e is DiffParseResultEventArgs diffResult) CheckBeginInvokeOnUi(() => OnHunksChanged(diffResult.Diff));
         }
 
         private void OnHunksChanged(IEnumerable<HunkRangeInfo> hunkRangeInfos)
         {
-            var t = HunksChanged;
-            if (t != null)
-                t(this, new HunksChangedEventArgs(hunkRangeInfos));
-        }
-
-        public void Dispose()
-        {
-            if (_isDisposed)
-                return;
-
-            _isDisposed = true;
-
-            _parser.Dispose();
+            HunksChanged?.Invoke(this, new HunksChangedEventArgs(hunkRangeInfos));
         }
     }
 }
