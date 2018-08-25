@@ -94,7 +94,6 @@
     <Compile Include="Core\IMarginCore.cs" />
     <Compile Include="Core\MarginCore.cs" />
     <Compile Include="DiffMarginFactoryBase.cs" />
-    <Compile Include="Core\ParseResultEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScrollDiffMargin.cs" />
     <Compile Include="ScrollDiffMarginFactory2012.cs" />

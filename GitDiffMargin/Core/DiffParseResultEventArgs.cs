@@ -1,16 +1,13 @@
-﻿using System;
 using System.Collections.Generic;
 using GitDiffMargin.Git;
-using Microsoft.VisualStudio.Text;
 
 namespace GitDiffMargin.Core
 {
-    public class DiffParseResultEventArgs : ParseResultEventArgs
+    public class DiffParseResultEventArgs
     {
         private readonly List<HunkRangeInfo> _diff;
 
-        public DiffParseResultEventArgs(ITextSnapshot snapshot, TimeSpan elapsedTime, List<HunkRangeInfo> diff)
-            : base(snapshot, elapsedTime)
+        public DiffParseResultEventArgs(List<HunkRangeInfo> diff)
         {
             _diff = diff;
         }

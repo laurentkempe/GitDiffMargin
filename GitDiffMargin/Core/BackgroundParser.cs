@@ -93,7 +93,7 @@ namespace GitDiffMargin.Core
             GC.SuppressFinalize(this);
         }
 
-        public event EventHandler<ParseResultEventArgs> ParseComplete;
+        public event EventHandler<DiffParseResultEventArgs> ParseComplete;
 
         public void RequestParse(bool forceReparse)
         {
@@ -116,7 +116,7 @@ namespace GitDiffMargin.Core
 
         protected abstract void ReParseImpl();
 
-        protected void OnParseComplete(ParseResultEventArgs e)
+        protected void OnParseComplete(DiffParseResultEventArgs e)
         {
             if (e == null)
                 throw new ArgumentNullException(nameof(e));

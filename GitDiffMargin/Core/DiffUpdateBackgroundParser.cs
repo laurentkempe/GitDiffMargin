@@ -61,7 +61,8 @@ namespace GitDiffMargin.Core
                 }
             }
 
-            Task.Factory.StartNew(HandleFileSystemChanged, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
+            Task.Factory.StartNew(HandleFileSystemChanged, CancellationToken.None, TaskCreationOptions.None,
+                TaskScheduler.Default);
         }
 
         private void ProcessFileSystemChange(FileSystemEventArgs e)
@@ -90,7 +91,7 @@ namespace GitDiffMargin.Core
                 if (!TextDocumentFactoryService.TryGetTextDocument(_documentBuffer, out var textDocument)) return;
 
                 var diff = _commands.GetGitDiffFor(textDocument, _originalPath, snapshot);
-                var result = new DiffParseResultEventArgs(snapshot, stopwatch.Elapsed, diff.ToList());
+                var result = new DiffParseResultEventArgs(diff.ToList());
                 OnParseComplete(result);
             }
             catch (InvalidOperationException)

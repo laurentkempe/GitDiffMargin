@@ -247,7 +247,7 @@ namespace GitDiffMargin.Core
             return properties.Contains(EditorFormatDefinition.BackgroundBrushId) ? GetBrush() : Brushes.Transparent;
         }
 
-        private void HandleParseComplete(object sender, ParseResultEventArgs e)
+        private void HandleParseComplete(object sender, DiffParseResultEventArgs e)
         {
             if (e is DiffParseResultEventArgs diffResult) CheckBeginInvokeOnUi(() => OnHunksChanged(diffResult.Diff));
         }
