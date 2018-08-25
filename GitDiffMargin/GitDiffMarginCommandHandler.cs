@@ -34,8 +34,7 @@ namespace GitDiffMargin
                 {
                     case GitDiffMarginCommand.ShowPopup:
                     {
-                        EditorDiffMarginViewModel viewModel;
-                        if (!TryGetMarginViewModel(out viewModel))
+                        if (!TryGetMarginViewModel(out var viewModel))
                             return 0;
 
                         var diffViewModel = GetCurrentDiffViewModel(viewModel);
@@ -47,8 +46,7 @@ namespace GitDiffMargin
                     case GitDiffMarginCommand.PreviousChange:
                     case GitDiffMarginCommand.NextChange:
                     {
-                        EditorDiffMarginViewModel viewModel;
-                        if (!TryGetMarginViewModel(out viewModel))
+                        if (!TryGetMarginViewModel(out var viewModel))
                             return 0;
 
                         // First look for a diff already showing a popup
@@ -74,8 +72,7 @@ namespace GitDiffMargin
                     case GitDiffMarginCommand.RollbackChange:
                     case GitDiffMarginCommand.CopyOldText:
                     {
-                        EditorDiffMarginViewModel viewModel;
-                        if (!TryGetMarginViewModel(out viewModel))
+                        if (!TryGetMarginViewModel(out var viewModel))
                             return 0;
 
                         var diffViewModel = viewModel.DiffViewModels.OfType<EditorDiffViewModel>()
@@ -95,8 +92,7 @@ namespace GitDiffMargin
 
                     case GitDiffMarginCommand.ShowDiff:
                     {
-                        EditorDiffMarginViewModel viewModel;
-                        if (!TryGetMarginViewModel(out viewModel))
+                        if (!TryGetMarginViewModel(out var viewModel))
                             return 0;
 
                         if (viewModel.DiffViewModels.Any())
@@ -118,9 +114,8 @@ namespace GitDiffMargin
         {
             if (commandGroup == typeof(GitDiffMarginCommand).GUID)
             {
-                EditorDiffMarginViewModel viewModel = null;
                 EditorDiffViewModel diffViewModel = null;
-                if (TryGetMarginViewModel(out viewModel))
+                if (TryGetMarginViewModel(out var viewModel))
                     diffViewModel = viewModel.DiffViewModels.OfType<EditorDiffViewModel>()
                         .FirstOrDefault(i => i.ShowPopup);
 

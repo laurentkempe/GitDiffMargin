@@ -226,8 +226,8 @@ namespace GitDiffMargin.Core
 
         public ITextDocument GetTextDocument()
         {
-            ITextDocument document;
-            TextView.TextDataModel.DocumentBuffer.Properties.TryGetProperty(typeof(ITextDocument), out document);
+            TextView.TextDataModel.DocumentBuffer.Properties.TryGetProperty(typeof(ITextDocument),
+                out ITextDocument document);
             return document;
         }
 

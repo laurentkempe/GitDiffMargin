@@ -1,4 +1,4 @@
-﻿#region using
+#region using
 
 using System;
 using System.Linq;
@@ -86,16 +86,13 @@ namespace GitDiffMargin.ViewModel
                 if (_toolbarTrayHost == null)
                     return null;
 
-                IVsUIElement toolbarTray;
-                ErrorHandler.ThrowOnFailure(_toolbarTrayHost.GetToolbarTray(out toolbarTray));
+                ErrorHandler.ThrowOnFailure(_toolbarTrayHost.GetToolbarTray(out var toolbarTray));
 
-                object uiObject;
-                ErrorHandler.ThrowOnFailure(toolbarTray.GetUIObject(out uiObject));
+                ErrorHandler.ThrowOnFailure(toolbarTray.GetUIObject(out var uiObject));
 
                 var wpfElement = uiObject as IVsUIWpfElement;
 
-                object frameworkElement;
-                ErrorHandler.ThrowOnFailure(wpfElement.GetFrameworkElement(out frameworkElement));
+                ErrorHandler.ThrowOnFailure(wpfElement.GetFrameworkElement(out var frameworkElement));
 
                 return frameworkElement;
             }
@@ -117,8 +114,7 @@ namespace GitDiffMargin.ViewModel
                             MarginCore.TextView.Properties.GetProperty<GitDiffMarginCommandHandler>(
                                 typeof(GitDiffMarginCommandHandler));
 
-                        IVsToolbarTrayHost toolbarTrayHost;
-                        ErrorHandler.ThrowOnFailure(uiShell.CreateToolbarTray(commandTarget, out toolbarTrayHost));
+                        ErrorHandler.ThrowOnFailure(uiShell.CreateToolbarTray(commandTarget, out var toolbarTrayHost));
 
                         var toolBarGuid = typeof(GitDiffMarginCommand).GUID;
                         ErrorHandler.ThrowOnFailure(toolbarTrayHost.AddToolbar(ref toolBarGuid,

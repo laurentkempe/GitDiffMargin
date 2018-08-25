@@ -91,8 +91,7 @@ namespace GitDiffMargin.Core
                 var stopwatch = Stopwatch.StartNew();
 
                 var snapshot = TextBuffer.CurrentSnapshot;
-                ITextDocument textDocument;
-                if (!TextDocumentFactoryService.TryGetTextDocument(_documentBuffer, out textDocument)) return;
+                if (!TextDocumentFactoryService.TryGetTextDocument(_documentBuffer, out var textDocument)) return;
 
                 var diff = _commands.GetGitDiffFor(textDocument, _originalPath, snapshot);
                 var result = new DiffParseResultEventArgs(snapshot, stopwatch.Elapsed, diff.ToList());

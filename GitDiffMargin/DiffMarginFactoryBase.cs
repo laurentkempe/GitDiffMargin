@@ -25,8 +25,7 @@ namespace GitDiffMargin
 
         protected IMarginCore TryGetMarginCore(IWpfTextViewHost textViewHost)
         {
-            MarginCore marginCore;
-            if (textViewHost.TextView.Properties.TryGetProperty(typeof(MarginCore), out marginCore))
+            if (textViewHost.TextView.Properties.TryGetProperty(typeof(MarginCore), out MarginCore marginCore))
                 return marginCore;
 
             // play nice with other source control providers
@@ -36,8 +35,7 @@ namespace GitDiffMargin
             if (documentBuffer == null)
                 return null;
 
-            ITextDocument textDocument;
-            if (!TextDocumentFactoryService.TryGetTextDocument(documentBuffer, out textDocument))
+            if (!TextDocumentFactoryService.TryGetTextDocument(documentBuffer, out var textDocument))
                 return null;
 
             var fullPath = GetFullPath(textDocument.FilePath);
