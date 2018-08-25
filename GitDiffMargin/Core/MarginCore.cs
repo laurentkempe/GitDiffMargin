@@ -68,71 +68,29 @@ namespace GitDiffMargin.Core
 
         public IGitCommands GitCommands { get; }
 
-        public FontFamily FontFamily
-        {
-            get
-            {
-                if (_classificationFormatMap.DefaultTextProperties.TypefaceEmpty)
-                    return new FontFamily("Consolas");
+        public FontFamily FontFamily => _classificationFormatMap.DefaultTextProperties.TypefaceEmpty
+            ? new FontFamily("Consolas")
+            : _classificationFormatMap.DefaultTextProperties.Typeface.FontFamily;
 
-                return _classificationFormatMap.DefaultTextProperties.Typeface.FontFamily;
-            }
-        }
+        public FontStretch FontStretch => _classificationFormatMap.DefaultTextProperties.TypefaceEmpty
+            ? FontStretches.Normal
+            : _classificationFormatMap.DefaultTextProperties.Typeface.Stretch;
 
-        public FontStretch FontStretch
-        {
-            get
-            {
-                if (_classificationFormatMap.DefaultTextProperties.TypefaceEmpty)
-                    return FontStretches.Normal;
+        public FontStyle FontStyle => _classificationFormatMap.DefaultTextProperties.TypefaceEmpty
+            ? FontStyles.Normal
+            : _classificationFormatMap.DefaultTextProperties.Typeface.Style;
 
-                return _classificationFormatMap.DefaultTextProperties.Typeface.Stretch;
-            }
-        }
+        public FontWeight FontWeight => _classificationFormatMap.DefaultTextProperties.TypefaceEmpty
+            ? FontWeights.Normal
+            : _classificationFormatMap.DefaultTextProperties.Typeface.Weight;
 
-        public FontStyle FontStyle
-        {
-            get
-            {
-                if (_classificationFormatMap.DefaultTextProperties.TypefaceEmpty)
-                    return FontStyles.Normal;
+        public double FontSize => _classificationFormatMap.DefaultTextProperties.FontRenderingEmSizeEmpty
+            ? 12.0
+            : _classificationFormatMap.DefaultTextProperties.FontRenderingEmSize;
 
-                return _classificationFormatMap.DefaultTextProperties.Typeface.Style;
-            }
-        }
-
-        public FontWeight FontWeight
-        {
-            get
-            {
-                if (_classificationFormatMap.DefaultTextProperties.TypefaceEmpty)
-                    return FontWeights.Normal;
-
-                return _classificationFormatMap.DefaultTextProperties.Typeface.Weight;
-            }
-        }
-
-        public double FontSize
-        {
-            get
-            {
-                if (_classificationFormatMap.DefaultTextProperties.FontRenderingEmSizeEmpty)
-                    return 12.0;
-
-                return _classificationFormatMap.DefaultTextProperties.FontRenderingEmSize;
-            }
-        }
-
-        public Brush Background
-        {
-            get
-            {
-                if (_classificationFormatMap.DefaultTextProperties.BackgroundBrushEmpty)
-                    return TextView.Background;
-
-                return _classificationFormatMap.DefaultTextProperties.BackgroundBrush;
-            }
-        }
+        public Brush Background => _classificationFormatMap.DefaultTextProperties.BackgroundBrushEmpty
+            ? TextView.Background
+            : _classificationFormatMap.DefaultTextProperties.BackgroundBrush;
 
         public Brush Foreground
         {

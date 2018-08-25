@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Commanding;
 using Microsoft.VisualStudio.OLE.Interop;
@@ -28,9 +28,10 @@ namespace GitDiffMargin.Commands
             ErrorHandler.ThrowOnFailure(GetCommandTarget(args).QueryStatus(_commandSet, 1, command, IntPtr.Zero));
             if ((command[0].cmdf & (uint) OLECMDF.OLECMDF_SUPPORTED) == 0)
                 return CommandState.Unspecified;
-            if ((command[0].cmdf & (uint) OLECMDF.OLECMDF_ENABLED) == 0)
-                return CommandState.Unavailable;
-            return CommandState.Available;
+
+            return (command[0].cmdf & (uint) OLECMDF.OLECMDF_ENABLED) == 0
+                ? CommandState.Unavailable
+                : CommandState.Available;
         }
 
         public virtual bool ExecuteCommand(T args, CommandExecutionContext executionContext)

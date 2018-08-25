@@ -1,4 +1,4 @@
-﻿#region using
+#region using
 
 using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Text.Editor;
@@ -20,10 +20,8 @@ namespace GitDiffMargin
             IWpfTextViewMargin containerMargin)
         {
             var marginCore = TryGetMarginCore(textViewHost);
-            if (marginCore == null)
-                return null;
 
-            return new EditorDiffMargin(textViewHost.TextView, marginCore);
+            return marginCore == null ? null : new EditorDiffMargin(textViewHost.TextView, marginCore);
         }
     }
 }

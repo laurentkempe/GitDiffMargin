@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.Composition;
+using System.ComponentModel.Composition;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
@@ -24,10 +24,8 @@ namespace GitDiffMargin
                 return null;
 
             var marginCore = TryGetMarginCore(textViewHost);
-            if (marginCore == null)
-                return null;
 
-            return new ScrollDiffMargin(textViewHost.TextView, marginCore, containerMargin);
+            return marginCore == null ? null : new ScrollDiffMargin(textViewHost.TextView, marginCore, containerMargin);
         }
     }
 }

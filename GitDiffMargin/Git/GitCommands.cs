@@ -163,7 +163,9 @@ namespace GitDiffMargin.Git
                 {
                     // determine if the file has been staged
                     var stagedMask = FileStatus.NewInIndex | FileStatus.ModifiedInIndex;
-                    var revision = (repo.RetrieveStatus(relativePath) & stagedMask) != 0 ? "index" : repo.Head.Tip.Sha.Substring(0, 7);
+                    var revision = (repo.RetrieveStatus(relativePath) & stagedMask) != 0
+                        ? "index"
+                        : repo.Head.Tip.Sha.Substring(0, 7);
 
                     leftLabel = string.Format("{0}@{1}", objectName, revision);
                 }
@@ -232,10 +234,8 @@ namespace GitDiffMargin.Git
             using (var repository = new Repository(repositoryPath))
             {
                 var workingDirectory = repository.Info.WorkingDirectory;
-                if (workingDirectory == null)
-                    return null;
 
-                return Path.GetFullPath(workingDirectory);
+                return workingDirectory == null ? null : Path.GetFullPath(workingDirectory);
             }
         }
 
