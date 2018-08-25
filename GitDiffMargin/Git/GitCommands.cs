@@ -197,13 +197,11 @@ namespace GitDiffMargin.Git
         public bool TryGetOriginalPath(string path, out string originalPath)
         {
             originalPath = null;
-            if (GetGitRepository(path, ref originalPath) == null)
-            {
-                originalPath = path;
-                return false;
-            }
+            if (GetGitRepository(path, ref originalPath) != null) return true;
 
-            return true;
+            originalPath = path;
+            return false;
+
         }
 
         /// <inheritdoc />
@@ -280,13 +278,9 @@ namespace GitDiffMargin.Git
 
         private static Encoding GetEncoding(string file)
         {
-            if (File.Exists(file))
-            {
-                var encoding = Encoding.UTF8;
-                if (HasPreamble(file, encoding)) return encoding;
-            }
-
-            return Encoding.Default;
+            return File.Exists(file)
+                ? (HasPreamble(file, Encoding.UTF8) ? Encoding.UTF8 : Encoding.Default)
+                : Encoding.Default;
         }
 
         private static bool HasPreamble(string file, Encoding encoding)

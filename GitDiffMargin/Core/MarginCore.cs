@@ -225,10 +225,14 @@ namespace GitDiffMargin.Core
 
         private static Brush GetBrush(ResourceDictionary properties)
         {
-            if (properties == null)
-                return Brushes.Transparent;
+            Brush GetBrush()
+            {
+                var brush = (Brush) properties[EditorFormatDefinition.BackgroundBrushId];
+                if (brush.CanFreeze) brush.Freeze();
+                return brush;
+            }
 
-            if (properties.Contains(EditorFormatDefinition.BackgroundColorId))
+            Brush GetSolidColorBrush()
             {
                 var color = (Color) properties[EditorFormatDefinition.BackgroundColorId];
                 var brush = new SolidColorBrush(color);
@@ -236,14 +240,11 @@ namespace GitDiffMargin.Core
                 return brush;
             }
 
-            if (properties.Contains(EditorFormatDefinition.BackgroundBrushId))
-            {
-                var brush = (Brush) properties[EditorFormatDefinition.BackgroundBrushId];
-                if (brush.CanFreeze) brush.Freeze();
-                return brush;
-            }
+            if (properties == null) return Brushes.Transparent;
 
-            return Brushes.Transparent;
+            if (properties.Contains(EditorFormatDefinition.BackgroundColorId)) return GetSolidColorBrush();
+
+            return properties.Contains(EditorFormatDefinition.BackgroundBrushId) ? GetBrush() : Brushes.Transparent;
         }
 
         private void HandleParseComplete(object sender, ParseResultEventArgs e)

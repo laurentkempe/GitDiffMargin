@@ -157,18 +157,19 @@ namespace GitDiffMargin.Core
             if (DateTimeOffset.Now - _lastEdit < ReparseDelay)
                 return;
 
-            if (Interlocked.CompareExchange(ref _parsing, 1, 0) == 0)
-                try
-                {
-                    var task = Task.Factory.StartNew(ReParse, CancellationToken.None, TaskCreationOptions.None,
-                        _taskScheduler);
-                    task.ContinueWith(_ => _parsing = 0);
-                }
-                catch
-                {
-                    _parsing = 0;
-                    throw;
-                }
+            if (Interlocked.CompareExchange(ref _parsing, 1, 0) != 0) return;
+
+            try
+            {
+                var task = Task.Factory.StartNew(ReParse, CancellationToken.None, TaskCreationOptions.None,
+                    _taskScheduler);
+                task.ContinueWith(_ => _parsing = 0);
+            }
+            catch
+            {
+                _parsing = 0;
+                throw;
+            }
         }
 
         private void ReParse()

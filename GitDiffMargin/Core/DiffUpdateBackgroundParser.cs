@@ -26,25 +26,23 @@ namespace GitDiffMargin.Core
             _commands = commands;
             ReparseDelay = TimeSpan.FromMilliseconds(500);
 
-            if (TextDocumentFactoryService.TryGetTextDocument(_documentBuffer, out _textDocument))
-            {
-                _originalPath = originalPath;
-                if (_commands.IsGitRepository(_textDocument.FilePath, _originalPath))
-                {
-                    _textDocument.FileActionOccurred += OnFileActionOccurred;
+            if (!TextDocumentFactoryService.TryGetTextDocument(_documentBuffer, out _textDocument)) return;
 
-                    var repositoryDirectory = _commands.GetGitRepository(_textDocument.FilePath, _originalPath);
-                    if (repositoryDirectory != null)
-                    {
-                        _watcher = new FileSystemWatcher(repositoryDirectory);
-                        _watcher.Changed += HandleFileSystemChanged;
-                        _watcher.Created += HandleFileSystemChanged;
-                        _watcher.Deleted += HandleFileSystemChanged;
-                        _watcher.Renamed += HandleFileSystemChanged;
-                        _watcher.EnableRaisingEvents = true;
-                    }
-                }
-            }
+            _originalPath = originalPath;
+
+            if (!_commands.IsGitRepository(_textDocument.FilePath, _originalPath)) return;
+
+            _textDocument.FileActionOccurred += OnFileActionOccurred;
+
+            var repositoryDirectory = _commands.GetGitRepository(_textDocument.FilePath, _originalPath);
+            if (repositoryDirectory == null) return;
+
+            _watcher = new FileSystemWatcher(repositoryDirectory);
+            _watcher.Changed += HandleFileSystemChanged;
+            _watcher.Created += HandleFileSystemChanged;
+            _watcher.Deleted += HandleFileSystemChanged;
+            _watcher.Renamed += HandleFileSystemChanged;
+            _watcher.EnableRaisingEvents = true;
         }
 
         public override string Name => "Git Diff Analyzer";
@@ -106,11 +104,10 @@ namespace GitDiffMargin.Core
         {
             base.Dispose(disposing);
 
-            if (disposing)
-            {
-                if (_textDocument != null) _textDocument.FileActionOccurred -= OnFileActionOccurred;
-                _watcher?.Dispose();
-            }
+            if (!disposing) return;
+
+            if (_textDocument != null) _textDocument.FileActionOccurred -= OnFileActionOccurred;
+            _watcher?.Dispose();
         }
     }
 }

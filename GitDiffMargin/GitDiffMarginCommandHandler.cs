@@ -29,82 +29,81 @@ namespace GitDiffMargin
         protected override OLECMDF QueryCommandStatus(ref Guid commandGroup, uint commandId,
             OleCommandText oleCommandText)
         {
-            if (commandGroup == typeof(GitDiffMarginCommand).GUID)
-                switch ((GitDiffMarginCommand) commandId)
+            if (commandGroup != typeof(GitDiffMarginCommand).GUID) return 0;
+            switch ((GitDiffMarginCommand) commandId)
+            {
+                case GitDiffMarginCommand.ShowPopup:
                 {
-                    case GitDiffMarginCommand.ShowPopup:
-                    {
-                        if (!TryGetMarginViewModel(out var viewModel))
-                            return 0;
+                    if (!TryGetMarginViewModel(out var viewModel))
+                        return 0;
 
-                        var diffViewModel = GetCurrentDiffViewModel(viewModel);
+                    var diffViewModel = GetCurrentDiffViewModel(viewModel);
 
-                        if (diffViewModel != null)
-                            return OLECMDF.OLECMDF_SUPPORTED | OLECMDF.OLECMDF_ENABLED;
-                        return OLECMDF.OLECMDF_SUPPORTED;
-                    }
-                    case GitDiffMarginCommand.PreviousChange:
-                    case GitDiffMarginCommand.NextChange:
-                    {
-                        if (!TryGetMarginViewModel(out var viewModel))
-                            return 0;
-
-                        // First look for a diff already showing a popup
-                        var diffViewModel = viewModel.DiffViewModels.OfType<EditorDiffViewModel>()
-                            .FirstOrDefault(i => i.ShowPopup);
-                        if (diffViewModel != null)
-                        {
-                            var command = (GitDiffMarginCommand) commandId == GitDiffMarginCommand.NextChange
-                                ? viewModel.NextChangeCommand
-                                : viewModel.PreviousChangeCommand;
-                            if (command.CanExecute(diffViewModel))
-                                return OLECMDF.OLECMDF_SUPPORTED | OLECMDF.OLECMDF_ENABLED;
-                            return OLECMDF.OLECMDF_SUPPORTED;
-                        }
-
-                        diffViewModel = GetDiffViewModelToMoveTo(commandId, viewModel);
-
-                        if (diffViewModel != null)
-                            return OLECMDF.OLECMDF_SUPPORTED | OLECMDF.OLECMDF_ENABLED;
-                        return OLECMDF.OLECMDF_SUPPORTED;
-                    }
-
-                    case GitDiffMarginCommand.RollbackChange:
-                    case GitDiffMarginCommand.CopyOldText:
-                    {
-                        if (!TryGetMarginViewModel(out var viewModel))
-                            return 0;
-
-                        var diffViewModel = viewModel.DiffViewModels.OfType<EditorDiffViewModel>()
-                            .FirstOrDefault(i => i.ShowPopup);
-                        if (diffViewModel != null)
-                        {
-                            var command = (GitDiffMarginCommand) commandId == GitDiffMarginCommand.RollbackChange
-                                ? diffViewModel.RollbackCommand
-                                : diffViewModel.CopyOldTextCommand;
-                            if (command.CanExecute(diffViewModel))
-                                return OLECMDF.OLECMDF_SUPPORTED | OLECMDF.OLECMDF_ENABLED;
-                        }
-
-                        // This command only works when a popup is open
-                        return OLECMDF.OLECMDF_SUPPORTED;
-                    }
-
-                    case GitDiffMarginCommand.ShowDiff:
-                    {
-                        if (!TryGetMarginViewModel(out var viewModel))
-                            return 0;
-
-                        if (viewModel.DiffViewModels.Any())
-                            return OLECMDF.OLECMDF_SUPPORTED | OLECMDF.OLECMDF_ENABLED;
-                        return OLECMDF.OLECMDF_SUPPORTED;
-                    }
-
-                    case GitDiffMarginCommand.GitDiffToolbar:
-                    case GitDiffMarginCommand.GitDiffToolbarGroup:
-                        // these aren't actually commands, but IDs of the command bars and groups
-                        break;
+                    if (diffViewModel != null)
+                        return OLECMDF.OLECMDF_SUPPORTED | OLECMDF.OLECMDF_ENABLED;
+                    return OLECMDF.OLECMDF_SUPPORTED;
                 }
+                case GitDiffMarginCommand.PreviousChange:
+                case GitDiffMarginCommand.NextChange:
+                {
+                    if (!TryGetMarginViewModel(out var viewModel))
+                        return 0;
+
+                    // First look for a diff already showing a popup
+                    var diffViewModel = viewModel.DiffViewModels.OfType<EditorDiffViewModel>()
+                        .FirstOrDefault(i => i.ShowPopup);
+                    if (diffViewModel != null)
+                    {
+                        var command = (GitDiffMarginCommand) commandId == GitDiffMarginCommand.NextChange
+                            ? viewModel.NextChangeCommand
+                            : viewModel.PreviousChangeCommand;
+                        if (command.CanExecute(diffViewModel))
+                            return OLECMDF.OLECMDF_SUPPORTED | OLECMDF.OLECMDF_ENABLED;
+                        return OLECMDF.OLECMDF_SUPPORTED;
+                    }
+
+                    diffViewModel = GetDiffViewModelToMoveTo(commandId, viewModel);
+
+                    if (diffViewModel != null)
+                        return OLECMDF.OLECMDF_SUPPORTED | OLECMDF.OLECMDF_ENABLED;
+                    return OLECMDF.OLECMDF_SUPPORTED;
+                }
+
+                case GitDiffMarginCommand.RollbackChange:
+                case GitDiffMarginCommand.CopyOldText:
+                {
+                    if (!TryGetMarginViewModel(out var viewModel))
+                        return 0;
+
+                    var diffViewModel = viewModel.DiffViewModels.OfType<EditorDiffViewModel>()
+                        .FirstOrDefault(i => i.ShowPopup);
+                    if (diffViewModel == null) return OLECMDF.OLECMDF_SUPPORTED;
+
+                    var command = (GitDiffMarginCommand) commandId == GitDiffMarginCommand.RollbackChange
+                        ? diffViewModel.RollbackCommand
+                        : diffViewModel.CopyOldTextCommand;
+                    if (command.CanExecute(diffViewModel))
+                        return OLECMDF.OLECMDF_SUPPORTED | OLECMDF.OLECMDF_ENABLED;
+
+                    // This command only works when a popup is open
+                    return OLECMDF.OLECMDF_SUPPORTED;
+                }
+
+                case GitDiffMarginCommand.ShowDiff:
+                {
+                    if (!TryGetMarginViewModel(out var viewModel))
+                        return 0;
+
+                    if (viewModel.DiffViewModels.Any())
+                        return OLECMDF.OLECMDF_SUPPORTED | OLECMDF.OLECMDF_ENABLED;
+                    return OLECMDF.OLECMDF_SUPPORTED;
+                }
+
+                case GitDiffMarginCommand.GitDiffToolbar:
+                case GitDiffMarginCommand.GitDiffToolbarGroup:
+                    // these aren't actually commands, but IDs of the command bars and groups
+                    break;
+            }
 
             return 0;
         }
@@ -112,80 +111,77 @@ namespace GitDiffMargin
         protected override bool HandlePreExec(ref Guid commandGroup, uint commandId, OLECMDEXECOPT executionOptions,
             IntPtr pvaIn, IntPtr pvaOut)
         {
-            if (commandGroup == typeof(GitDiffMarginCommand).GUID)
+            if (commandGroup != typeof(GitDiffMarginCommand).GUID) return false;
+
+            EditorDiffViewModel diffViewModel = null;
+            if (TryGetMarginViewModel(out var viewModel))
+                diffViewModel = viewModel.DiffViewModels.OfType<EditorDiffViewModel>()
+                    .FirstOrDefault(i => i.ShowPopup);
+
+            switch ((GitDiffMarginCommand) commandId)
             {
-                EditorDiffViewModel diffViewModel = null;
-                if (TryGetMarginViewModel(out var viewModel))
-                    diffViewModel = viewModel.DiffViewModels.OfType<EditorDiffViewModel>()
-                        .FirstOrDefault(i => i.ShowPopup);
-
-                switch ((GitDiffMarginCommand) commandId)
+                case GitDiffMarginCommand.ShowPopup:
                 {
-                    case GitDiffMarginCommand.ShowPopup:
-                    {
-                        diffViewModel = GetCurrentDiffViewModel(viewModel);
+                    diffViewModel = GetCurrentDiffViewModel(viewModel);
 
-                        if (diffViewModel != null)
-                        {
-                            diffViewModel.ShowPopup = true;
-                            return true;
-                        }
+                    if (diffViewModel == null) return false;
 
-                        return false;
-                    }
-                    case GitDiffMarginCommand.PreviousChange:
-                    case GitDiffMarginCommand.NextChange:
-                    {
-                        if (viewModel == null)
-                            return false;
+                    diffViewModel.ShowPopup = true;
+                    return true;
 
-                        var command = (GitDiffMarginCommand) commandId == GitDiffMarginCommand.NextChange
-                            ? viewModel.NextChangeCommand
-                            : viewModel.PreviousChangeCommand;
-
-                        // First look for a diff already showing a popup
-                        if (diffViewModel != null)
-                        {
-                            command.Execute(diffViewModel);
-                            return true;
-                        }
-
-                        diffViewModel = GetDiffViewModelToMoveTo(commandId, viewModel);
-
-                        if (diffViewModel == null) return false;
-
-                        viewModel.MoveToChange(diffViewModel, 0);
-                        return true;
-                    }
-
-                    case GitDiffMarginCommand.RollbackChange:
-                    case GitDiffMarginCommand.CopyOldText:
-                    {
-                        if (diffViewModel == null)
-                            return false;
-
-                        var command = (GitDiffMarginCommand) commandId == GitDiffMarginCommand.RollbackChange
-                            ? diffViewModel.RollbackCommand
-                            : diffViewModel.CopyOldTextCommand;
-                        command.Execute(diffViewModel);
-                        return true;
-                    }
-
-                    case GitDiffMarginCommand.ShowDiff:
-                    {
-                        if (diffViewModel == null)
-                            return false;
-
-                        var command = diffViewModel.ShowDifferenceCommand;
-                        command.Execute(diffViewModel);
-                        return true;
-                    }
-
-                    case GitDiffMarginCommand.GitDiffToolbar:
-                    case GitDiffMarginCommand.GitDiffToolbarGroup:
-                        // these aren't actually commands, but IDs of the command bars and groups
-                        break;
                 }
+                case GitDiffMarginCommand.PreviousChange:
+                case GitDiffMarginCommand.NextChange:
+                {
+                    if (viewModel == null)
+                        return false;
+
+                    var command = (GitDiffMarginCommand) commandId == GitDiffMarginCommand.NextChange
+                        ? viewModel.NextChangeCommand
+                        : viewModel.PreviousChangeCommand;
+
+                    // First look for a diff already showing a popup
+                    if (diffViewModel != null)
+                    {
+                        command.Execute(diffViewModel);
+                        return true;
+                    }
+
+                    diffViewModel = GetDiffViewModelToMoveTo(commandId, viewModel);
+
+                    if (diffViewModel == null) return false;
+
+                    viewModel.MoveToChange(diffViewModel, 0);
+                    return true;
+                }
+
+                case GitDiffMarginCommand.RollbackChange:
+                case GitDiffMarginCommand.CopyOldText:
+                {
+                    if (diffViewModel == null)
+                        return false;
+
+                    var command = (GitDiffMarginCommand) commandId == GitDiffMarginCommand.RollbackChange
+                        ? diffViewModel.RollbackCommand
+                        : diffViewModel.CopyOldTextCommand;
+                    command.Execute(diffViewModel);
+                    return true;
+                }
+
+                case GitDiffMarginCommand.ShowDiff:
+                {
+                    if (diffViewModel == null)
+                        return false;
+
+                    var command = diffViewModel.ShowDifferenceCommand;
+                    command.Execute(diffViewModel);
+                    return true;
+                }
+
+                case GitDiffMarginCommand.GitDiffToolbar:
+                case GitDiffMarginCommand.GitDiffToolbarGroup:
+                    // these aren't actually commands, but IDs of the command bars and groups
+                    break;
             }
 
             return false;
