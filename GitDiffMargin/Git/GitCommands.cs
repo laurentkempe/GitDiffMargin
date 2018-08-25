@@ -167,7 +167,7 @@ namespace GitDiffMargin.Git
                         ? "index"
                         : repo.Head.Tip.Sha.Substring(0, 7);
 
-                    leftLabel = string.Format("{0}@{1}", objectName, revision);
+                    leftLabel = $"{objectName}@{revision}";
                 }
                 else if (oldBlob != null)
                 {
@@ -177,7 +177,7 @@ namespace GitDiffMargin.Git
                 else
                 {
                     // we just compared to head
-                    leftLabel = string.Format("{0}@{1}", objectName, repo.Head.Tip.Sha.Substring(0, 7));
+                    leftLabel = $"{objectName}@{repo.Head.Tip.Sha.Substring(0, 7)}";
                 }
 
                 var rightLabel = originalPath;
