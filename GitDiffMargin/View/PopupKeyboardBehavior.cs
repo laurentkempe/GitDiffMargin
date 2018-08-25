@@ -38,7 +38,7 @@ namespace GitDiffMargin.View
 
         public static bool GetIsEnabled(DependencyObject d)
         {
-            return (bool)d.GetValue(IsEnabledProperty);
+            return (bool) d.GetValue(IsEnabledProperty);
         }
 
         public static void SetIsEnabled(DependencyObject d, bool value)
@@ -48,7 +48,7 @@ namespace GitDiffMargin.View
 
         private static void IsEnabledChanged(DependencyObject sender, DependencyPropertyChangedEventArgs ea)
         {
-            EnableKeyboardInput((Popup)sender, (bool)ea.NewValue);
+            EnableKeyboardInput((Popup) sender, (bool) ea.NewValue);
         }
 
         private static void EnableKeyboardInput(Popup popup, bool enabled)

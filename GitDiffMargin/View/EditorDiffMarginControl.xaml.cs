@@ -11,7 +11,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 namespace GitDiffMargin.View
 {
     /// <summary>
-    ///   Interaction logic for EditorDiffMarginControl.xaml
+    ///     Interaction logic for EditorDiffMarginControl.xaml
     /// </summary>
     public partial class EditorDiffMarginControl
     {
@@ -27,6 +27,8 @@ namespace GitDiffMargin.View
             InitializeComponent();
         }
 
+        public static CustomPopupPlacementCallback CustomPopupPlacementCallback => CustomPopupPlacementCallbackImpl;
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             ClickWaitTimer.Tag = sender as Button;
@@ -41,7 +43,7 @@ namespace GitDiffMargin.View
             e.Handled = true;
 
             var button = sender as Button;
-            var editorDiffViewModel = (EditorDiffViewModel)button?.DataContext;
+            var editorDiffViewModel = (EditorDiffViewModel) button?.DataContext;
 
             editorDiffViewModel?.ShowDifferenceCommand.Execute(null);
         }
@@ -69,9 +71,8 @@ namespace GitDiffMargin.View
             editorDiffViewModel?.ShowPopUpCommand.Execute(editorDiffMarginViewModel);
         }
 
-        public static CustomPopupPlacementCallback CustomPopupPlacementCallback => CustomPopupPlacementCallbackImpl;
-
-        private static CustomPopupPlacement[] CustomPopupPlacementCallbackImpl(Size popupSize, Size targetSize, Point offset)
+        private static CustomPopupPlacement[] CustomPopupPlacementCallbackImpl(Size popupSize, Size targetSize,
+            Point offset)
         {
             var verticalPlacement = new CustomPopupPlacement(offset, PopupPrimaryAxis.Vertical);
             var horizontalPlacement = new CustomPopupPlacement(offset, PopupPrimaryAxis.Horizontal);

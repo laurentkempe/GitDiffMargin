@@ -7,6 +7,5 @@ namespace GitDiffMargin
         public const string DiffMarginName = EditorDiffMargin.MarginNameConst + "/DiffMarginName";
 
         public static readonly EditorOptionKey<bool> DiffMarginId = new EditorOptionKey<bool>(DiffMarginName);
-
     }
 }

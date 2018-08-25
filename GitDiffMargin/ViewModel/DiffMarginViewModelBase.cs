@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using GalaSoft.MvvmLight;
@@ -24,24 +23,18 @@ namespace GitDiffMargin.ViewModel
             MarginCore.HunksChanged += HandleHunksChanged;
         }
 
-        public ObservableCollection<DiffViewModel> DiffViewModels { get; private set; }
+        public ObservableCollection<DiffViewModel> DiffViewModels { get; }
 
         public void RefreshDiffViewModelPositions()
         {
-            foreach (var diffViewModel in DiffViewModels)
-            {
-                diffViewModel.RefreshPosition();
-            }
+            foreach (var diffViewModel in DiffViewModels) diffViewModel.RefreshPosition();
         }
 
         protected virtual void HandleHunksChanged(object sender, HunksChangedEventArgs e)
         {
             DiffViewModels.Clear();
 
-            foreach (var diffViewModel in e.Hunks.Select(CreateDiffViewModel))
-            {
-                DiffViewModels.Add(diffViewModel);
-            }
+            foreach (var diffViewModel in e.Hunks.Select(CreateDiffViewModel)) DiffViewModels.Add(diffViewModel);
         }
 
         protected abstract DiffViewModel CreateDiffViewModel(HunkRangeInfo hunkRangeInfo);

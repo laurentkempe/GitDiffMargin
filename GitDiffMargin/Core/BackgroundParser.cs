@@ -32,20 +32,17 @@ namespace GitDiffMargin.Core
 {
     public abstract class BackgroundParser : IDisposable
     {
-        private readonly WeakReference<ITextBuffer> _textBuffer;
         private readonly TaskScheduler _taskScheduler;
-        private readonly ITextDocumentFactoryService _textDocumentFactoryService;
+        private readonly WeakReference<ITextBuffer> _textBuffer;
         private readonly Timer _timer;
+        private bool _dirty;
+        private DateTimeOffset _lastEdit;
+        private int _parsing;
 
         private TimeSpan _reparseDelay;
-        private DateTimeOffset _lastEdit;
-        private bool _dirty;
-        private int _parsing;
-        private bool _disposed;
 
-        public event EventHandler<ParseResultEventArgs> ParseComplete;
-
-        protected BackgroundParser(ITextBuffer textBuffer, TaskScheduler taskScheduler, ITextDocumentFactoryService textDocumentFactoryService)
+        protected BackgroundParser(ITextBuffer textBuffer, TaskScheduler taskScheduler,
+            ITextDocumentFactoryService textDocumentFactoryService)
         {
             if (textBuffer == null)
                 throw new ArgumentNullException("textBuffer");
@@ -56,7 +53,7 @@ namespace GitDiffMargin.Core
 
             _textBuffer = new WeakReference<ITextBuffer>(textBuffer);
             _taskScheduler = taskScheduler;
-            _textDocumentFactoryService = textDocumentFactoryService;
+            TextDocumentFactoryService = textDocumentFactoryService;
 
             textBuffer.PostChanged += TextBufferPostChanged;
 
@@ -66,32 +63,17 @@ namespace GitDiffMargin.Core
             _lastEdit = DateTimeOffset.MinValue;
         }
 
-        public ITextBuffer TextBuffer
-        {
-            get
-            {
-                return _textBuffer.Target;
-            }
-        }
+        public ITextBuffer TextBuffer => _textBuffer.Target;
 
-        public bool Disposed
-        {
-            get
-            {
-                return _disposed;
-            }
-        }
+        public bool Disposed { get; private set; }
 
         public TimeSpan ReparseDelay
         {
-            get
-            {
-                return _reparseDelay;
-            }
+            get => _reparseDelay;
 
             set
             {
-                TimeSpan originalDelay = _reparseDelay;
+                var originalDelay = _reparseDelay;
                 try
                 {
                     _reparseDelay = value;
@@ -104,27 +86,17 @@ namespace GitDiffMargin.Core
             }
         }
 
+        public virtual string Name => string.Empty;
+
+        protected ITextDocumentFactoryService TextDocumentFactoryService { get; }
+
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        public virtual string Name
-        {
-            get
-            {
-                return string.Empty;
-            }
-        }
-
-        protected ITextDocumentFactoryService TextDocumentFactoryService
-        {
-            get
-            {
-                return _textDocumentFactoryService;
-            }
-        }
+        public event EventHandler<ParseResultEventArgs> ParseComplete;
 
         public void RequestParse(bool forceReparse)
         {
@@ -135,14 +107,14 @@ namespace GitDiffMargin.Core
         {
             if (disposing)
             {
-                ITextBuffer textBuffer = TextBuffer;
+                var textBuffer = TextBuffer;
                 if (textBuffer != null)
                     textBuffer.PostChanged -= TextBufferPostChanged;
 
                 _timer.Dispose();
             }
 
-            _disposed = true;
+            Disposed = true;
         }
 
         protected abstract void ReParseImpl();
@@ -159,8 +131,8 @@ namespace GitDiffMargin.Core
 
         protected void MarkDirty(bool resetTimer)
         {
-            this._dirty = true;
-            this._lastEdit = DateTimeOffset.Now;
+            _dirty = true;
+            _lastEdit = DateTimeOffset.Now;
 
             if (resetTimer)
                 _timer.Change(_reparseDelay, _reparseDelay);
@@ -191,10 +163,10 @@ namespace GitDiffMargin.Core
                 return;
 
             if (Interlocked.CompareExchange(ref _parsing, 1, 0) == 0)
-            {
                 try
                 {
-                    Task task = Task.Factory.StartNew(ReParse, CancellationToken.None, TaskCreationOptions.None, _taskScheduler);
+                    var task = Task.Factory.StartNew(ReParse, CancellationToken.None, TaskCreationOptions.None,
+                        _taskScheduler);
                     task.ContinueWith(_ => _parsing = 0);
                 }
                 catch
@@ -202,7 +174,6 @@ namespace GitDiffMargin.Core
                     _parsing = 0;
                     throw;
                 }
-            }
         }
 
         private void ReParse()

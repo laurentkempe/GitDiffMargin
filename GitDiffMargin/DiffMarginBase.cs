@@ -11,10 +11,8 @@ namespace GitDiffMargin
     {
         protected readonly ITextView TextView;
         private bool _isDisposed;
-        protected DiffMarginViewModelBase ViewModel;
         protected UserControl UserControl;
-
-        protected abstract string MarginName { get; }
+        protected DiffMarginViewModelBase ViewModel;
 
         protected DiffMarginBase(ITextView textView)
         {
@@ -24,15 +22,12 @@ namespace GitDiffMargin
             TextView.LayoutChanged += OnLayoutChanged;
         }
 
+        protected abstract string MarginName { get; }
+
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            _isDisposed = true;
         }
 
         public ITextViewMargin GetTextViewMargin(string marginName)
@@ -49,13 +44,7 @@ namespace GitDiffMargin
             }
         }
 
-        public bool Enabled
-        {
-            get
-            {
-                return TextView.Options.IsSelectionMarginEnabled();
-            }
-        }
+        public bool Enabled => TextView.Options.IsSelectionMarginEnabled();
 
         public FrameworkElement VisualElement
         {
@@ -66,12 +55,14 @@ namespace GitDiffMargin
             }
         }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            _isDisposed = true;
+        }
+
         private void HandleOptionChanged(object sender, EditorOptionChangedEventArgs e)
         {
-            if (!_isDisposed && e.OptionId == GitDiffMarginTextViewOptions.DiffMarginName)
-            {
-                UpdateVisibility();
-            }
+            if (!_isDisposed && e.OptionId == GitDiffMarginTextViewOptions.DiffMarginName) UpdateVisibility();
         }
 
         private void UpdateVisibility()

@@ -1,7 +1,7 @@
-﻿namespace GitDiffMargin
-{
-    using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
+namespace GitDiffMargin
+{
     [Guid(GitDiffMarginCommandHandler.GitDiffMarginCommandSet)]
     public enum GitDiffMarginCommand
     {
@@ -14,6 +14,6 @@
 
         GitDiffToolbar = 100,
 
-        GitDiffToolbarGroup = 150,
+        GitDiffToolbarGroup = 150
     }
 }

@@ -40,16 +40,8 @@ namespace GitDiffMargin.Core
             ElapsedTime = elapsedTime;
         }
 
-        public ITextSnapshot Snapshot
-        {
-            get;
-            private set;
-        }
+        public ITextSnapshot Snapshot { get; }
 
-        public TimeSpan? ElapsedTime
-        {
-            get;
-            private set;
-        }
+        public TimeSpan? ElapsedTime { get; }
     }
 }
