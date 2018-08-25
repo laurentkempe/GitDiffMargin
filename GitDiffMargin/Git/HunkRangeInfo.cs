@@ -9,13 +9,8 @@ namespace GitDiffMargin.Git
 {
     public class HunkRangeInfo
     {
-        public HunkRangeInfo(HunkRange originaleHunkRange, HunkRange newHunkRange, IEnumerable<string> diffLines)
-            : this(originaleHunkRange, newHunkRange, diffLines, false)
-        {
-        }
-
         public HunkRangeInfo(HunkRange originaleHunkRange, HunkRange newHunkRange, IEnumerable<string> diffLines,
-            bool suppressRollback)
+            bool suppressRollback = false)
         {
             OriginalHunkRange = originaleHunkRange;
             NewHunkRange = newHunkRange;

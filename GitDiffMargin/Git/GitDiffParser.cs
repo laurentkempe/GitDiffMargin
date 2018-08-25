@@ -10,12 +10,7 @@ namespace GitDiffMargin.Git
         private readonly string _gitDiff;
         private readonly bool _suppressRollback;
 
-        public GitDiffParser(string gitDiff, int contextLines)
-            : this(gitDiff, contextLines, false)
-        {
-        }
-
-        public GitDiffParser(string gitDiff, int contextLines, bool suppressRollback)
+        public GitDiffParser(string gitDiff, int contextLines, bool suppressRollback = false)
         {
             _gitDiff = gitDiff;
             _contextLines = contextLines;
