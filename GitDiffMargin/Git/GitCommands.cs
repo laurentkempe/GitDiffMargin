@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
@@ -162,12 +162,8 @@ namespace GitDiffMargin.Git
                 if (indexEntry != null)
                 {
                     // determine if the file has been staged
-                    string revision;
                     var stagedMask = FileStatus.NewInIndex | FileStatus.ModifiedInIndex;
-                    if ((repo.RetrieveStatus(relativePath) & stagedMask) != 0)
-                        revision = "index";
-                    else
-                        revision = repo.Head.Tip.Sha.Substring(0, 7);
+                    var revision = (repo.RetrieveStatus(relativePath) & stagedMask) != 0 ? "index" : repo.Head.Tip.Sha.Substring(0, 7);
 
                     leftLabel = string.Format("{0}@{1}", objectName, revision);
                 }

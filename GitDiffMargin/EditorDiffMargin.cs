@@ -33,11 +33,7 @@ namespace GitDiffMargin
             if (TextView.IsClosed)
                 return;
 
-            bool? visible;
-            if (diffViewModel.IsDeletion)
-                visible = UpdateDeletedDiffDimensions(diffViewModel, hunkRangeInfo);
-            else
-                visible = UpdateNormalDiffDimensions(diffViewModel, hunkRangeInfo);
+            var visible = diffViewModel.IsDeletion ? UpdateDeletedDiffDimensions(diffViewModel, hunkRangeInfo) : UpdateNormalDiffDimensions(diffViewModel, hunkRangeInfo);
 
             if (visible.HasValue)
                 diffViewModel.IsVisible = visible.Value;
