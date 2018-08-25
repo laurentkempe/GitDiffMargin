@@ -68,6 +68,7 @@
                    PlacementTarget="{Binding ElementName=diffControl}"
                    CustomPopupPlacementCallback="{x:Static view:EditorDiffMarginControl.CustomPopupPlacementCallback}"
                    StaysOpen="False"
+                   Opened="Popup_OnOpened"
                    view:PopupAllowKeyboardInput.IsEnabled="True">
               <Popup.CommandBindings>
                 <CommandBinding Command="Close" Executed="Popup_Close" />
@@ -81,7 +82,8 @@
                           Background="White"
                           BorderBrush="Black"
                           BorderThickness="1,1,1,1">
-                    <ContentControl Content="{Binding ToolBarTray, Mode=OneWay}"
+                    <ContentControl Name="Commands"
+                                    Content="{Binding ToolBarTray, Mode=OneWay}"
                                     Focusable="True" />
                   </Border>
                  <Border Background="{Binding Background, Mode=OneWay}"

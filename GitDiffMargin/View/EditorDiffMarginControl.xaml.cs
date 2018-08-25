@@ -3,8 +3,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 using GitDiffMargin.ViewModel;
+using Microsoft.VisualStudio.Shell.Interop;
 
 namespace GitDiffMargin.View
 {
@@ -74,6 +76,17 @@ namespace GitDiffMargin.View
             var verticalPlacement = new CustomPopupPlacement(offset, PopupPrimaryAxis.Vertical);
             var horizontalPlacement = new CustomPopupPlacement(offset, PopupPrimaryAxis.Horizontal);
             return new[] {verticalPlacement, horizontalPlacement};
+        }
+
+        private void Popup_OnOpened(object sender, EventArgs e)
+        {
+            var popup = sender as Popup;
+            if (popup == null) return;
+
+            var contentControl = (ContentControl)popup.FindName("Commands");
+            if (contentControl == null) return;
+
+            contentControl.Focus();
         }
     }
 }
