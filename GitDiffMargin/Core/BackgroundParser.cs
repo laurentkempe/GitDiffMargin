@@ -1,4 +1,4 @@
-﻿/* The MIT License
+/* The MIT License
  *
  * Copyright (c) 2013 Sam Harwell, Tunnel Vision Labs, LLC
  *
@@ -45,11 +45,11 @@ namespace GitDiffMargin.Core
             ITextDocumentFactoryService textDocumentFactoryService)
         {
             if (textBuffer == null)
-                throw new ArgumentNullException("textBuffer");
+                throw new ArgumentNullException(nameof(textBuffer));
             if (taskScheduler == null)
-                throw new ArgumentNullException("taskScheduler");
+                throw new ArgumentNullException(nameof(taskScheduler));
             if (textDocumentFactoryService == null)
-                throw new ArgumentNullException("textDocumentFactoryService");
+                throw new ArgumentNullException(nameof(textDocumentFactoryService));
 
             _textBuffer = new WeakReference<ITextBuffer>(textBuffer);
             _taskScheduler = taskScheduler;
@@ -122,7 +122,7 @@ namespace GitDiffMargin.Core
         protected virtual void OnParseComplete(ParseResultEventArgs e)
         {
             if (e == null)
-                throw new ArgumentNullException("e");
+                throw new ArgumentNullException(nameof(e));
 
             var t = ParseComplete;
             if (t != null)

@@ -21,7 +21,7 @@ namespace GitDiffMargin.ViewModel
             base(marginCore)
         {
             if (updateDiffDimensions == null)
-                throw new ArgumentNullException("updateDiffDimensions");
+                throw new ArgumentNullException(nameof(updateDiffDimensions));
 
             _updateDiffDimensions = updateDiffDimensions;
         }

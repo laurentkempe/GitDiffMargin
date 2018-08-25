@@ -14,7 +14,7 @@ namespace GitDiffMargin.ViewModel
         protected DiffMarginViewModelBase(IMarginCore marginCore)
         {
             if (marginCore == null)
-                throw new ArgumentNullException("marginCore");
+                throw new ArgumentNullException(nameof(marginCore));
 
             MarginCore = marginCore;
 

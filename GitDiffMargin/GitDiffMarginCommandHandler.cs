@@ -22,9 +22,9 @@ namespace GitDiffMargin
             : base(textViewAdapter)
         {
             if (editorAdaptersFactoryService == null)
-                throw new ArgumentNullException("editorAdaptersFactoryService");
+                throw new ArgumentNullException(nameof(editorAdaptersFactoryService));
             if (textView == null)
-                throw new ArgumentNullException("textView");
+                throw new ArgumentNullException(nameof(textView));
 
             _editorAdaptersFactoryService = editorAdaptersFactoryService;
             _textView = textView;
