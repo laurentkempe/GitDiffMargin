@@ -51,21 +51,19 @@ namespace GitDiffMargin.Core
 
         private void HandleFileSystemChanged(object sender, FileSystemEventArgs e)
         {
-            Action action =
-                () =>
+            void HandleFileSystemChanged()
+            {
+                try
                 {
-                    try
-                    {
-                        ProcessFileSystemChange(e);
-                    }
-                    catch (Exception ex)
-                    {
-                        if (ErrorHandler.IsCriticalException(ex))
-                            throw;
-                    }
-                };
+                    ProcessFileSystemChange(e);
+                }
+                catch (Exception ex)
+                {
+                    if (ErrorHandler.IsCriticalException(ex)) throw;
+                }
+            }
 
-            Task.Factory.StartNew(action, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
+            Task.Factory.StartNew(HandleFileSystemChanged, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
         }
 
         private void ProcessFileSystemChange(FileSystemEventArgs e)
