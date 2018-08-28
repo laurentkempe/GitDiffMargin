@@ -169,15 +169,16 @@ namespace GitDiffMargin.ViewModel
                     IVsUIShell4 uiShell = Package.GetGlobalService(typeof(SVsUIShell)) as IVsUIShell4;
                     if (uiShell != null)
                     {
-                        IOleCommandTarget commandTarget = MarginCore.TextView.Properties.GetProperty<GitDiffMarginCommandHandler>(typeof(GitDiffMarginCommandHandler));
+                        if (MarginCore.TextView.Properties.TryGetProperty<GitDiffMarginCommandHandler>(typeof(GitDiffMarginCommandHandler), out var commandTarget))
+                        {
+                            IVsToolbarTrayHost toolbarTrayHost;
+                            ErrorHandler.ThrowOnFailure(uiShell.CreateToolbarTray(commandTarget, out toolbarTrayHost));
 
-                        IVsToolbarTrayHost toolbarTrayHost;
-                        ErrorHandler.ThrowOnFailure(uiShell.CreateToolbarTray(commandTarget, out toolbarTrayHost));
+                            Guid toolBarGuid = typeof(GitDiffMarginCommand).GUID;
+                            ErrorHandler.ThrowOnFailure(toolbarTrayHost.AddToolbar(ref toolBarGuid, (int)GitDiffMarginCommand.GitDiffToolbar));
 
-                        Guid toolBarGuid = typeof(GitDiffMarginCommand).GUID;
-                        ErrorHandler.ThrowOnFailure(toolbarTrayHost.AddToolbar(ref toolBarGuid, (int)GitDiffMarginCommand.GitDiffToolbar));
-
-                        _toolbarTrayHost = toolbarTrayHost;
+                            _toolbarTrayHost = toolbarTrayHost;
+                        }
                     }
                 }
                 else
