@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
 
@@ -36,6 +36,6 @@ using Microsoft.VisualStudio.Shell;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("3.8.0.0")]
-[assembly: AssemblyFileVersion("3.8.0.0")]
-[assembly: AssemblyInformationalVersion("3.8.0.0")]
+[assembly: AssemblyVersion("3.8.1.0")]
+[assembly: AssemblyFileVersion("3.8.1.0")]
+[assembly: AssemblyInformationalVersion("3.8.1.0")]

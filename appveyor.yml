@@ -1,8 +1,8 @@
-version: '3.8.0.{build}'
+version: '3.8.1.{build}'
 
 image: Visual Studio 2017
 
-install: 
+install:
 - ps: (new-object Net.WebClient).DownloadString("https://raw.github.com/madskristensen/ExtensionScripts/master/AppVeyor/vsix.ps1") | iex
 
 assembly_info:
