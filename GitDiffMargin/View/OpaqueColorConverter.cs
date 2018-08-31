@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 
@@ -23,8 +24,8 @@ namespace GitDiffMargin.View
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            // We don't need to convert back. What should we do anyways? We don't know the original opacity, nor we can we get it.
-            throw new NotSupportedException();
+            // It's not possible to convert back: we don't know the original opacity nor can we get it in someway.
+            return DependencyProperty.UnsetValue;
         }
     }
 }
