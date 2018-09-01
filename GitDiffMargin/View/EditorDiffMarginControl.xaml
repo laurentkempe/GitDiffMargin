@@ -13,13 +13,14 @@
              mc:Ignorable="d">
   <UserControl.Resources>
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <ControlTemplate x:Key="ChangeTemplate" d:DataContext="{d:DesignInstance viewModel:EditorDiffViewModel}">
-            <Rectangle Width="{Binding Width, Mode=OneWay}" HorizontalAlignment="Left" Margin="{Binding Margin, Mode=OneWay}" Fill="{Binding DiffBrush}" />
-        </ControlTemplate>
-        <ControlTemplate x:Key="DeletionTemplate" d:DataContext="{d:DesignInstance viewModel:EditorDiffViewModel}">
-            <Polygon Points="0,0 1,1 0,2 0,0" Fill="{Binding DiffBrush}" Width="9" Height="{Binding Height}" Stretch="Fill" />
-        </ControlTemplate>
-    </UserControl.Resources>
+    <view:OpaqueColorConverter x:Key="OpaqueColorConverter" />
+    <ControlTemplate x:Key="ChangeTemplate" d:DataContext="{d:DesignInstance viewModel:EditorDiffViewModel}">
+        <Rectangle Width="{Binding Width, Mode=OneWay}" HorizontalAlignment="Left" Margin="{Binding Margin, Mode=OneWay}" Fill="{Binding DiffBrush}" />
+    </ControlTemplate>
+    <ControlTemplate x:Key="DeletionTemplate" d:DataContext="{d:DesignInstance viewModel:EditorDiffViewModel}">
+        <Polygon Points="0,0 1,1 0,2 0,0" Fill="{Binding DiffBrush}" Width="9" Height="{Binding Height}" Stretch="Fill" />
+    </ControlTemplate>
+  </UserControl.Resources>
   <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="9" MinWidth="9" />
@@ -86,7 +87,7 @@
                                     Content="{Binding ToolBarTray, Mode=OneWay}"
                                     Focusable="True" />
                   </Border>
-                 <Border Background="{Binding Background, Mode=OneWay}"
+                 <Border Background="{Binding Background, Mode=OneWay, Converter={StaticResource OpaqueColorConverter}}"
                           BorderBrush="{Binding Foreground, Mode=OneWay}"
                           BorderThickness="1,1,1,1"
                           Margin="0,-1,0,0"
@@ -101,7 +102,7 @@
                              FontWeight="{Binding FontWeight, Mode=OneWay}"
                              FontSize="{Binding FontSize, Mode=OneWay}"
                              Text="{Binding DiffText, Mode=OneWay}"
-                             Background="{Binding Background, Mode=OneWay}"
+                             Background="{Binding Background, Mode=OneWay, Converter={StaticResource OpaqueColorConverter}}"
                              Foreground="{Binding Foreground, Mode=OneWay}"
                              VerticalScrollBarVisibility="Auto"
                              HorizontalScrollBarVisibility="Auto" />
