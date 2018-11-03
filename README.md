@@ -47,3 +47,4 @@ Thanks to
 * Ethan J. Brown [@Iristyle](https://github.com/Iristyle) for the chocolatey package
 * [@heinzbeinz](https://github.com/heinzbeinz) for the support of Visual Studio 15 preview
 * Jamie Cansdale [@jcansdale](https://github.com/jcansdale) for bugfix
+* Charles Milette [sylveon](https://github.com/sylveon) for bugfix
