@@ -64,8 +64,10 @@
       These are not development-only dependencies, but PrivateAssets is still used to avoid transitive dependencies when
       GitDiffMargin.Commands references this project using a ProjectReference.
     -->
-    <PackageReference Include="LibGit2Sharp" Version="0.24.1" PrivateAssets="all" />
-    <PackageReference Include="LibGit2Sharp.NativeBinaries" Version="1.0.205" ExcludeAssets="build" PrivateAssets="all" />
+    <PackageReference Include="LibGit2Sharp" Version="0.26.0" PrivateAssets="all" />
+    <PackageReference Include="LibGit2Sharp.NativeBinaries" Version="2.0.267" ExcludeAssets="build" PrivateAssets="all">
+      <IncludeAssets>runtime; compile; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="VSSDK.Editor.11" Version="11.0.4" PrivateAssets="all" />
     <PackageReference Include="VSSDK.Shell.11" Version="11.0.4" PrivateAssets="all" />
   </ItemGroup>
@@ -115,8 +117,8 @@
     <Compile Include="Core\WeakReference.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="$(NuGetPackageRoot)libgit2sharp.nativebinaries\1.0.205\runtimes\win7-x86\native\git2-dd2d538.dll">
-      <Link>git2-dd2d538.dll</Link>
+    <Content Include="$(NuGetPackageRoot)libgit2sharp.nativebinaries\2.0.267\runtimes\win-x86\native\git2-572e4d8.dll">
+      <Link>git2-572e4d8.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\GitDiffMargin-Preview.png">
