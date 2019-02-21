@@ -32,5 +32,5 @@ steps:
 - task: PublishBuildArtifacts@1
   inputs:
     pathtoPublish: '$(Build.SourcesDirectory)\GitDiffMargin.Extension\bin\Release\GitDiffMargin.vsix' 
-    artifactName: 'vsix' 
+    artifactName: 'GitDiffMargin.vsix' 
     
