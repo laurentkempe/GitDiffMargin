@@ -40,11 +40,15 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-#- task: VSTest@2
-#  inputs:
-#    platform: '$(buildPlatform)'
-#    configuration: '$(buildConfiguration)'
-
+- task: VSTest@2
+  displayName: 'Run tests'
+  inputs:
+    testAssemblyVer2: |
+     **\$(BuildConfiguration)\*Tests.dll
+     !**\obj\**
+    platform: '$(BuildPlatform)'
+    configuration: '$(BuildConfiguration)'
+    
 - task: CopyFiles@2
   displayName: 'Copy Artifacts to Staging'
   inputs: 
@@ -54,11 +58,11 @@ steps:
 
 - task: CopyFiles@2
   displayName: 'Copy Vsix to Chocolatey'
-  inputs: 
+  inputs:
     contents: '**\?(*.vsix)'
     targetFolder: '$(Build.Repository.LocalPath)/ChocolateyPackage/GitDiffMargin/tools/'
     flattenFolders: true
-
+    
 - task: gep13.chocolatey-azuredevops.chocolatey-azuredevops.ChocolateyCommand@0
   displayName: 'Chocolatey pack'
   inputs:
