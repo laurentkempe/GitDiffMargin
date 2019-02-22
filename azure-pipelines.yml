@@ -21,7 +21,7 @@ steps:
   inputs:
     restoreSolution: '$(solution)'
 
-- task: bleddynrichards.Assembly-Info-Task.Assembly-Info-Task.Assembly-Info-Task@1
+- task: bleddynrichards.Assembly-Info-Task.Assembly-Info-Task.Assembly-Info-NetFramework@2
   displayName: 'Update Assembly Version'
   inputs:
     VersionNumber: '$(Build.BuildNumber)'
