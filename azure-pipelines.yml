@@ -28,9 +28,15 @@ steps:
 #  inputs:
 #    platform: '$(buildPlatform)'
 #    configuration: '$(buildConfiguration)'
-    
+
+- task: CopyFiles@2
+  displayName: 'Copy Artifacts to Staging'
+  inputs: 
+    contents: '**\?(*.vsix|extension-manifest.json|README-Marketplace.md)'
+    targetFolder: '$(Build.ArtifactStagingDirectory)'
+    flattenFolders: true
+
 - task: PublishBuildArtifacts@1
   inputs:
-    pathtoPublish: '$(Build.SourcesDirectory)\GitDiffMargin.Extension\bin\Release\GitDiffMargin.vsix' 
-    artifactName: 'GitDiffMargin.vsix' 
-    
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
+    artifactName: '$(system.teamProject)'
