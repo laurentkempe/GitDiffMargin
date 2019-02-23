@@ -1,7 +1,8 @@
- Git Diff Margin [![Build Status](https://dev.azure.com/techheadbrothers/GitDiffMargin/_apis/build/status/laurentkempe.GitDiffMargin)](https://dev.azure.com/techheadbrothers/GitDiffMargin/_build/latest?definitionId=7) [![Build status](https://ci.appveyor.com/api/projects/status/n2j1hcqpdel0xj0c/branch/master?svg=true)](https://ci.appveyor.com/project/laurentkempe/gitdiffmargin/branch/master) [![Gitter](https://img.shields.io/gitter/room/inferred/freebuilder.svg?style=flat-square)](https://gitter.im/GitDiffMargin/Lobby)
-
+ # Git Diff Margin [![VS Marketplace](http://vsmarketplacebadge.apphb.com/version/LaurentKempe.GitDiffMargin.svg)](https://marketplace.visualstudio.com/items?itemName=LaurentKempe.GitDiffMargin) [![Rating(Short)](http://vsmarketplacebadge.apphb.com/rating-short/LaurentKempe.GitDiffMargin.svg)](https://marketplace.visualstudio.com/items?itemName=LaurentKempe.GitDiffMargin) [![Installs(Short))](http://vsmarketplacebadge.apphb.com/installs-short/LaurentKempe.GitDiffMargin.svg)](https://marketplace.visualstudio.com/items?itemName=LaurentKempe.GitDiffMargin) [![Downloads(Short)))](http://vsmarketplacebadge.apphb.com/downloads-short/LaurentKempe.GitDiffMargin.svg)](https://marketplace.visualstudio.com/items?itemName=LaurentKempe.GitDiffMargin)
 
 Git Diff Margin displays live Git changes of the currently edited file on Visual Studio margin and scroll bar.
+
+[![Build Status](https://dev.azure.com/techheadbrothers/GitDiffMargin/_apis/build/status/laurentkempe.GitDiffMargin)](https://dev.azure.com/techheadbrothers/GitDiffMargin/_build/latest?definitionId=7) [![Build status](https://ci.appveyor.com/api/projects/status/n2j1hcqpdel0xj0c/branch/master?svg=true)](https://ci.appveyor.com/project/laurentkempe/gitdiffmargin/branch/master) [![Gitter](https://img.shields.io/gitter/room/inferred/freebuilder.svg?style=flat-square)](https://gitter.im/GitDiffMargin/Lobby)
 
 * Supports Visual Studio 2012 through Visual Studio 2019 Preview
 * Quickly view all current file changes on
