@@ -7,9 +7,12 @@ pool:
   vmImage: 'VS2017-Win2016'
 
 variables:
+  patch: $[counter('versioncounter', 0)]
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+
+name: 3.9.0.$(patch)
 
 steps:
 - task: NuGetToolInstaller@0
@@ -18,6 +21,19 @@ steps:
   inputs:
     restoreSolution: '$(solution)'
 
+- task: bleddynrichards.Assembly-Info-Task.Assembly-Info-Task.Assembly-Info-NetFramework@2
+  displayName: 'Update Assembly Version'
+  inputs:
+    VersionNumber: '$(Build.BuildNumber)'
+    FileVersionNumber: '$(Build.BuildNumber)'
+    InformationalVersion: '$(Build.BuildNumber)'
+
+- task: VsixToolsUpdateVersion@1
+  displayName: 'Update Vsix Version'
+  inputs:
+    FileName: $(Build.SourcesDirectory)\$(system.teamProject).Extension\source.extension.vsixmanifest
+    VersionNumber: '$(Build.BuildNumber)'
+  
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
@@ -28,9 +44,22 @@ steps:
 #  inputs:
 #    platform: '$(buildPlatform)'
 #    configuration: '$(buildConfiguration)'
-    
+
+- task: CopyFiles@2
+  displayName: 'Copy Artifacts to Staging'
+  inputs: 
+    contents: '**\?(*.vsix|extension-manifest.json|README-Marketplace.md)'
+    targetFolder: '$(Build.ArtifactStagingDirectory)'
+    flattenFolders: true
+
+- task: PowerShell@2
+  displayName: 'Rename Build Artifacts'
+  inputs:
+    targetType: 'inline'
+    script: 'Get-ChildItem ./*.vsix -Recurse | Rename-Item -NewName {$_.basename + "_" + $env:BUILD_BUILDNUMBER + $_.extension }'
+    workingDirectory: '$(Build.ArtifactStagingDirectory)'
+
 - task: PublishBuildArtifacts@1
   inputs:
-    pathtoPublish: '$(Build.SourcesDirectory)\GitDiffMargin.Extension\bin\Release\GitDiffMargin.vsix' 
-    artifactName: 'GitDiffMargin.vsix' 
-    
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
+    artifactName: '$(system.teamProject)'

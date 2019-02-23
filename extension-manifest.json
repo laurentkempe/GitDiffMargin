@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json.schemastore.org/vsix-publish",
+    "categories": [
+        "coding",
+        "programming languages",
+        "source control"
+    ],
+    "identity": {
+        "internalName": "GitDiffMargin",
+        "tags": [
+            "Git"
+        ]
+    },
+    "overview": "README-Marketplace.md",
+    "priceCategory": "free",
+    "publisher": "LaurentKempe",
+    "private": false,
+    "qna": true,
+    "repo": "https://github.com/laurentkempe/GitDiffMargin"
+}
