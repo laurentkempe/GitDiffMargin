@@ -35,6 +35,12 @@ Please report all problems or feature requests you might have on the [following 
 
 # Release Notes
 
+## Version 3.9.1
+
+### Security fix
+
+* Update to LibGit2Sharp v0.26.0
+
 ## Version 3.9.0
 
 ### New feature
