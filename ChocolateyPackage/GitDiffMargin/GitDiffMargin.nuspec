@@ -31,5 +31,8 @@
     <licenseUrl>https://raw.githubusercontent.com/laurentkempe/GitDiffMargin/master/LICENSE.md</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <iconUrl>https://raw.githubusercontent.com/laurentkempe/GitDiffMargin/master/GitDiffMargin/Resources/GitDiffMargin-Thumb.png</iconUrl>
+    <dependencies>
+      <dependency id="chocolatey-visualstudio.extension" version="1.6.0" />
+    </dependencies>
   </metadata>
 </package>
