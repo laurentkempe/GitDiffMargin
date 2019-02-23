@@ -52,12 +52,12 @@ steps:
     targetFolder: '$(Build.ArtifactStagingDirectory)'
     flattenFolders: true
 
-- task: PowerShell@2
-  displayName: 'Rename Build Artifacts'
-  inputs:
-    targetType: 'inline'
-    script: 'Get-ChildItem ./*.vsix -Recurse | Rename-Item -NewName {$_.basename + "_" + $env:BUILD_BUILDNUMBER + $_.extension }'
-    workingDirectory: '$(Build.ArtifactStagingDirectory)'
+#- task: PowerShell@2
+#  displayName: 'Rename Build Artifacts'
+#  inputs:
+#    targetType: 'inline'
+#    script: 'Get-ChildItem ./*.vsix -Recurse | Rename-Item -NewName {$_.basename + "_" + $env:BUILD_BUILDNUMBER + $_.extension }'
+#    workingDirectory: '$(Build.ArtifactStagingDirectory)'
 
 - task: PublishBuildArtifacts@1
   inputs:
