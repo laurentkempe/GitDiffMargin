@@ -170,7 +170,7 @@ namespace GitDiffMargin.Git
                 string objectName = Path.GetFileName(filename);
 
                 Blob oldBlob = null;
-                var indexEntry = repo.Index[relativePath];
+                var indexEntry = repo.Index[relativePath.Replace("\\", "/")];
                 if (indexEntry != null)
                 {
                     objectName = Path.GetFileName(indexEntry.Path);
