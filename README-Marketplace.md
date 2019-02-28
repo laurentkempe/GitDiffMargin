@@ -35,6 +35,12 @@ Please report all problems or feature requests you might have on the [following 
 
 # Release Notes
 
+## Version 3.9.2
+
+### Fix
+
+* Fix show the diff showing empty content
+
 ## Version 3.9.1
 
 ### Security fix

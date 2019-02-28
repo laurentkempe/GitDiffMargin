@@ -12,7 +12,7 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
-name: 3.9.1.$(patch)
+name: 3.9.2.$(patch)
 
 steps:
 - task: NuGetToolInstaller@0
