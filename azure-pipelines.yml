@@ -52,6 +52,20 @@ steps:
     targetFolder: '$(Build.ArtifactStagingDirectory)'
     flattenFolders: true
 
+- task: CopyFiles@2
+  displayName: 'Copy Vsix to Chocolatey'
+  inputs: 
+    contents: '**\?(*.vsix)'
+    targetFolder: '$(Build.Repository.LocalPath)/ChocolateyPackage/GitDiffMargin/tools/'
+    flattenFolders: true
+
+- task: gep13.chocolatey-azuredevops.chocolatey-azuredevops.ChocolateyCommand@0
+  displayName: 'Chocolatey pack'
+  inputs:
+    packWorkingDirectory: '$(Build.Repository.LocalPath)/ChocolateyPackage/GitDiffMargin/'
+    packNuspecFileName: GitDiffMargin.nuspec
+    packVersion: '$(Build.BuildNumber)'
+
 #- task: PowerShell@2
 #  displayName: 'Rename Build Artifacts'
 #  inputs:
