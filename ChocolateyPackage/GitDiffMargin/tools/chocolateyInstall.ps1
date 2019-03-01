@@ -1,8 +1,14 @@
+$ErrorActionPreference = 'Stop';
+
+$toolsPath = Split-Path $MyInvocation.MyCommand.Definition
+$filePath = "$toolsPath\GitDiffMargin.vsix"
+
 $package = 'GitDiffMargin'
+$vsixUrl = "file://" + $filePath.Replace("\", "/")
 
 $params = @{
-  PackageName = $package;
-  VsixUrl = 'https://visualstudiogallery.msdn.microsoft.com/cf49cf30-2ca6-4ea0-b7cc-6a8e0dadc1a8/file/101267/12/GitDiffMargin.vsix';
+    PackageName = $package;
+    VsixUrl     = $vsixUrl;
 }
 
 Install-VisualStudioVsixExtension @params
