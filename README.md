@@ -27,7 +27,9 @@ Git Diff Margin version 3.2.2 is the latest release supporting Visual Studio 201
 
 ## Installation
 
-Grab it from inside of Visual Studio's Extension Manager, or via the [Extension Gallery link](https://marketplace.visualstudio.com/items?itemName=LaurentKempe.GitDiffMargin)
+Grab it from inside of Visual Studio's Extension Manager searching for Git Diff Margin, or via the [Extension Gallery link](https://marketplace.visualstudio.com/items?itemName=LaurentKempe.GitDiffMargin)
+
+You can use [Chocolatey Git Diff Margin](https://www.chocolatey.org/packages/GitDiffMargin/)
 
 ## Video
 
