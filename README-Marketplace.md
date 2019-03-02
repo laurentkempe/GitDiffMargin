@@ -35,6 +35,12 @@ Please report all problems or feature requests you might have on the [following 
 
 # Release Notes
 
+## Version 3.9.3
+
+### New feature
+
+* Chocolatey package
+
 ## Version 3.9.2
 
 ### Fix
