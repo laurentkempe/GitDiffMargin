@@ -47,7 +47,8 @@ Thanks to
 
 * Sam Harwell [@sharwell](https://github.com/sharwell) for all the improvements
 * Rick Sladkey [@ricksladkey](https://github.com/ricksladkey) for the fixes
-* Ethan J. Brown [@Iristyle](https://github.com/Iristyle) for the chocolatey package
+* Ethan J. Brown [@Iristyle](https://github.com/Iristyle) for the first chocolatey package
 * [@heinzbeinz](https://github.com/heinzbeinz) for the support of Visual Studio 15 preview
 * Jamie Cansdale [@jcansdale](https://github.com/jcansdale) for bugfix
 * Charles Milette [sylveon](https://github.com/sylveon) for bugfix
+* Gary Ewan Park [@gep13](https://github.com/gep13) for the new chocolatey package
