@@ -53,3 +53,4 @@ Thanks to
 * Jamie Cansdale [@jcansdale](https://github.com/jcansdale) for bugfix
 * Charles Milette [sylveon](https://github.com/sylveon) for bugfix
 * Gary Ewan Park [@gep13](https://github.com/gep13) for the new chocolatey package
+* Duncan Smart [@duncansmart](https://github.com/duncansmart) for bug fix

@@ -36,6 +36,12 @@ You might also install it using the following [Chocolatey package](https://choco
 
 # Release Notes
 
+## Version 3.9.4
+
+### Fix
+
+* Fix files with CRLF have whole file highlighted as modified
+
 ## Version 3.9.3
 
 ### New feature
@@ -227,3 +233,4 @@ Thanks to
 *   Jamie Cansdale [@jcansdale](https://github.com/jcansdale) for bugfix
 *   Charles Milette [sylveon](https://github.com/sylveon) for bugfix
 *   Gary Ewan Park [@gep13](https://github.com/gep13) for the new chocolatey package
+*   Duncan Smart [@duncansmart](https://github.com/duncansmart) for bug fix
