@@ -78,6 +78,8 @@ namespace GitDiffMargin.Git
                     if (relativeFilepath.StartsWith(workingDirectory, StringComparison.OrdinalIgnoreCase))
                         relativeFilepath = relativeFilepath.Substring(workingDirectory.Length);
 
+                    relativeFilepath = relativeFilepath.Replace('\\', '/');
+
                     var newBlob = repo.ObjectDatabase.CreateBlob(currentContent, relativeFilepath);
 
                     bool suppressRollback;
@@ -103,7 +105,7 @@ namespace GitDiffMargin.Git
                         {
                             // try again using case-insensitive comparison
                             Tree tree = from.Tree;
-                            foreach (string segment in relativeFilepath.Split(Path.DirectorySeparatorChar))
+                            foreach (string segment in relativeFilepath.Split('/'))
                             {
                                 if (tree == null)
                                     yield break;
