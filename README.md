@@ -33,7 +33,7 @@ You can use [Chocolatey Git Diff Margin](https://www.chocolatey.org/packages/Git
 
 ## Video
 
-You might see a little video on the [following page](https://www.flickr.com/photos/laurentkempe/14879945429/).
+You might see a short video showing some Git Diff Margin features on the [following page](https://www.flickr.com/photos/laurentkempe/14879945429/).
 
 ## Feedback
 
