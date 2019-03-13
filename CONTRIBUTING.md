@@ -36,15 +36,17 @@ Here are a few helpful tips when reporting a bug:
 - If the bug is not related to the Git Diff Margin extension, visit the [Visual Studio support page](https://www.visualstudio.com/support/support-overview-vs) for help.
 - To report a bug use the [bug report template](https://github.com/laurentkempe/GitDiffMargin/issues/new?assignees=&labels=bug&template=bug_report.md&title=).
 - Screenshots are very helpful in diagnosing bugs and understanding the state of the extension when it's experiencing problems. Please include them whenever possible.
-- A log file is helpful in diagnosing bug issues. To include log files in your issue:
+- A log file is helpful in diagnosing bug issues. 
 
-  1. Close Visual Studio if it's open
-  2. Open a Developer Command Prompt for VS2017
-  3. Run devenv /log
-  4. Reproduce your issue
-  5. Close VS
-  6. Locate the following file on your system and create a gist and link it in the issue report:
-    - `%appdata%\Microsoft\VisualStudio\15.0\ActivityLog.xml`
+To include log files in your issue:
+* Close Visual Studio if it's open
+* Open a Developer Command Prompt for VS2017
+* Run devenv /log
+* Reproduce your issue
+* Close VS
+* Locate the following file on your system and create a gist and link it in the issue report:
+  - `%appdata%\Microsoft\VisualStudio\15.0\ActivityLog.xml`
+
 
 ## Resources
 
