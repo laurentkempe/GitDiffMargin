@@ -4,6 +4,8 @@ Git Diff Margin displays live Git changes of the currently edited file on Visual
 
 [![Build Status](https://dev.azure.com/techheadbrothers/GitDiffMargin/_apis/build/status/laurentkempe.GitDiffMargin)](https://dev.azure.com/techheadbrothers/GitDiffMargin/_build/latest?definitionId=7) [![Build status](https://ci.appveyor.com/api/projects/status/n2j1hcqpdel0xj0c/branch/master?svg=true)](https://ci.appveyor.com/project/laurentkempe/gitdiffmargin/branch/master) [![Gitter](https://img.shields.io/gitter/room/inferred/freebuilder.svg?style=flat-square)](https://gitter.im/GitDiffMargin/Lobby)
 
+## Features
+
 * Supports Visual Studio 2012 through Visual Studio 2019 Preview
 * Quickly view all current file changes on
     * Left margin
@@ -27,17 +29,37 @@ Git Diff Margin version 3.2.2 is the latest release supporting Visual Studio 201
 
 ## Installation
 
-Grab it from inside of Visual Studio's Extension Manager searching for Git Diff Margin, or via the [Extension Gallery link](https://marketplace.visualstudio.com/items?itemName=LaurentKempe.GitDiffMargin)
+Grab it from inside of Visual Studio's Extension Manager searching for **Git Diff Margin**, or via the [Extension Gallery link](https://marketplace.visualstudio.com/items?itemName=LaurentKempe.GitDiffMargin).
 
-You can use [Chocolatey Git Diff Margin](https://www.chocolatey.org/packages/GitDiffMargin/)
+You can use [Chocolatey Git Diff Margin](https://www.chocolatey.org/packages/GitDiffMargin/).
 
 ## Video
 
 You might see a short video showing some Git Diff Margin features on the [following page](https://www.flickr.com/photos/laurentkempe/14879945429/).
 
+## Contributing
+
+Visit the [Contributor Guidelines](CONTRIBUTING.md) for details on how to contribute as well as the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md) for details on how to participate.
+
+### Build requirements
+
+* Visual Studio 2017
+* Visual Studio SDK
+* The built VSIX will work with Visual Studio 2012 to Visual Studio 2019 preview
+
+### Build
+
+Clone the repository and using a git GUI client or via the command line:
+
+```txt
+git clone https://github.com/laurentkempe/GitDiffMargin.git
+cd GitDiffMargin
+```
+
+Open the `GitDiffMargin.sln` solution with Visual Studio 2017+, build and run!
+
 ## Feedback
 
-* To report a bug, suggest a feature or send a pull request please refer to [Contributing to Git Diff Margin](https://github.com/laurentkempe/GitDiffMargin/blob/master/CONTRIBUTING.md)
 * Write a [**review**](https://marketplace.visualstudio.com/items?itemName=LaurentKempe.GitDiffMargin#review-details)
 * Tweet me [![Follow on Twitter](https://img.shields.io/twitter/url/http/realvizu.svg?style=social&label=@laurentkempe)](https://twitter.com/laurentkempe)
 
@@ -53,3 +75,9 @@ Thanks to
 * Charles Milette [sylveon](https://github.com/sylveon) for bugfix
 * Gary Ewan Park [@gep13](https://github.com/gep13) for the new chocolatey package
 * Duncan Smart [@duncansmart](https://github.com/duncansmart) for bug fix
+
+## Copyright
+
+Copyright 2012 - 2019 Laurent Kempé
+
+Licensed under the [MIT License](LICENSE.md)
