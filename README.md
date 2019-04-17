@@ -6,7 +6,7 @@ Git Diff Margin displays live Git changes of the currently edited file on Visual
 
 ## Features
 
-* Supports Visual Studio 2012 through Visual Studio 2019 Preview
+* Supports Visual Studio 2012 through Visual Studio 2019
 * Quickly view all current file changes on
     * Left margin
     * Scroll Bars in map and bar mode with and without source overview
@@ -45,7 +45,7 @@ Visit the [Contributor Guidelines](CONTRIBUTING.md) for details on how to contri
 
 * Visual Studio 2017
 * Visual Studio SDK
-* The built VSIX will work with Visual Studio 2012 to Visual Studio 2019 preview
+* The built VSIX will work with Visual Studio 2012 to Visual Studio 2019
 
 ### Build
 
