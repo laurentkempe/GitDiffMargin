@@ -1,6 +1,6 @@
 using System;
 using System.Windows;
-using System.Windows.Media;         
+using System.Windows.Media;
 using GalaSoft.MvvmLight;
 using GitDiffMargin.Core;
 using GitDiffMargin.Git;
@@ -102,6 +102,13 @@ namespace GitDiffMargin.ViewModel
             }
 
             return lineNumber >= diffStartLine && lineNumber <= diffEndLine;
+        }
+
+        public override void Cleanup()
+        {
+            MarginCore.BrushesChanged -= HandleBrushesChanged;
+
+            base.Cleanup();
         }
 
         private void HandleBrushesChanged(object sender, EventArgs e)

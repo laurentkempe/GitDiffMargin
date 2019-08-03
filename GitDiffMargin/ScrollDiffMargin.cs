@@ -31,6 +31,13 @@ namespace GitDiffMargin
             UserControl = new ScrollDiffMarginControl { DataContext = ViewModel, Width = MarginWidth, MaxWidth = MarginWidth, MinWidth = MarginWidth};
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            ViewModel.Cleanup();
+
+            base.Dispose(disposing);
+        }
+
         private void UpdateDiffDimensions(DiffViewModel diffViewModel, HunkRangeInfo hunkRangeInfo)
         {
             if (TextView.IsClosed)

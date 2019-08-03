@@ -31,6 +31,13 @@ namespace GitDiffMargin
             UserControl = new EditorDiffMarginControl {DataContext = ViewModel, Width = MarginWidth};
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            ViewModel.Cleanup();
+
+            base.Dispose(disposing);
+        }
+
         private void UpdateDiffDimensions(DiffViewModel diffViewModel, HunkRangeInfo hunkRangeInfo)
         {
             if (TextView.IsClosed)

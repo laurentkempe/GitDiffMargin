@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using GalaSoft.MvvmLight;
@@ -36,6 +35,10 @@ namespace GitDiffMargin.ViewModel
 
         protected virtual void HandleHunksChanged(object sender, HunksChangedEventArgs e)
         {
+            foreach (var diffViewModel in DiffViewModels)
+            {
+                diffViewModel.Cleanup();
+            }
             DiffViewModels.Clear();
 
             foreach (var diffViewModel in e.Hunks.Select(CreateDiffViewModel))
