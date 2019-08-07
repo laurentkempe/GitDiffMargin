@@ -40,11 +40,11 @@ You might also install it using the following [Chocolatey package](https://choco
 
 ### New features
 
-* Diff against something other than HEAD (Advanced users) #155
+* Diff against something other than HEAD (Advanced users)
 
 ### Fix
 
-* Fix memory leak #240
+* Fix memory leak
 
 ## Version 3.9.4
 
