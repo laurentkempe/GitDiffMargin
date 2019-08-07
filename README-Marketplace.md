@@ -36,6 +36,16 @@ You might also install it using the following [Chocolatey package](https://choco
 
 # Release Notes
 
+## Version 3.10.0
+
+### New features
+
+* Diff against something other than HEAD (Advanced users) #155
+
+### Fix
+
+* Fix memory leak #240
+
 ## Version 3.9.4
 
 ### Fix
@@ -226,7 +236,7 @@ You might also install it using the following [Chocolatey package](https://choco
 Thanks to
 
 *   Sam Harwell [@sharwell](https://github.com/sharwell) for all the improvements
-*   Rick Sladkey [@ricksladkey](https://github.com/ricksladkey) for the fixes
+*   Rick Sladkey [@ricksladkey](https://github.com/ricksladkey) for the fixes and features
 *   [@Iristyle](https://github.com/Iristyle) for the chocolatey package
 *   Yves Goergen [@](https://github.com/dg9ngf)[dg9ngf](https://github.com/dg9ngf)
 *   [@heinzbeinz](https://github.com/heinzbeinz) for the support of Visual Studio 15 preview

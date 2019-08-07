@@ -22,6 +22,7 @@ Git Diff Margin displays live Git changes of the currently edited file on Visual
 * Open popup with user defined keyboard shortcuts, close with esc key 
 * Support Visual Studio 2013 Dark, Light and Blue Theme
 * Support zoom
+* Diff against something other than HEAD (Advanced users)
 
 ![Screenshot](https://farm4.staticflickr.com/3893/15335334635_a88dc1f271.jpg)
 
