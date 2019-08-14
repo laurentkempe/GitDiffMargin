@@ -117,7 +117,7 @@
     <Compile Include="Core\WeakReference.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="$(NuGetPackageRoot)libgit2sharp.nativebinaries\2.0.267\runtimes\win-x86\native\git2-572e4d8.dll">
+    <Content Include="$(NuGetPackageRoot)libgit2sharp.nativebinaries\2.0.289\runtimes\win-x86\native\git2-7ce88e6.dll">
       <Link>git2-572e4d8.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
