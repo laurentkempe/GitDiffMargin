@@ -64,7 +64,7 @@
       These are not development-only dependencies, but PrivateAssets is still used to avoid transitive dependencies when
       GitDiffMargin.Commands references this project using a ProjectReference.
     -->
-    <PackageReference Include="LibGit2Sharp" Version="0.26.0" PrivateAssets="all" />
+    <PackageReference Include="LibGit2Sharp" Version="0.26.1" PrivateAssets="all" />
     <PackageReference Include="LibGit2Sharp.NativeBinaries" Version="2.0.267" ExcludeAssets="build" PrivateAssets="all">
       <IncludeAssets>runtime; compile; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
