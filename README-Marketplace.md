@@ -37,6 +37,12 @@ You might also install it using the following [Chocolatey package](https://choco
 
 # Release Notes
 
+## Version 3.10.1
+
+### Security fix
+
+* Update to LibGit2Sharp v0.26.1
+
 ## Version 3.10.0
 
 ### New features

@@ -7,7 +7,7 @@
         <MoreInfo>https://github.com/laurentkempe/GitDiffMargin</MoreInfo>
         <License>License.md</License>
         <GettingStartedGuide>http://visualstudiogallery.msdn.microsoft.com/cf49cf30-2ca6-4ea0-b7cc-6a8e0dadc1a8</GettingStartedGuide>
-        <ReleaseNotes>https://github.com/laurentkempe/GitDiffMargin/releases/tag/v3.10.0</ReleaseNotes>
+        <ReleaseNotes>https://github.com/laurentkempe/GitDiffMargin/releases/tag/v3.10.1</ReleaseNotes>
         <Icon>Resources/GitDiffMargin-Thumb.png</Icon>
         <PreviewImage>Resources/GitDiffMargin-Preview.png</PreviewImage>
         <!--<Tags></Tags>-->
