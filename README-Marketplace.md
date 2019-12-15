@@ -22,6 +22,10 @@ Git Diff Margin displays live Git changes of the currently edited file on Visual
 
 ![](/142621/1/gitdiffmargin-preview.png)
 
+# Sponsor
+
+If you use and 💗 Git Diff Margin extension think of [becoming a sponsor](https://github.com/sponsors/laurentkempe) now!
+
 # Get the code
 
 [https://github.com/laurentkempe/GitDiffMargin](https://github.com/laurentkempe/GitDiffMargin)
@@ -36,6 +40,12 @@ You might also install it using the following [Chocolatey package](https://choco
 * To suggest an idea, please use the [**Issue Tracker**](https://github.com/laurentkempe/GitDiffMargin/issues/new?assignees=&labels=&template=feature_request.md&title=)
 
 # Release Notes
+
+## Version 3.10.2
+
+### Security fix
+
+* Update to LibGit2Sharp v0.26.2
 
 ## Version 3.10.1
 

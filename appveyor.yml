@@ -1,24 +1,24 @@
-version: '3.10.1.{build}'
+version: "3.10.2.{build}"
 
 image: Visual Studio 2017
 
 install:
-- ps: (new-object Net.WebClient).DownloadString("https://raw.github.com/madskristensen/ExtensionScripts/master/AppVeyor/vsix.ps1") | iex
+  - ps: (new-object Net.WebClient).DownloadString("https://raw.github.com/madskristensen/ExtensionScripts/master/AppVeyor/vsix.ps1") | iex
 
 assembly_info:
   patch: true
   file: '**\AssemblyInfo.*'
-  assembly_version: '{version}'
-  assembly_file_version: '{version}'
-  assembly_informational_version: '{version}'
+  assembly_version: "{version}"
+  assembly_file_version: "{version}"
+  assembly_informational_version: "{version}"
 
 before_build:
-- ps: Vsix-IncrementVsixVersion -versionType "revision" | Vsix-UpdateBuildVersion
+  - ps: Vsix-IncrementVsixVersion -versionType "revision" | Vsix-UpdateBuildVersion
 
 build_script:
-- nuget restore -Verbosity quiet
-- msbuild /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m
+  - nuget restore -Verbosity quiet
+  - msbuild /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m
 
 artifacts:
-- path: '\GitDiffMargin.Extension\bin\Release\GitDiffMargin.vsix'
-  name: build
+  - path: '\GitDiffMargin.Extension\bin\Release\GitDiffMargin.vsix'
+    name: build

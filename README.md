@@ -28,6 +28,10 @@ Git Diff Margin displays live Git changes of the currently edited file on Visual
 
 Git Diff Margin version 3.2.2 is the latest release supporting Visual Studio 2010 it uses LibGit2Sharp v0.23.1 and is not being maintained. You can [download it here](https://github.com/laurentkempe/GitDiffMargin/releases/tag/v3.2.2).
 
+## Sponsor
+
+If you use and 💗 Git Diff Margin extension you can [become a sponsor](https://github.com/sponsors/laurentkempe) now!
+
 ## Installation
 
 Grab it from inside of Visual Studio's Extension Manager searching for **Git Diff Margin**, or via the [Extension Gallery link](https://marketplace.visualstudio.com/items?itemName=LaurentKempe.GitDiffMargin).
