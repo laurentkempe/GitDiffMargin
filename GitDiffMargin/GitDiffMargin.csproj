@@ -117,8 +117,8 @@
     <Compile Include="Core\WeakReference.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="$(NuGetPackageRoot)libgit2sharp.nativebinaries\2.0.289\runtimes\win-x86\native\git2-7ce88e6.dll">
-      <Link>git2-7ce88e6.dll</Link>
+    <Content Include="$(NuGetPackageRoot)\libgit2sharp.nativebinaries\2.0.306\runtimes\win-x86\native\git2-106a5f2.dll">
+      <Link>git2-106a5f2.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\GitDiffMargin-Preview.png">
