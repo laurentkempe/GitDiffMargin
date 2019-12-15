@@ -57,7 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Tvl.VisualStudio.Text.Utility.10" version="1.0.0" />
-    <PackageReference Include="MvvmLightLibs" Version="5.2.0.0" />
+    <PackageReference Include="MvvmLightLibs" Version="5.4.1.1" />
     <!-- This is a development-only dependency. -->
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="15.5.72" PrivateAssets="all" />
     <!--
