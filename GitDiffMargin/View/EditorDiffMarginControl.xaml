@@ -5,6 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModel="clr-namespace:GitDiffMargin.ViewModel"
              xmlns:view="clr-namespace:GitDiffMargin.View"
+             xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"
              Cursor="Hand"
              ClipToBounds="True"
              d:DataContext="{d:DesignInstance viewModel:EditorDiffMarginViewModel}"
@@ -85,7 +86,14 @@
                           BorderThickness="1,1,1,1">
                     <ContentControl Name="Commands"
                                     Content="{Binding ToolBarTray, Mode=OneWay}"
-                                    Focusable="True" />
+                                    Focusable="True">
+                      <ContentControl.Resources>
+                        <Style TargetType="{x:Type imaging:CrispImage}"
+                               BasedOn="{StaticResource {x:Type imaging:CrispImage}}">
+                          <Setter Property="ScaleFactor" Value="{Binding Path=DataContext.ScaleFactor, ElementName=Commands}" />
+                        </Style>
+                      </ContentControl.Resources>
+                    </ContentControl>
                   </Border>
                  <Border Background="{Binding Background, Mode=OneWay, Converter={StaticResource OpaqueColorConverter}}"
                           BorderBrush="{Binding Foreground, Mode=OneWay}"
@@ -94,6 +102,7 @@
                           Visibility="{Binding IsDiffTextVisible,
                                                Converter={StaticResource BooleanToVisibilityConverter}}">
                     <TextBox Margin="5"
+                             SnapsToDevicePixels="True"
                              BorderThickness="0"
                              IsReadOnly="True"
                              FontFamily="{Binding FontFamily, Mode=OneWay}"

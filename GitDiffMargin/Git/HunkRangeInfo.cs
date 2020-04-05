@@ -22,14 +22,14 @@ namespace GitDiffMargin.Git
             NewHunkRange = newHunkRange;
             DiffLines = diffLines.ToList();
             SuppressRollback = suppressRollback;
-            
+
             IsAddition = DiffLines.All(s => s.StartsWith("+") || s.StartsWith("\\") || string.IsNullOrWhiteSpace(s));
             IsDeletion = DiffLines.All(s => s.StartsWith("-") || s.StartsWith("\\") || string.IsNullOrWhiteSpace(s));
             IsModification = !IsAddition && !IsDeletion;
 
             if (IsDeletion || IsModification)
             {
-                OriginalText = DiffLines.Where(s => s.StartsWith("-")).Select(s => s.Remove(0, 1).TrimEnd('\n').TrimEnd('\r')).ToList();                
+                OriginalText = DiffLines.Where(s => s.StartsWith("-")).Select(s => s.Remove(0, 1).TrimEnd('\n').TrimEnd('\r')).ToList();
             }
         }
 
