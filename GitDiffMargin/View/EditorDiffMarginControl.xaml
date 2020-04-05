@@ -102,7 +102,7 @@
                           Visibility="{Binding IsDiffTextVisible,
                                                Converter={StaticResource BooleanToVisibilityConverter}}">
                     <TextBox Margin="5"
-                             SnapsToDevicePixels="True"
+                             TextOptions.TextFormattingMode="Ideal"
                              BorderThickness="0"
                              IsReadOnly="True"
                              FontFamily="{Binding FontFamily, Mode=OneWay}"
