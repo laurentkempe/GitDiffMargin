@@ -189,6 +189,8 @@ namespace GitDiffMargin.Core
             get { return 3.0; }
         }
 
+        public double ScaleFactor => TextView.ZoomLevel / 100;
+
         public event EventHandler BrushesChanged;
 
         public event EventHandler<HunksChangedEventArgs> HunksChanged;
@@ -212,7 +214,7 @@ namespace GitDiffMargin.Core
             else
             {
                 _textView.VisualElement.Dispatcher.BeginInvoke(action);
-            } 
+            }
         }
 
         private void HandleFormatMappingChanged(object sender, FormatItemsEventArgs e)

@@ -20,8 +20,9 @@
     <Buttons>
       <Button guid="GitDiffMarginCommand" id="PreviousChange" priority="0x0101" type="Button">
         <Parent guid="GitDiffMarginCommand" id="GitDiffToolbarGroup"/>
-        <Icon guid="IconPreviousArrow" id="1"/>
+        <Icon guid="guidGitDiffMarginIcons" id="GitDiffMarginPreviousChange" />
         <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>IconIsMoniker</CommandFlag>
         <Strings>
           <LocCanonicalName>GitDiffMargin.PreviousChange</LocCanonicalName>
           <ButtonText>Previous</ButtonText>
@@ -32,8 +33,9 @@
 
       <Button guid="GitDiffMarginCommand" id="NextChange" priority="0x0102" type="Button">
         <Parent guid="GitDiffMarginCommand" id="GitDiffToolbarGroup"/>
-        <Icon guid="IconNextArrow" id="1"/>
+        <Icon guid="guidGitDiffMarginIcons" id="GitDiffMarginNextChange" />
         <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>IconIsMoniker</CommandFlag>
         <Strings>
           <LocCanonicalName>GitDiffMargin.NextChange</LocCanonicalName>
           <ButtonText>Next</ButtonText>
@@ -44,8 +46,9 @@
 
       <Button guid="GitDiffMarginCommand" id="RollbackChange" priority="0x0103" type="Button">
         <Parent guid="GitDiffMarginCommand" id="GitDiffToolbarGroup"/>
-        <Icon guid="IconRollback" id="1"/>
+        <Icon guid="guidGitDiffMarginIcons" id="GitDiffMarginRollbackChange" />
         <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>IconIsMoniker</CommandFlag>
         <Strings>
           <!-- Uncommenting the following line exposes the command for key binding -->
           <!--<LocCanonicalName>GitDiffMargin.Rollback</LocCanonicalName>-->
@@ -57,8 +60,9 @@
 
       <Button guid="GitDiffMarginCommand" id="ShowDiff" priority="0x0104" type="Button">
         <Parent guid="GitDiffMarginCommand" id="GitDiffToolbarGroup"/>
-        <Icon guid="IconShowDifference" id="1"/>
+        <Icon guid="guidGitDiffMarginIcons" id="GitDiffMarginShowDiff" />
         <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>IconIsMoniker</CommandFlag>
         <Strings>
           <!-- Uncommenting the following line exposes the command for key binding -->
           <!--<LocCanonicalName>GitDiffMargin.ShowDifference</LocCanonicalName>-->
@@ -70,8 +74,9 @@
 
       <Button guid="GitDiffMarginCommand" id="CopyOldText" priority="0x0105" type="Button">
         <Parent guid="GitDiffMarginCommand" id="GitDiffToolbarGroup"/>
-        <Icon guid="IconCopyOldText" id="1"/>
+        <Icon guid="guidGitDiffMarginIcons" id="GitDiffMarginCopy" />
         <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>IconIsMoniker</CommandFlag>
         <Strings>
           <!-- Uncommenting the following line exposes the command for key binding -->
           <!--<LocCanonicalName>GitDiffMargin.CopyOldText</LocCanonicalName>-->
@@ -92,13 +97,6 @@
       </Button>
     </Buttons>
 
-    <Bitmaps>
-      <Bitmap guid="IconPreviousArrow" href="Resources\PreviousArrow.png"/>
-      <Bitmap guid="IconNextArrow" href="Resources\NextArrow.png"/>
-      <Bitmap guid="IconRollback" href="Resources\Rollback.png"/>
-      <Bitmap guid="IconShowDifference" href="Resources\ShowDifference.png"/>
-      <Bitmap guid="IconCopyOldText" href="Resources\CopyOldText.png"/>
-    </Bitmaps>
   </Commands>
 
   <Symbols>
@@ -116,10 +114,20 @@
       <IDSymbol name="GitDiffToolbarGroup" value="150"/>
     </GuidSymbol>
 
-    <GuidSymbol name="IconPreviousArrow" value="{2B8EC57B-D807-4D9C-AFB4-24DA7D6F56B5}" />
-    <GuidSymbol name="IconNextArrow" value="{1D3F20AD-672B-4D17-85FD-42D999D4FED3}" />
-    <GuidSymbol name="IconRollback" value="{E4584E6D-3BB3-4141-80A7-9E22D028C41E}" />
-    <GuidSymbol name="IconShowDifference" value="{E8011DB3-8E2C-4EEA-8C3D-0D33FB66EB12}" />
-    <GuidSymbol name="IconCopyOldText" value="{269FF401-0A36-4E4B-8301-66FB58AA9835}" />
+    <GuidSymbol name="guidGitDiffMarginIcons" value="{3e6659f9-943a-4ba2-89d6-a7974e8b4e2f}">
+      <IDSymbol name="GitDiffMarginShowDiff" value="1" />
+    </GuidSymbol>
+    <GuidSymbol name="guidGitDiffMarginIcons" value="{3e6659f9-943a-4ba2-89d6-a7974e8b4e2f}">
+      <IDSymbol name="GitDiffMarginRollbackChange" value="2" />
+    </GuidSymbol>
+    <GuidSymbol name="guidGitDiffMarginIcons" value="{3e6659f9-943a-4ba2-89d6-a7974e8b4e2f}">
+      <IDSymbol name="GitDiffMarginNextChange" value="3" />
+    </GuidSymbol>
+    <GuidSymbol name="guidGitDiffMarginIcons" value="{3e6659f9-943a-4ba2-89d6-a7974e8b4e2f}">
+      <IDSymbol name="GitDiffMarginPreviousChange" value="4" />
+    </GuidSymbol>
+    <GuidSymbol name="guidGitDiffMarginIcons" value="{3e6659f9-943a-4ba2-89d6-a7974e8b4e2f}">
+      <IDSymbol name="GitDiffMarginCopy" value="5" />
+    </GuidSymbol>
   </Symbols>
 </CommandTable>

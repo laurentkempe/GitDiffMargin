@@ -86,6 +86,8 @@ namespace GitDiffMargin.ViewModel
                 RaisePropertyChanged(() => IsVisible);}
         }
 
+        public double ScaleFactor => MarginCore.ScaleFactor;
+
         public void RefreshPosition()
         {
             UpdateDimensions();
