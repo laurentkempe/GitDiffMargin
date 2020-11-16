@@ -42,7 +42,7 @@
     <PackageReference Include="NUnit3TestAdapter">
       <Version>3.15.1</Version>
     </PackageReference>
-    <PackageReference Include="Shouldly" Version="3.0.2" />
+    <PackageReference Include="Shouldly" Version="4.0.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GitDiffMargin\GitDiffMargin.csproj">
