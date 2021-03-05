@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using LibGit2Sharp;
 using Microsoft.VisualStudio;
@@ -24,6 +25,29 @@ namespace GitDiffMargin.Git
     public class GitCommands : IGitCommands
     {
         private readonly SVsServiceProvider _serviceProvider;
+
+        [DllImport("kernel32.dll")]
+        private static extern IntPtr LoadLibrary(string dllToLoad);
+
+        private class VersionAccessor : LibGit2Sharp.Version
+        {
+            public static readonly VersionAccessor Instance = new VersionAccessor();
+        }
+
+        static GitCommands()
+        {
+            try
+            {
+                var currentFolder = Path.GetDirectoryName(typeof(GitCommands).Assembly.Location);
+                var subFolder = "x86";
+                LoadLibrary(Path.Combine(currentFolder, subFolder, $"git2-{VersionAccessor.Instance.LibGit2CommitSha}.dll"));
+            }
+            catch
+            {
+                // Ignore this error; if the library failed to load it will produce exceptions at the point where it is
+                // used.
+            }
+        }
 
         [ImportingConstructor]
         public GitCommands(SVsServiceProvider serviceProvider)

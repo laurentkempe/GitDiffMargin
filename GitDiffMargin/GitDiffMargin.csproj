@@ -119,7 +119,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(NuGetPackageRoot)\libgit2sharp.nativebinaries\2.0.306\runtimes\win-x86\native\git2-106a5f2.dll">
-      <Link>git2-106a5f2.dll</Link>
+      <Link>x86\git2-106a5f2.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="Resources\GitDiffMargin-Preview.png">
