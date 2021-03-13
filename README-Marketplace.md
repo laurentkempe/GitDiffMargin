@@ -2,7 +2,7 @@
 
 Git Diff Margin displays live Git changes of the currently edited file on Visual Studio margin and scroll bar.
 
-*   Supports Visual Studio 2012 through Visual Studio 2019 Preview 1
+*   Supports Visual Studio 2012 through Visual Studio 2019
 *   Quickly view all current file changes on
     *   Left margin
     *   Scroll Bars in map and bar mode with and without source overview
@@ -15,7 +15,7 @@ Git Diff Margin displays live Git changes of the currently edited file on Visual
 *   Copy a part of the old code by selecting it in the popup
 *   Show the diff in Visual Studio Diff window except for Visual Studio 2010 which still use configured Git external diff tool
 *   Navigate to previous/next change on file using user defined keyboard shortcuts or the popup icons
-*   Open popup with user defined keyboard shortcuts, close with esc key 
+*   Open popup with user defined keyboard shortcuts, close with esc key
 *   Support Visual Studio 2013 Dark, Light, and Blue Theme
 *   Support zoom
 *   Diff against something other than HEAD (Advanced users)
