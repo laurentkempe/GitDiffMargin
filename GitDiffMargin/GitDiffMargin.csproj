@@ -121,21 +121,21 @@
       <Link>x86\$(libgit2_filename).dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Resource Include="Resources\GitDiffMargin-Preview.png">
+    <Content Include="Resources\GitDiffMargin-Preview.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\GitDiffMargin-Thumb.png">
+    </Content>
+    <Content Include="Resources\GitDiffMargin-Thumb.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
+    </Content>
     <Content Include="..\LICENSE.md">
       <Link>LICENSE.md</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Git-Logo-2Color.png">
+    <Content Include="Resources\Git-Logo-2Color.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
+    </Content>
     <Content Include="Resources\Git-Icon-1788C.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
