@@ -41,6 +41,12 @@ You might also install it using the following [Chocolatey package](https://choco
 
 # Release Notes
 
+## Version 3.10.3
+
+### Other
+
+* Dependency reorganization and typo fix
+
 ## Version 3.10.2
 
 ### Security fix

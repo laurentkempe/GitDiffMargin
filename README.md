@@ -19,7 +19,7 @@ Git Diff Margin displays live Git changes of the currently edited file on Visual
 * Copy a part of the old code by selecting it in the popup
 * Show the diff in Visual Studio Diff window
 * Navigate to previous/next change on the file using user defined keyboard shortcuts or the popup icons
-* Open popup with user defined keyboard shortcuts, close with esc key 
+* Open popup with user defined keyboard shortcuts, close with esc key
 * Support Visual Studio 2013 Dark, Light and Blue Theme
 * Support zoom
 * Diff against something other than HEAD (Advanced users)
