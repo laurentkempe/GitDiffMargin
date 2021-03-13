@@ -67,7 +67,7 @@
       GitDiffMargin.Commands references this project using a ProjectReference.
     -->
     <PackageReference Include="LibGit2Sharp" Version="0.26.2" PrivateAssets="all" />
-    <PackageReference Include="LibGit2Sharp.NativeBinaries" GeneratePathProperty="true" Version="2.0.306" ExcludeAssets="build" PrivateAssets="all" />
+    <PackageReference Include="LibGit2Sharp.NativeBinaries" GeneratePathProperty="true" Version="2.0.312" ExcludeAssets="build" PrivateAssets="all" />
     <PackageReference Include="VSSDK.Editor.11" Version="11.0.4" PrivateAssets="all" />
     <PackageReference Include="VSSDK.Shell.11" Version="11.0.4" PrivateAssets="all" />
   </ItemGroup>
