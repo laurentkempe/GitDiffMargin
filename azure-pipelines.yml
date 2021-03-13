@@ -16,6 +16,9 @@ name: 3.10.2.$(patch)
 
 steps:
 - task: NuGetToolInstaller@0
+  displayName: 'Use NuGet 5.3.1'
+  inputs:
+    versionSpec: 5.3.1
 
 - task: NuGetCommand@2
   inputs:
