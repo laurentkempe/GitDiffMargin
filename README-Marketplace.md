@@ -22,6 +22,8 @@ Git Diff Margin displays live Git changes of the currently edited file on Visual
 
 ![](/142621/1/gitdiffmargin-preview.png)
 
+For a better experience you should [disable Visual Studio built in 'Track changes' bar](https://github.com/laurentkempe/GitDiffMargin/issues/123#issue-217206125).
+
 # Sponsor
 
 If you use and 💗 Git Diff Margin extension think of [becoming a sponsor](https://github.com/sponsors/laurentkempe) now!
