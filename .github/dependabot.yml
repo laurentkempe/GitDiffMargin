@@ -1,0 +1,36 @@
+version: 2
+updates:
+- package-ecosystem: nuget
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "04:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: Microsoft.VSSDK.BuildTools
+    versions:
+    - 16.10.10
+    - 16.10.23
+    - 16.10.31
+    - 16.10.7
+    - 16.9.1044
+  - dependency-name: StreamJsonRpc
+    versions:
+    - 2.6.121
+    - 2.7.70
+  - dependency-name: Microsoft.VisualStudio.Threading
+    versions:
+    - 16.8.55
+    - 16.9.54
+  - dependency-name: Microsoft.VisualStudio.Editor
+    versions:
+    - 16.8.239
+  - dependency-name: Microsoft.VisualStudio.Shell.15.0
+    versions:
+    - 16.8.30709.132
+  - dependency-name: Microsoft.VisualStudio.Imaging
+    versions:
+    - 16.7.30329.63
+  - dependency-name: Newtonsoft.Json
+    versions:
+    - 12.0.3
