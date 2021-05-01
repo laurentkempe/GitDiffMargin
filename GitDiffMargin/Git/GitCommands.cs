@@ -39,7 +39,7 @@ namespace GitDiffMargin.Git
             try
             {
                 var currentFolder = Path.GetDirectoryName(typeof(GitCommands).Assembly.Location);
-                var subFolder = "x86";
+                var subFolder = Environment.Is64BitProcess ? "x64" : "x86";
                 LoadLibrary(Path.Combine(currentFolder, subFolder, $"git2-{VersionAccessor.Instance.LibGit2CommitSha}.dll"));
             }
             catch
