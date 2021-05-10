@@ -22,6 +22,7 @@
     <Utf8Output>true</Utf8Output>
     <ExpressionBlendVersion>4.0.30816.0</ExpressionBlendVersion>
     <TargetFrameworkProfile />
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -57,7 +58,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Tvl.VisualStudio.Text.Utility.10" version="1.0.0" />
     <PackageReference Include="MvvmLightLibs" Version="5.4.1.1" />
     <!-- This is a development-only dependency. -->
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="15.5.72" PrivateAssets="all" />
@@ -72,11 +72,13 @@
     <PackageReference Include="VSSDK.Shell.11" Version="11.0.4" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandFilter.cs" />
     <Compile Include="Core\BackgroundParser.cs" />
     <Compile Include="Core\HunksChangedEventArgs.cs" />
     <Compile Include="GitDiffMarginCommand.cs" />
     <Compile Include="GitDiffMarginCommandHandler.cs" />
     <Compile Include="GitDiffMarginPackage.cs" />
+    <Compile Include="OleCommandText.cs" />
     <Compile Include="Settings\DiffAdditionEditorFormatDefinition.cs" />
     <Compile Include="DiffMarginBase.cs" />
     <Compile Include="Settings\DiffModificationEditorFormatDefinition.cs" />
@@ -100,6 +102,7 @@
     <Compile Include="ScrollDiffMargin.cs" />
     <Compile Include="ScrollDiffMarginFactory2012.cs" />
     <Compile Include="ScrollDiffMarginFactory2013.cs" />
+    <Compile Include="TextViewCommandFilter.cs" />
     <Compile Include="ViewModel\DiffMarginViewModelBase.cs" />
     <Compile Include="ViewModel\EditorDiffMarginViewModel.cs" />
     <Compile Include="ViewModel\DiffViewModel.cs" />

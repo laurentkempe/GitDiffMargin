@@ -7,8 +7,6 @@ namespace GitDiffMargin
     using GitDiffMargin.ViewModel;
     using Microsoft.VisualStudio.Editor;
     using Microsoft.VisualStudio.Text.Editor;
-    using Tvl.VisualStudio.Shell;
-    using Tvl.VisualStudio.Text;
     using IVsTextView = Microsoft.VisualStudio.TextManager.Interop.IVsTextView;
     using OLECMDEXECOPT = Microsoft.VisualStudio.OLE.Interop.OLECMDEXECOPT;
     using OLECMDF = Microsoft.VisualStudio.OLE.Interop.OLECMDF;

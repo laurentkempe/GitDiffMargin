@@ -43,14 +43,5 @@ using Microsoft.VisualStudio.Shell;
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\CommonServiceLocator.dll")]
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\System.Windows.Interactivity.dll")]
 
-[assembly: ProvideCodeBase(
-    AssemblyName = "Tvl.VisualStudio.Shell.Utility.10",
-    Version = "1.0.0.0",
-    CodeBase = "$PackageFolder$\\Tvl.VisualStudio.Shell.Utility.10.dll")]
-[assembly: ProvideCodeBase(
-    AssemblyName = "Tvl.VisualStudio.Text.Utility.10",
-    Version = "1.0.0.0",
-    CodeBase = "$PackageFolder$\\Tvl.VisualStudio.Text.Utility.10.dll")]
-
 [assembly: InternalsVisibleTo("GitDiffMargin.Commands, PublicKey=00240000048000009400000006020000002400005253413100040000010001007df3fa608a609f848a39944defc0b31e504b3e84fc5c7cd6008277f4c323cc8332ce97434c483558e43fb4d6b5c6e4c4ddb3711dabafef0e79bda1f02d49621c7bc1da4b6847707f70417455e6b76cb27c08f4d32ad29a20233124023b809d2be10d3b0a003edeee23c0d8758b384103a18c95ba323c63a451052d84dc7672d0")]
 [assembly: InternalsVisibleTo("GitDiffMargin.LegacyCommands, PublicKey=00240000048000009400000006020000002400005253413100040000010001007df3fa608a609f848a39944defc0b31e504b3e84fc5c7cd6008277f4c323cc8332ce97434c483558e43fb4d6b5c6e4c4ddb3711dabafef0e79bda1f02d49621c7bc1da4b6847707f70417455e6b76cb27c08f4d32ad29a20233124023b809d2be10d3b0a003edeee23c0d8758b384103a18c95ba323c63a451052d84dc7672d0")]
