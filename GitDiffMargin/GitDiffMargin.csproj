@@ -72,52 +72,13 @@
     <PackageReference Include="VSSDK.Shell.11" Version="11.0.4" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommandFilter.cs" />
-    <Compile Include="Core\BackgroundParser.cs" />
-    <Compile Include="Core\HunksChangedEventArgs.cs" />
-    <Compile Include="GitDiffMarginCommand.cs" />
-    <Compile Include="GitDiffMarginCommandHandler.cs" />
-    <Compile Include="GitDiffMarginPackage.cs" />
-    <Compile Include="OleCommandText.cs" />
-    <Compile Include="Settings\DiffAdditionEditorFormatDefinition.cs" />
-    <Compile Include="DiffMarginBase.cs" />
-    <Compile Include="Settings\DiffModificationEditorFormatDefinition.cs" />
-    <Compile Include="Core\DiffParseResultEventArgs.cs" />
-    <Compile Include="Settings\DiffRemovedEditorFormatDefinition.cs" />
-    <Compile Include="Core\DiffUpdateBackgroundParser.cs" />
-    <Compile Include="EditorDiffMargin.cs" />
-    <Compile Include="EditorDiffMarginFactory.cs" />
-    <Compile Include="GitDiffMarginTextViewOptions.cs" />
-    <Compile Include="Git\DiffFormatNames.cs" />
-    <Compile Include="Git\GitCommands.cs" />
-    <Compile Include="Git\GitDiffParser.cs" />
-    <Compile Include="Git\HunkRange.cs" />
-    <Compile Include="Git\HunkRangeInfo.cs" />
-    <Compile Include="Git\IGitCommands.cs" />
-    <Compile Include="Core\IMarginCore.cs" />
-    <Compile Include="Core\MarginCore.cs" />
-    <Compile Include="DiffMarginFactoryBase.cs" />
-    <Compile Include="Core\ParseResultEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ScrollDiffMargin.cs" />
-    <Compile Include="ScrollDiffMarginFactory2012.cs" />
-    <Compile Include="ScrollDiffMarginFactory2013.cs" />
-    <Compile Include="TextViewCommandFilter.cs" />
-    <Compile Include="ViewModel\DiffMarginViewModelBase.cs" />
-    <Compile Include="ViewModel\EditorDiffMarginViewModel.cs" />
-    <Compile Include="ViewModel\DiffViewModel.cs" />
-    <Compile Include="ViewModel\EditorDiffViewModel.cs" />
-    <Compile Include="ViewModel\ScrollDiffMarginViewModel.cs" />
-    <Compile Include="ViewModel\ScrollDiffViewModel.cs" />
     <Compile Include="View\EditorDiffMarginControl.xaml.cs">
       <DependentUpon>EditorDiffMarginControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\OpaqueColorConverter.cs" />
-    <Compile Include="View\PopupKeyboardBehavior.cs" />
     <Compile Include="View\ScrollDiffMarginControl.xaml.cs">
       <DependentUpon>ScrollDiffMarginControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Core\WeakReference.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(PkgLibGit2Sharp_NativeBinaries)\runtimes\win-x64\native\$(libgit2_filename).dll">
@@ -195,6 +156,7 @@
     <None Include="SharedKey.snk" />
   </ItemGroup>
   <ItemGroup />
+  <Import Project="..\GitDiffMargin.Shared\GitDiffMargin.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="Exists('$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets')" />
 </Project>
