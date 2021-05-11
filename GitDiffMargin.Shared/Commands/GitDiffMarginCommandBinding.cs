@@ -1,4 +1,6 @@
-﻿namespace GitDiffMargin.Commands
+﻿#if !LEGACY_COMMANDS
+
+namespace GitDiffMargin.Commands
 {
     using System.ComponentModel.Composition;
     using Microsoft.VisualStudio.Editor.Commanding;
@@ -30,3 +32,5 @@
 #pragma warning restore CS0649 // Field 'fieldName' is never assigned to, and will always have its default value null
     }
 }
+
+#endif

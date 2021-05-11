@@ -1,4 +1,6 @@
-﻿namespace GitDiffMargin.Commands
+﻿#if !LEGACY_COMMANDS
+
+namespace GitDiffMargin.Commands
 {
     using System;
     using Microsoft.VisualStudio.OLE.Interop;
@@ -16,3 +18,5 @@
             => args.TextView.Properties.GetProperty<GitDiffMarginCommandHandler>(typeof(GitDiffMarginCommandHandler));
     }
 }
+
+#endif

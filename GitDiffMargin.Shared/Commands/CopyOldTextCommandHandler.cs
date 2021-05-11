@@ -1,4 +1,6 @@
-﻿namespace GitDiffMargin.Commands
+﻿#if !LEGACY_COMMANDS
+
+namespace GitDiffMargin.Commands
 {
     using System.ComponentModel.Composition;
     using Microsoft.VisualStudio.Commanding;
@@ -17,3 +19,5 @@
         public override string DisplayName => "Copy Old Text";
     }
 }
+
+#endif

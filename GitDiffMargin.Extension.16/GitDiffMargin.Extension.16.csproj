@@ -6,7 +6,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectTypeGuids>{82b43b9b-a64c-4715-b499-d71e9ca2bd60};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <ProjectGuid>{E4701F35-8030-418E-8E8C-6AE72E229138}</ProjectGuid>
+    <ProjectGuid>{77F03C6C-C371-47DB-8390-048AD7944086}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>GitDiffMargin.Extension</RootNamespace>
@@ -16,7 +16,7 @@
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
     <IncludeAssemblyInVSIXContainer>false</IncludeAssemblyInVSIXContainer>
     <IncludeDebugSymbolsInLocalVSIXDeployment>false</IncludeDebugSymbolsInLocalVSIXDeployment>
-    <TargetVsixContainerName>GitDiffMargin.vsix</TargetVsixContainerName>
+    <TargetVsixContainerName>GitDiffMargin.16.vsix</TargetVsixContainerName>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -50,14 +50,14 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Editor" Version="15.6.27740" />
+    <PackageReference Include="Microsoft.VisualStudio.Shell.15.0" Version="15.6.27413" />
+    <PackageReference Include="Microsoft.VisualStudio.Threading" Version="15.6.56" />
+    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+    <PackageReference Include="StreamJsonRpc" Version="1.3.23" />
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="15.5.72" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GitDiffMargin\GitDiffMargin.15.csproj">
-      <Project>{233b6f13-7687-4823-870b-a8f44b79d4f0}</Project>
-      <Name>GitDiffMargin.15</Name>
-      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup;BuiltProjectOutputGroupDependencies;GetCopyToOutputDirectoryItems;SatelliteDllsProjectOutputGroup;PkgDefProjectOutputGroup</IncludeOutputGroupsInVSIX>
-    </ProjectReference>
     <ProjectReference Include="..\GitDiffMargin\GitDiffMargin.16.csproj">
       <Project>{5ebd33a8-2990-40e5-a28c-479de54d6083}</Project>
       <Name>GitDiffMargin.16</Name>

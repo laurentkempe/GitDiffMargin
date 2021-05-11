@@ -45,9 +45,9 @@
     <PackageReference Include="Shouldly" Version="3.0.2" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GitDiffMargin\GitDiffMargin.csproj">
+    <ProjectReference Include="..\GitDiffMargin\GitDiffMargin.15.csproj">
       <Project>{233B6F13-7687-4823-870B-A8F44B79D4F0}</Project>
-      <Name>GitDiffMargin</Name>
+      <Name>GitDiffMargin.15</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

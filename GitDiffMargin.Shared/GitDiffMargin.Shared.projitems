@@ -10,6 +10,22 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)CommandFilter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\CommandHandlerTextViewCreationListener.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\CopyOldTextCommandArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\CopyOldTextCommandHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\GitDiffMarginCommandBinding.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\GitDiffMarginCommandHandler`1.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\NextChangeCommandArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\NextChangeCommandHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\PreviousChangeCommandArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\PreviousChangeCommandHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\RollbackChangeCommandArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\RollbackChangeCommandHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\ShimCommandHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\ShowDiffCommandArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\ShowDiffCommandHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\ShowPopupCommandArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\ShowPopupCommandHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\BackgroundParser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\DiffParseResultEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\DiffUpdateBackgroundParser.cs" />
@@ -32,6 +48,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Git\HunkRange.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Git\HunkRangeInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Git\IGitCommands.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LegacyCommands\LegacyCommandHandlerTextViewCreationListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OleCommandText.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ScrollDiffMargin.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ScrollDiffMarginFactory2012.cs" />

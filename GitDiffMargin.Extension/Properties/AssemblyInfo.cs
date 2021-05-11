@@ -22,9 +22,9 @@ using Microsoft.VisualStudio.Shell;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("e4701f35-8030-418e-8e8c-6ae72e229138")]
 
-[assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\GitDiffMargin.dll")]
+[assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\GitDiffMargin.15.dll")]
+[assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\GitDiffMargin.16.dll")]
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\GitDiffMargin.Commands.dll")]
-[assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\GitDiffMargin.LegacyCommands.dll")]
 
 // Version information for an assembly consists of the following four values:
 //

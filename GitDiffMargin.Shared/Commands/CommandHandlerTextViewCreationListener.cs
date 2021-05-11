@@ -1,4 +1,6 @@
-﻿namespace GitDiffMargin.LegacyCommands
+﻿#if !LEGACY_COMMANDS
+
+namespace GitDiffMargin.Commands
 {
     using System.ComponentModel.Composition;
     using Microsoft.VisualStudio.Editor;
@@ -10,13 +12,13 @@
     [Export(typeof(IVsTextViewCreationListener))]
     [ContentType("text")]
     [TextViewRole(PredefinedTextViewRoles.Editable)]
-    internal class LegacyCommandHandlerTextViewCreationListener : IVsTextViewCreationListener
+    internal class CommandHandlerTextViewCreationListener : IVsTextViewCreationListener
     {
         private readonly SVsServiceProvider _serviceProvider;
         private readonly IVsEditorAdaptersFactoryService _editorAdaptersFactoryService;
 
         [ImportingConstructor]
-        public LegacyCommandHandlerTextViewCreationListener(SVsServiceProvider serviceProvider, IVsEditorAdaptersFactoryService editorAdaptersFactoryService)
+        public CommandHandlerTextViewCreationListener(SVsServiceProvider serviceProvider, IVsEditorAdaptersFactoryService editorAdaptersFactoryService)
         {
             _serviceProvider = serviceProvider;
             _editorAdaptersFactoryService = editorAdaptersFactoryService;
@@ -28,9 +30,12 @@
             if (textView == null)
                 return;
 
+            // The new command handling approach does not require that the command filter be enabled. The command
+            // implementations interact directly with the handler via its IOleCommandTarget interface.
             GitDiffMarginCommandHandler filter = new GitDiffMarginCommandHandler(textViewAdapter, _editorAdaptersFactoryService, textView);
-            filter.Enabled = true;
             textView.Properties.AddProperty(typeof(GitDiffMarginCommandHandler), filter);
         }
     }
 }
+
+#endif

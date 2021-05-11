@@ -1,4 +1,6 @@
-﻿namespace GitDiffMargin.Commands
+﻿#if !LEGACY_COMMANDS
+
+namespace GitDiffMargin.Commands
 {
     using Microsoft.VisualStudio.Text;
     using Microsoft.VisualStudio.Text.Editor;
@@ -12,3 +14,5 @@
         }
     }
 }
+
+#endif

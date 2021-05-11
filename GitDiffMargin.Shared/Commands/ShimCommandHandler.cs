@@ -1,4 +1,6 @@
-﻿namespace GitDiffMargin.Commands
+﻿#if !LEGACY_COMMANDS
+
+namespace GitDiffMargin.Commands
 {
     using System;
     using Microsoft.VisualStudio;
@@ -50,3 +52,5 @@
         protected abstract IOleCommandTarget GetCommandTarget(T args);
     }
 }
+
+#endif

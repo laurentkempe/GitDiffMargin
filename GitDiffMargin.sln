@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31220.325
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitDiffMargin.Extension", "GitDiffMargin.Extension\GitDiffMargin.Extension.csproj", "{E4701F35-8030-418E-8E8C-6AE72E229138}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitDiffMargin", "GitDiffMargin\GitDiffMargin.csproj", "{233B6F13-7687-4823-870B-A8F44B79D4F0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitDiffMargin.15", "GitDiffMargin\GitDiffMargin.15.csproj", "{233B6F13-7687-4823-870B-A8F44B79D4F0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitDiffMargin.Unit.Tests", "GitDiffMargin.Unit.Tests\GitDiffMargin.Unit.Tests.csproj", "{B954F515-AC6F-40D4-8169-03985AC62B06}"
 EndProject
@@ -18,16 +18,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitDiffMargin.Commands", "GitDiffMargin.Commands\GitDiffMargin.Commands.csproj", "{AFEE8D6F-0358-4628-8CAC-D10668C95057}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitDiffMargin.LegacyCommands", "GitDiffMargin.LegacyCommands\GitDiffMargin.LegacyCommands.csproj", "{359BA5C3-6964-4FA4-941F-FB97E250C521}"
-EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "GitDiffMargin.Shared", "GitDiffMargin.Shared\GitDiffMargin.Shared.shproj", "{574C5A5D-53A1-4368-B5F6-B5AE65B672DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitDiffMargin.16", "GitDiffMargin\GitDiffMargin.16.csproj", "{5EBD33A8-2990-40E5-A28C-479DE54D6083}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitDiffMargin.Extension.15", "GitDiffMargin.Extension.15\GitDiffMargin.Extension.15.csproj", "{FBDDDD6F-2CE8-446B-AA3F-87236A2158F4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitDiffMargin.Extension.16", "GitDiffMargin.Extension.16\GitDiffMargin.Extension.16.csproj", "{77F03C6C-C371-47DB-8390-048AD7944086}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		GitDiffMargin.Shared\GitDiffMargin.Shared.projitems*{233b6f13-7687-4823-870b-a8f44b79d4f0}*SharedItemsImports = 4
 		GitDiffMargin.Shared\GitDiffMargin.Shared.projitems*{574c5a5d-53a1-4368-b5f6-b5ae65b672db}*SharedItemsImports = 13
+		GitDiffMargin.Shared\GitDiffMargin.Shared.projitems*{5ebd33a8-2990-40e5-a28c-479de54d6083}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,14 +49,18 @@ Global
 		{B954F515-AC6F-40D4-8169-03985AC62B06}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B954F515-AC6F-40D4-8169-03985AC62B06}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B954F515-AC6F-40D4-8169-03985AC62B06}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AFEE8D6F-0358-4628-8CAC-D10668C95057}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AFEE8D6F-0358-4628-8CAC-D10668C95057}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AFEE8D6F-0358-4628-8CAC-D10668C95057}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AFEE8D6F-0358-4628-8CAC-D10668C95057}.Release|Any CPU.Build.0 = Release|Any CPU
-		{359BA5C3-6964-4FA4-941F-FB97E250C521}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{359BA5C3-6964-4FA4-941F-FB97E250C521}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{359BA5C3-6964-4FA4-941F-FB97E250C521}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{359BA5C3-6964-4FA4-941F-FB97E250C521}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EBD33A8-2990-40E5-A28C-479DE54D6083}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EBD33A8-2990-40E5-A28C-479DE54D6083}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EBD33A8-2990-40E5-A28C-479DE54D6083}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EBD33A8-2990-40E5-A28C-479DE54D6083}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBDDDD6F-2CE8-446B-AA3F-87236A2158F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBDDDD6F-2CE8-446B-AA3F-87236A2158F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBDDDD6F-2CE8-446B-AA3F-87236A2158F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBDDDD6F-2CE8-446B-AA3F-87236A2158F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77F03C6C-C371-47DB-8390-048AD7944086}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77F03C6C-C371-47DB-8390-048AD7944086}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77F03C6C-C371-47DB-8390-048AD7944086}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77F03C6C-C371-47DB-8390-048AD7944086}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

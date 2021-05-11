@@ -1,14 +1,15 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
+using Microsoft.VisualStudio.Shell;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("GitDiffMargin.Commands")]
+[assembly: AssemblyTitle("GitDiffMargin.Extension")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Laurent Kempé")]
-[assembly: AssemblyProduct("GitDiffMargin.Commands")]
+[assembly: AssemblyProduct("GitDiffMargin.Extension")]
 [assembly: AssemblyCopyright("Laurent Kempé")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -19,7 +20,9 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("afee8d6f-0358-4628-8cac-d10668c95057")]
+[assembly: Guid("e4701f35-8030-418e-8e8c-6ae72e229138")]
+
+[assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\GitDiffMargin.16.dll")]
 
 // Version information for an assembly consists of the following four values:
 //
