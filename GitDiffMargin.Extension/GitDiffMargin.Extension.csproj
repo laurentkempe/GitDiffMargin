@@ -42,7 +42,7 @@
   <ItemGroup>
     <ProjectReference Include="..\GitDiffMargin.Extension.15\GitDiffMargin.Extension.15.csproj" ReferenceOutputAssembly="False" IncludeOutputGroupsInVsix="VSIXContainerProjectOutputGroup" />
     <ProjectReference Include="..\GitDiffMargin.Extension.16\GitDiffMargin.Extension.16.csproj" ReferenceOutputAssembly="False" IncludeOutputGroupsInVsix="VSIXContainerProjectOutputGroup" />
-    <ProjectReference Include="..\GitDiffMargin.Extension.17\GitDiffMargin.Extension.17.csproj" ReferenceOutputAssembly="False" IncludeOutputGroupsInVsix="VSIXContainerProjectOutputGroup" />
+    <ProjectReference Include="..\GitDiffMargin.Extension.17\GitDiffMargin.Extension.17.csproj" ReferenceOutputAssembly="False" SkipGetTargetFrameworkProperties="true" IncludeOutputGroupsInVsix="VSIXContainerProjectOutputGroup" />
   </ItemGroup>
 
   <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />

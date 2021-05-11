@@ -18,11 +18,12 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>GitDiffMargin</RootNamespace>
     <AssemblyName>GitDiffMargin.17</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <UseCodebase>true</UseCodebase>
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
     <CreateVsixContainer>false</CreateVsixContainer>
+    <DeployExtension>false</DeployExtension>
     <Utf8Output>true</Utf8Output>
     <ExpressionBlendVersion>4.0.30816.0</ExpressionBlendVersion>
     <TargetFrameworkProfile />
@@ -64,19 +65,14 @@
   <ItemGroup>
     <PackageReference Include="MvvmLightLibs" Version="5.4.1.1" />
     <!-- This is a development-only dependency. -->
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="15.5.72" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.VisualStudio.Imaging" Version="15.6.27413" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.0.63-dev17-g3f11f5ab" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.0.0-previews-1-31318-291" PrivateAssets="all" />
     <!--
       These are not development-only dependencies, but PrivateAssets is still used to avoid transitive dependencies when
       GitDiffMargin.Commands references this project using a ProjectReference.
     -->
-    <PackageReference Include="LibGit2Sharp" Version="0.26.2" PrivateAssets="all" />
+    <PackageReference Include="LibGit2Sharp" Version="0.26.2" />
     <PackageReference Include="LibGit2Sharp.NativeBinaries" GeneratePathProperty="true" Version="2.0.306" ExcludeAssets="build" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.VisualStudio.Editor" Version="15.6.27740" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.VisualStudio.Shell.15.0" Version="15.6.27413" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.VisualStudio.Threading" Version="15.6.56" PrivateAssets="all" />
-    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" PrivateAssets="all" />
-    <PackageReference Include="StreamJsonRpc" Version="1.3.23" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
