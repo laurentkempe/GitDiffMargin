@@ -26,11 +26,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitDiffMargin.Extension.15"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitDiffMargin.Extension.16", "GitDiffMargin.Extension.16\GitDiffMargin.Extension.16.csproj", "{77F03C6C-C371-47DB-8390-048AD7944086}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitDiffMargin.17", "GitDiffMargin\GitDiffMargin.17.csproj", "{9585F286-16D6-4370-B9B6-2D3C7323DA98}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitDiffMargin.Extension.17", "GitDiffMargin.Extension.17\GitDiffMargin.Extension.17.csproj", "{ED67BECA-1BA3-4C3B-8A61-6D0145701582}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		GitDiffMargin.Shared\GitDiffMargin.Shared.projitems*{233b6f13-7687-4823-870b-a8f44b79d4f0}*SharedItemsImports = 4
 		GitDiffMargin.Shared\GitDiffMargin.Shared.projitems*{574c5a5d-53a1-4368-b5f6-b5ae65b672db}*SharedItemsImports = 13
 		GitDiffMargin.Shared\GitDiffMargin.Shared.projitems*{5ebd33a8-2990-40e5-a28c-479de54d6083}*SharedItemsImports = 4
+		GitDiffMargin.Shared\GitDiffMargin.Shared.projitems*{9585f286-16d6-4370-b9b6-2d3c7323da98}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +66,14 @@ Global
 		{77F03C6C-C371-47DB-8390-048AD7944086}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77F03C6C-C371-47DB-8390-048AD7944086}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77F03C6C-C371-47DB-8390-048AD7944086}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9585F286-16D6-4370-B9B6-2D3C7323DA98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9585F286-16D6-4370-B9B6-2D3C7323DA98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9585F286-16D6-4370-B9B6-2D3C7323DA98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9585F286-16D6-4370-B9B6-2D3C7323DA98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED67BECA-1BA3-4C3B-8A61-6D0145701582}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED67BECA-1BA3-4C3B-8A61-6D0145701582}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED67BECA-1BA3-4C3B-8A61-6D0145701582}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED67BECA-1BA3-4C3B-8A61-6D0145701582}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

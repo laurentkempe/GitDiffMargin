@@ -11,7 +11,7 @@
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
     <IncludeAssemblyInVSIXContainer>false</IncludeAssemblyInVSIXContainer>
     <IncludeDebugSymbolsInLocalVSIXDeployment>false</IncludeDebugSymbolsInLocalVSIXDeployment>
-    <TargetVsixContainerName>GitDiffMargin.16.vsix</TargetVsixContainerName>
+    <TargetVsixContainerName>GitDiffMargin.17.vsix</TargetVsixContainerName>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -32,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GitDiffMargin\GitDiffMargin.16.csproj">
+    <ProjectReference Include="..\GitDiffMargin\GitDiffMargin.17.csproj">
       <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup;BuiltProjectOutputGroupDependencies;GetCopyToOutputDirectoryItems;SatelliteDllsProjectOutputGroup;PkgDefProjectOutputGroup</IncludeOutputGroupsInVSIX>
     </ProjectReference>
   </ItemGroup>

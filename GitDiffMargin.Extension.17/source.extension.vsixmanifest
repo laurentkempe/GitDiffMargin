@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="GitDiffMargin..5ef9f816-d9ce-45cd-a8fa-cd67a807df0e" Version="|%CurrentProject%;GetVsixVersion|" Language="en-US" Publisher="Laurent Kempé" />
-        <DisplayName>Git Diff Margin</DisplayName>
+        <Identity Id="GitDiffMargin..2c461ecc-61d1-4c8d-9df7-1447cfd8c0d4" Version="|%CurrentProject%;GetVsixVersion|" Language="en-US" Publisher="Laurent Kempé" />
+        <DisplayName>Git Diff Margin (Visual Studio 2022)</DisplayName>
         <Description xml:space="preserve">Git Diff Margin displays live Git changes of the currently edited file on Visual Studio margin and scroll bar. Supports Visual Studio 2012 through Visual Studio 2019.</Description>
         <MoreInfo>https://github.com/laurentkempe/GitDiffMargin</MoreInfo>
         <License>LICENSE.md</License>
@@ -13,8 +13,6 @@
         <!--<Tags></Tags>-->
     </Metadata>
     <Installation>
-        <InstallationTarget Version="[11.0,17.0)" Id="Microsoft.VisualStudio.Community" />
-        <InstallationTarget Version="[11.0,17.0)" Id="Microsoft.VisualStudio.Pro" />
         <InstallationTarget Version="[17.0,18.0)" Id="Microsoft.VisualStudio.Community">
             <ProductArchitecture>x86</ProductArchitecture>
         </InstallationTarget>
@@ -29,31 +27,11 @@
         </InstallationTarget>
     </Installation>
     <Prerequisites>
-        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,18.0)" DisplayName="Visual Studio core editor" />
+        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,18.0)" DisplayName="Visual Studio core editor" />
     </Prerequisites>
-    <Dependencies>
-        <Dependency d:Source="File"
-            DisplayName="Git Diff Margin (Visual Studio 2017)"
-            Id="GitDiffMargin..21764268-b943-4a65-972e-bbb1852c7bd4"
-            Version="[|%CurrentProject%;GetVsixVersion|,)"
-            d:InstallSource="Embed"
-            Location="GitDiffMargin.15.vsix"
-            TargetVersion="[15.0,15.0.27131)" />
-        <Dependency d:Source="File"
-            DisplayName="Git Diff Margin (Visual Studio 2019)"
-            Id="GitDiffMargin..3bfa77c9-d2fe-4cfd-bbf7-01832c5bfe93"
-            Version="[|%CurrentProject%;GetVsixVersion|,)"
-            d:InstallSource="Embed"
-            Location="GitDiffMargin.16.vsix"
-            TargetVersion="[15.0.27428,17.0)" />
-        <Dependency d:Source="File"
-            DisplayName="Git Diff Margin (Visual Studio 2022)"
-            Id="GitDiffMargin..2c461ecc-61d1-4c8d-9df7-1447cfd8c0d4"
-            Version="[|%CurrentProject%;GetVsixVersion|,)"
-            d:InstallSource="Embed"
-            Location="GitDiffMargin.17.vsix"
-            TargetVersion="[17.0,18.0)" />
-    </Dependencies>
     <Assets>
+        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="GitDiffMargin.17" Path="|GitDiffMargin.17|" />
+        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="GitDiffMargin.17" Path="|GitDiffMargin.17;PkgdefProjectOutputGroup|" />
+        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
     </Assets>
 </PackageManifest>

@@ -1,3 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
+
+  <PropertyGroup>
+    <Company>Laurent Kempé</Company>
+    <Copyright>Laurent Kempé</Copyright>
+    <Version>3.9.0.0</Version>
+  </PropertyGroup>
+
 </Project>
