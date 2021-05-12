@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31220.325
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitDiffMargin.Extension", "GitDiffMargin.Extension\GitDiffMargin.Extension.csproj", "{E4701F35-8030-418E-8E8C-6AE72E229138}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitDiffMargin.Extension", "GitDiffMargin.Extension\GitDiffMargin.Extension.csproj", "{E4701F35-8030-418E-8E8C-6AE72E229138}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitDiffMargin.15", "GitDiffMargin\GitDiffMargin.15.csproj", "{233B6F13-7687-4823-870B-A8F44B79D4F0}"
 EndProject
@@ -22,13 +22,15 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "GitDiffMargin.Shared", "Git
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitDiffMargin.16", "GitDiffMargin\GitDiffMargin.16.csproj", "{5EBD33A8-2990-40E5-A28C-479DE54D6083}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitDiffMargin.Extension.15", "GitDiffMargin.Extension.15\GitDiffMargin.Extension.15.csproj", "{FBDDDD6F-2CE8-446B-AA3F-87236A2158F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitDiffMargin.Extension.15", "GitDiffMargin.Extension.15\GitDiffMargin.Extension.15.csproj", "{FBDDDD6F-2CE8-446B-AA3F-87236A2158F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitDiffMargin.Extension.16", "GitDiffMargin.Extension.16\GitDiffMargin.Extension.16.csproj", "{77F03C6C-C371-47DB-8390-048AD7944086}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitDiffMargin.Extension.16", "GitDiffMargin.Extension.16\GitDiffMargin.Extension.16.csproj", "{77F03C6C-C371-47DB-8390-048AD7944086}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitDiffMargin.17", "GitDiffMargin\GitDiffMargin.17.csproj", "{9585F286-16D6-4370-B9B6-2D3C7323DA98}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitDiffMargin.Extension.17", "GitDiffMargin.Extension.17\GitDiffMargin.Extension.17.csproj", "{ED67BECA-1BA3-4C3B-8A61-6D0145701582}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitDiffMargin.Extension.17", "GitDiffMargin.Extension.17\GitDiffMargin.Extension.17.csproj", "{ED67BECA-1BA3-4C3B-8A61-6D0145701582}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitDiffMargin.Shim", "GitDiffMargin.Shim\GitDiffMargin.Shim.csproj", "{3E6837B2-4280-4A1F-853A-85CCA53CD425}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -74,6 +76,10 @@ Global
 		{ED67BECA-1BA3-4C3B-8A61-6D0145701582}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED67BECA-1BA3-4C3B-8A61-6D0145701582}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED67BECA-1BA3-4C3B-8A61-6D0145701582}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E6837B2-4280-4A1F-853A-85CCA53CD425}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E6837B2-4280-4A1F-853A-85CCA53CD425}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E6837B2-4280-4A1F-853A-85CCA53CD425}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E6837B2-4280-4A1F-853A-85CCA53CD425}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -8,7 +8,7 @@
     <RootNamespace>GitDiffMargin.Extension</RootNamespace>
     <AssemblyName>GitDiffMargin.Extension</AssemblyName>
 
-    <GeneratePkgDefFile>false</GeneratePkgDefFile>
+    <GeneratePkgDefFile>true</GeneratePkgDefFile>
     <IncludeAssemblyInVSIXContainer>false</IncludeAssemblyInVSIXContainer>
     <IncludeDebugSymbolsInLocalVSIXDeployment>false</IncludeDebugSymbolsInLocalVSIXDeployment>
     <TargetVsixContainerName>GitDiffMargin.vsix</TargetVsixContainerName>
@@ -33,16 +33,26 @@
 
   <ItemGroup>
     <Content Include="..\LICENSE.md" IncludeInVsix="true" />
+    <Content Include="GitDiffMargin.pkgdef" IncludeInVsix="true" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="MvvmLightLibs" Version="5.4.1.1" />
+    <PackageReference Include="LibGit2Sharp" Version="0.26.2" />
+
+    <PackageReference Include="Microsoft.VisualStudio.Editor" Version="15.6.27740" />
+    <PackageReference Include="Microsoft.VisualStudio.Shell.15.0" Version="15.6.27413" />
+    <PackageReference Include="Microsoft.VisualStudio.Threading" Version="15.6.56" />
+    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+    <PackageReference Include="StreamJsonRpc" Version="1.3.23" />
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.0.63-dev17-g3f11f5ab" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GitDiffMargin.Extension.15\GitDiffMargin.Extension.15.csproj" ReferenceOutputAssembly="False" IncludeOutputGroupsInVsix="VSIXContainerProjectOutputGroup" />
-    <ProjectReference Include="..\GitDiffMargin.Extension.16\GitDiffMargin.Extension.16.csproj" ReferenceOutputAssembly="False" IncludeOutputGroupsInVsix="VSIXContainerProjectOutputGroup" />
-    <ProjectReference Include="..\GitDiffMargin.Extension.17\GitDiffMargin.Extension.17.csproj" ReferenceOutputAssembly="False" SkipGetTargetFrameworkProperties="true" IncludeOutputGroupsInVsix="VSIXContainerProjectOutputGroup" />
+    <ProjectReference Include="..\GitDiffMargin.Shim\GitDiffMargin.Shim.csproj" ReferenceOutputAssembly="False" SkipGetTargetFrameworkProperties="true" />
+    <ProjectReference Include="..\GitDiffMargin\GitDiffMargin.15.csproj" ReferenceOutputAssembly="False" SkipGetTargetFrameworkProperties="true" VsixSubPath="dev15" IncludeOutputGroupsInVsix="BuiltProjectOutputGroup;BuiltProjectOutputGroupDependencies;GetCopyToOutputDirectoryItems;SatelliteDllsProjectOutputGroup" />
+    <ProjectReference Include="..\GitDiffMargin\GitDiffMargin.16.csproj" ReferenceOutputAssembly="False" SkipGetTargetFrameworkProperties="true" VsixSubPath="dev16" IncludeOutputGroupsInVsix="BuiltProjectOutputGroup;BuiltProjectOutputGroupDependencies;GetCopyToOutputDirectoryItems;SatelliteDllsProjectOutputGroup" />
+    <ProjectReference Include="..\GitDiffMargin\GitDiffMargin.17.csproj" ReferenceOutputAssembly="False" SkipGetTargetFrameworkProperties="true" VsixSubPath="dev17" IncludeOutputGroupsInVsix="BuiltProjectOutputGroup;BuiltProjectOutputGroupDependencies;GetCopyToOutputDirectoryItems;SatelliteDllsProjectOutputGroup" />
   </ItemGroup>
 
   <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
