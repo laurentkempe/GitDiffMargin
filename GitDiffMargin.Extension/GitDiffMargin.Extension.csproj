@@ -26,11 +26,6 @@
     <DeployExtension>False</DeployExtension>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <!-- Temporarily disable deployment -->
-    <DeployExtension>False</DeployExtension>
-  </PropertyGroup>
-
   <ItemGroup>
     <Content Include="..\LICENSE.md" IncludeInVsix="true" />
     <Content Include="GitDiffMargin.pkgdef" IncludeInVsix="true" />

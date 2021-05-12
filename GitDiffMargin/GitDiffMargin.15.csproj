@@ -87,10 +87,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="$(PkgLibGit2Sharp_NativeBinaries)\runtimes\win-x64\native\$(libgit2_filename).dll">
-      <Link>x64\$(libgit2_filename).dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="$(PkgLibGit2Sharp_NativeBinaries)\runtimes\win-x86\native\$(libgit2_filename).dll">
       <Link>x86\$(libgit2_filename).dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -99,10 +95,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\GitDiffMargin-Thumb.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\LICENSE.md">
-      <Link>LICENSE.md</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -115,26 +107,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Resources\icons\Copy_16x.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\icons\Diff_16x.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\icons\Next_16x.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\icons\Previous_16x.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\icons\Undo_16x.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="View\EditorDiffMarginControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -145,20 +117,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <VSCTCompile Include="GitDiffMargin.vsct">
-      <ResourceName>Menus.ctmenu</ResourceName>
-    </VSCTCompile>
-    <EmbeddedResource Include="VSPackage.resx">
-      <ManifestResourceName>VSPackage</ManifestResourceName>
-      <MergeWithCTO>true</MergeWithCTO>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Icons.imagemanifest">
-      <IncludeInVSIX>true</IncludeInVSIX>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </Content>
     <None Include="SharedKey.snk" />
   </ItemGroup>
   <ItemGroup />
