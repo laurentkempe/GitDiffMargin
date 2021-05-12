@@ -28,10 +28,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitDiffMargin.Shim", "GitDi
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		GitDiffMargin.Shared\GitDiffMargin.Shared.projitems*{233b6f13-7687-4823-870b-a8f44b79d4f0}*SharedItemsImports = 4
+		GitDiffMargin.Shared\GitDiffMargin.Shared.projitems*{233b6f13-7687-4823-870b-a8f44b79d4f0}*SharedItemsImports = 5
 		GitDiffMargin.Shared\GitDiffMargin.Shared.projitems*{574c5a5d-53a1-4368-b5f6-b5ae65b672db}*SharedItemsImports = 13
-		GitDiffMargin.Shared\GitDiffMargin.Shared.projitems*{5ebd33a8-2990-40e5-a28c-479de54d6083}*SharedItemsImports = 4
-		GitDiffMargin.Shared\GitDiffMargin.Shared.projitems*{9585f286-16d6-4370-b9b6-2d3c7323da98}*SharedItemsImports = 4
+		GitDiffMargin.Shared\GitDiffMargin.Shared.projitems*{5ebd33a8-2990-40e5-a28c-479de54d6083}*SharedItemsImports = 5
+		GitDiffMargin.Shared\GitDiffMargin.Shared.projitems*{9585f286-16d6-4370-b9b6-2d3c7323da98}*SharedItemsImports = 5
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

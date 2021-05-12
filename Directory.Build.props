@@ -4,7 +4,12 @@
   <PropertyGroup>
     <Company>Laurent Kempé</Company>
     <Copyright>Laurent Kempé</Copyright>
-    <Version>3.9.0.0</Version>
+    <Product>Git Diff Margin</Product>
+    <Description>Git Diff Margin displays live changes of the currently edited file on Visual Studio margin and scroll bar.</Description>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Nerdbank.GitVersioning" Version="3.4.194" PrivateAssets="all" />
+  </ItemGroup>
 
 </Project>

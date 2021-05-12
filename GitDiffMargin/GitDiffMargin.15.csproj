@@ -1,68 +1,41 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project>
   <PropertyGroup>
     <MSBuildProjectExtensionsPath>obj\15\</MSBuildProjectExtensionsPath>
     <BaseIntermediateOutputPath>obj\15\</BaseIntermediateOutputPath>
   </PropertyGroup>
 
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.props" />
   <Import Project="$(PkgLibGit2Sharp_NativeBinaries)\build\LibGit2Sharp.NativeBinaries.props" Condition="Exists('$(PkgLibGit2Sharp_NativeBinaries)\build\LibGit2Sharp.NativeBinaries.props')" />
+
   <PropertyGroup>
-    <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>10.0.20305</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectTypeGuids>{82b43b9b-a64c-4715-b499-d71e9ca2bd60};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <ProjectGuid>{233B6F13-7687-4823-870B-A8F44B79D4F0}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <TargetFramework>net46</TargetFramework>
     <RootNamespace>GitDiffMargin</RootNamespace>
     <AssemblyName>GitDiffMargin.Impl</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <UseWPF>true</UseWPF>
+
     <UseCodebase>true</UseCodebase>
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
     <CreateVsixContainer>false</CreateVsixContainer>
     <DeployExtension>false</DeployExtension>
-    <Utf8Output>true</Utf8Output>
-    <ExpressionBlendVersion>4.0.30816.0</ExpressionBlendVersion>
-    <TargetFrameworkProfile />
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+
+  <PropertyGroup>
     <OutputPath>bin\15\$(Configuration)\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;LEGACY_COMMANDS</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+    <DefaultItemExcludes>$(DefaultItemExcludes);obj/16/**;obj/17/**</DefaultItemExcludes>
+    <DefineConstants>$(DefineConstants);LEGACY_COMMANDS</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\15\$(Configuration)\</OutputPath>
-    <DefineConstants>TRACE;LEGACY_COMMANDS</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
+
   <PropertyGroup>
     <ApplicationIcon>Resources\Git-Icon-1788C.ico</ApplicationIcon>
   </PropertyGroup>
+
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>SharedKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="WindowsBase" />
-  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="MvvmLightLibs" Version="5.4.1.1" />
     <!-- This is a development-only dependency. -->
@@ -73,19 +46,11 @@
       GitDiffMargin.Commands references this project using a ProjectReference.
     -->
     <PackageReference Include="LibGit2Sharp" Version="0.26.2" />
-    <PackageReference Include="LibGit2Sharp.NativeBinaries" GeneratePathProperty="true" Version="2.0.306" ExcludeAssets="build" PrivateAssets="all" />
+    <PackageReference Include="LibGit2Sharp.NativeBinaries" GeneratePathProperty="true" Version="2.0.306" ExcludeAssets="build;runtime" PrivateAssets="all" />
     <PackageReference Include="VSSDK.Editor.11" Version="11.0.4" PrivateAssets="all" />
     <PackageReference Include="VSSDK.Shell.11" Version="11.0.4" PrivateAssets="all" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="View\EditorDiffMarginControl.xaml.cs">
-      <DependentUpon>EditorDiffMarginControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\ScrollDiffMarginControl.xaml.cs">
-      <DependentUpon>ScrollDiffMarginControl.xaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
+
   <ItemGroup>
     <Content Include="$(PkgLibGit2Sharp_NativeBinaries)\runtimes\win-x86\native\$(libgit2_filename).dll">
       <Link>x86\$(libgit2_filename).dll</Link>
@@ -97,8 +62,6 @@
     <Content Include="Resources\GitDiffMargin-Thumb.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Resources\Git-Logo-2Color.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -106,21 +69,16 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Page Include="View\EditorDiffMarginControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\ScrollDiffMarginControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="SharedKey.snk" />
-  </ItemGroup>
-  <ItemGroup />
+
   <Import Project="..\GitDiffMargin.Shared\GitDiffMargin.Shared.projitems" Label="Shared" />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
+  <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
+
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="Exists('$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets')" />
+
+  <ItemGroup>
+    <!-- https://github.com/Microsoft/extendvs/issues/57 -->
+    <ProjectReference Update="@(ProjectReference)" Name="%(Filename)" />
+  </ItemGroup>
+
 </Project>

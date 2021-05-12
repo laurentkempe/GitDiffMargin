@@ -3,7 +3,7 @@
 
   <Target Name="GetVsixVersion" Returns="$(VsixVersion)">
     <PropertyGroup>
-      <VsixVersion Condition="'$(VsixVersion)' == ''">$(Version)</VsixVersion>
+      <VsixVersion Condition="'$(VsixVersion)' == ''">$(BuildVersionSimple)</VsixVersion>
     </PropertyGroup>
   </Target>
 
