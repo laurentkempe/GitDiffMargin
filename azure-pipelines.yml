@@ -4,15 +4,12 @@
 # https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
 
 pool:
-  vmImage: 'VS2017-Win2016'
+  vmImage: 'windows-latest'
 
 variables:
-  patch: $[counter('versioncounter', 0)]
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-
-name: 3.10.3.$(patch)
 
 steps:
 - task: NuGetToolInstaller@0
@@ -23,31 +20,21 @@ steps:
 - task: NuGetCommand@2
   inputs:
     restoreSolution: '$(solution)'
+    feedsToUse: config
+    nugetConfigPath: NuGet.Config
 
-- task: bleddynrichards.Assembly-Info-Task.Assembly-Info-Task.Assembly-Info-NetFramework@2
-  displayName: 'Update Assembly Version'
-  inputs:
-    VersionNumber: '$(Build.BuildNumber)'
-    FileVersionNumber: '$(Build.BuildNumber)'
-    InformationalVersion: '$(Build.BuildNumber)'
-
-- task: VsixToolsUpdateVersion@2
-  displayName: 'Update Vsix Version'
-  inputs:
-    FileName: $(Build.SourcesDirectory)\$(system.teamProject).Extension\source.extension.vsixmanifest
-    VersionNumber: '$(Build.BuildNumber)'
-  
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+    msbuildArgs: '/bl:$(Build.SourcesDirectory)/msbuild.binlog /v:m'
 
 - task: VSTest@2
   displayName: 'Run tests'
   inputs:
     testAssemblyVer2: |
-     **\$(BuildConfiguration)\*Tests.dll
+     **\$(BuildConfiguration)\*\*Tests.dll
      !**\obj\**
     platform: '$(BuildPlatform)'
     configuration: '$(BuildConfiguration)'
@@ -58,6 +45,12 @@ steps:
     contents: '**\?(*.vsix|extension-manifest.json|README-Marketplace.md)'
     targetFolder: '$(Build.ArtifactStagingDirectory)'
     flattenFolders: true
+
+- task: PublishBuildArtifacts@1
+  displayName: Publish Logs
+  inputs:
+    pathtoPublish: 'msbuild.binlog' 
+    artifactName: '$(system.teamProject) Logs'
 
 - task: CopyFiles@2
   displayName: 'Copy Vsix to Chocolatey'
@@ -71,7 +64,7 @@ steps:
   inputs:
     packWorkingDirectory: '$(Build.Repository.LocalPath)/ChocolateyPackage/GitDiffMargin/'
     packNuspecFileName: GitDiffMargin.nuspec
-    packVersion: '$(Build.BuildNumber)'
+    packVersion: '$(GITBUILDVERSIONSIMPLE)'
 
 #- task: PowerShell@2
 #  displayName: 'Rename Build Artifacts'
@@ -81,6 +74,7 @@ steps:
 #    workingDirectory: '$(Build.ArtifactStagingDirectory)'
 
 - task: PublishBuildArtifacts@1
+  displayName: Publish Output
   inputs:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
     artifactName: '$(system.teamProject)'
