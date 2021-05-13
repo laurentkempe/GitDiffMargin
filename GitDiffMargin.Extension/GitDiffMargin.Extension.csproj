@@ -29,6 +29,8 @@
   <ItemGroup>
     <Content Include="..\LICENSE.md" IncludeInVsix="true" />
     <Content Include="GitDiffMargin.pkgdef" IncludeInVsix="true" />
+    <Content Include="Resources\GitDiffMargin-Preview.png" IncludeInVsix="true" />
+    <Content Include="Resources\GitDiffMargin-Thumb.png" IncludeInVsix="true" />
   </ItemGroup>
 
   <ItemGroup>
