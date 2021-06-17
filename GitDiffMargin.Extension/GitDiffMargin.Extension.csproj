@@ -46,7 +46,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GitDiffMargin.Shim\GitDiffMargin.Shim.csproj" ReferenceOutputAssembly="False" SkipGetTargetFrameworkProperties="true" />
+    <ProjectReference Include="..\GitDiffMargin.Shim\GitDiffMargin.Shim.csproj" />
     <ProjectReference Include="..\GitDiffMargin\GitDiffMargin.15.csproj" ReferenceOutputAssembly="False" SkipGetTargetFrameworkProperties="true" VsixSubPath="dev15" IncludeOutputGroupsInVsix="BuiltProjectOutputGroup;BuiltProjectOutputGroupDependencies;GetCopyToOutputDirectoryItems;SatelliteDllsProjectOutputGroup" />
     <ProjectReference Include="..\GitDiffMargin\GitDiffMargin.16.csproj" ReferenceOutputAssembly="False" SkipGetTargetFrameworkProperties="true" VsixSubPath="dev16" IncludeOutputGroupsInVsix="BuiltProjectOutputGroup;BuiltProjectOutputGroupDependencies;GetCopyToOutputDirectoryItems;SatelliteDllsProjectOutputGroup" />
     <ProjectReference Include="..\GitDiffMargin\GitDiffMargin.17.csproj" ReferenceOutputAssembly="False" SkipGetTargetFrameworkProperties="true" VsixSubPath="dev17" IncludeOutputGroupsInVsix="BuiltProjectOutputGroup;BuiltProjectOutputGroupDependencies;GetCopyToOutputDirectoryItems;SatelliteDllsProjectOutputGroup" />

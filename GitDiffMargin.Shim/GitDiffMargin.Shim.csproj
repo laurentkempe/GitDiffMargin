@@ -21,7 +21,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GitDiffMargin\GitDiffMargin.15.csproj" Private="false" />
+    <ProjectReference Include="..\GitDiffMargin\GitDiffMargin.15.csproj" Private="false" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>

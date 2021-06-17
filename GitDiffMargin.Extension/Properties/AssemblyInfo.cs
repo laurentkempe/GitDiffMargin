@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\GalaSoft.MvvmLight.dll")]
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\GalaSoft.MvvmLight.Extras.dll")]
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\GalaSoft.MvvmLight.Platform.dll")]
+[assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\GitDiffMargin.Shim.dll")]
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\LibGit2Sharp.dll")]
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\CommonServiceLocator.dll")]
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\System.Windows.Interactivity.dll")]
