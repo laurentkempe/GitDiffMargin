@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.31220.325
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitDiffMargin.Extension", "GitDiffMargin.Extension\GitDiffMargin.Extension.csproj", "{E4701F35-8030-418E-8E8C-6AE72E229138}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitDiffMargin.15", "GitDiffMargin\GitDiffMargin.15.csproj", "{233B6F13-7687-4823-870B-A8F44B79D4F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitDiffMargin.15", "GitDiffMargin\GitDiffMargin.15.csproj", "{233B6F13-7687-4823-870B-A8F44B79D4F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitDiffMargin.Unit.Tests", "GitDiffMargin.Unit.Tests\GitDiffMargin.Unit.Tests.csproj", "{B954F515-AC6F-40D4-8169-03985AC62B06}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitDiffMargin.Unit.Tests", "GitDiffMargin.Unit.Tests\GitDiffMargin.Unit.Tests.csproj", "{B954F515-AC6F-40D4-8169-03985AC62B06}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1ACE889E-6D42-4673-B624-5E11D4FE5744}"
 	ProjectSection(SolutionItems) = preProject
@@ -20,9 +20,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "GitDiffMargin.Shared", "GitDiffMargin.Shared\GitDiffMargin.Shared.shproj", "{574C5A5D-53A1-4368-B5F6-B5AE65B672DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitDiffMargin.16", "GitDiffMargin\GitDiffMargin.16.csproj", "{5EBD33A8-2990-40E5-A28C-479DE54D6083}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitDiffMargin.16", "GitDiffMargin\GitDiffMargin.16.csproj", "{5EBD33A8-2990-40E5-A28C-479DE54D6083}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitDiffMargin.17", "GitDiffMargin\GitDiffMargin.17.csproj", "{9585F286-16D6-4370-B9B6-2D3C7323DA98}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitDiffMargin.17", "GitDiffMargin\GitDiffMargin.17.csproj", "{9585F286-16D6-4370-B9B6-2D3C7323DA98}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitDiffMargin.Shim", "GitDiffMargin.Shim\GitDiffMargin.Shim.csproj", "{3E6837B2-4280-4A1F-853A-85CCA53CD425}"
 EndProject
