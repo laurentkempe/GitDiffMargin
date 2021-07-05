@@ -43,17 +43,17 @@ You might also install it using the following [Chocolatey package](https://choco
 
 # Release Notes
 
+## Version 3.11
+
+### New feature
+
+* Add support for Visual Studio 2022
+
 ## Version 3.10.4
 
 ### Other
 
 * Fix cannot install on older Visual Studio versions when Visual Studio 2021 preview 1 is installed
-
-## Version 3.11.3
-
-### New feature
-
-* Add support for Visual Studio 2022
 
 ## Version 3.10.3
 
