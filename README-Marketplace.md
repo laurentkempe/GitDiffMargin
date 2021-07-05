@@ -2,7 +2,7 @@
 
 Git Diff Margin displays live Git changes of the currently edited file on Visual Studio margin and scroll bar.
 
-*   Supports Visual Studio 2012 through Visual Studio 2019
+*   Supports Visual Studio 2012 through Visual Studio 2022
 *   Quickly view all current file changes on
     *   Left margin
     *   Scroll Bars in map and bar mode with and without source overview
@@ -48,6 +48,12 @@ You might also install it using the following [Chocolatey package](https://choco
 ### Other
 
 * Fix cannot install on older Visual Studio versions when Visual Studio 2021 preview 1 is installed
+
+## Version 3.11.3
+
+### New feature
+
+* Add support for Visual Studio 2022
 
 ## Version 3.10.3
 
