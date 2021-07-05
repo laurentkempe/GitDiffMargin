@@ -1,0 +1,7 @@
+﻿[$RootKey$\Packages\{f82c1ef6-3b52-425e-bc28-4934e6073a32}]
+@="GitDiffMarginPackage"
+"InprocServer32"="$WinDir$\SYSTEM32\MSCOREE.DLL"
+"Class"="GitDiffMargin.GitDiffMarginPackage"
+"CodeBase"="$PackageFolder$\GitDiffMargin.Shim.dll"
+[$RootKey$\Menus]
+"{f82c1ef6-3b52-425e-bc28-4934e6073a32}"=", Menus.ctmenu, 1"

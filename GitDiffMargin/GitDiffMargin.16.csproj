@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <MSBuildProjectExtensionsPath>obj\16\</MSBuildProjectExtensionsPath>
+    <BaseIntermediateOutputPath>obj\16\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+
+  <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.props" />
+  <Import Project="$(PkgLibGit2Sharp_NativeBinaries)\build\LibGit2Sharp.NativeBinaries.props" Condition="Exists('$(PkgLibGit2Sharp_NativeBinaries)\build\LibGit2Sharp.NativeBinaries.props')" />
+
+  <PropertyGroup>
+    <TargetFramework>net46</TargetFramework>
+    <RootNamespace>GitDiffMargin</RootNamespace>
+    <AssemblyName>GitDiffMargin.Impl</AssemblyName>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <UseWPF>true</UseWPF>
+
+    <UseCodebase>true</UseCodebase>
+    <GeneratePkgDefFile>true</GeneratePkgDefFile>
+    <CreateVsixContainer>false</CreateVsixContainer>
+    <DeployExtension>false</DeployExtension>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <OutputPath>bin\16\$(Configuration)\</OutputPath>
+    <DefaultItemExcludes>$(DefaultItemExcludes);obj/15/**;obj/17/**</DefaultItemExcludes>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ApplicationIcon>Resources\Git-Icon-1788C.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>SharedKey.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MvvmLightLibs" Version="5.4.1.1" />
+    <!-- This is a development-only dependency. -->
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.0.63-dev17-g3f11f5ab" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.VisualStudio.Imaging" Version="15.6.27413" PrivateAssets="all" />
+    <!--
+      These are not development-only dependencies, but PrivateAssets is still used to avoid transitive dependencies when
+      GitDiffMargin.Commands references this project using a ProjectReference.
+    -->
+    <PackageReference Include="LibGit2Sharp" Version="0.26.2" />
+    <PackageReference Include="LibGit2Sharp.NativeBinaries" GeneratePathProperty="true" Version="2.0.306" ExcludeAssets="build;runtime" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.VisualStudio.Editor" Version="15.6.27740" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.VisualStudio.Shell.15.0" Version="15.6.27413" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.VisualStudio.Threading" Version="15.6.56" PrivateAssets="all" />
+    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" PrivateAssets="all" />
+    <PackageReference Include="StreamJsonRpc" Version="1.3.23" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="$(PkgLibGit2Sharp_NativeBinaries)\runtimes\win-x86\native\$(libgit2_filename).dll">
+      <Link>x86\$(libgit2_filename).dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <Import Project="..\GitDiffMargin.Shared\GitDiffMargin.Shared.projitems" Label="Shared" />
+
+  <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
+
+  <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="Exists('$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets')" />
+
+  <ItemGroup>
+    <!-- https://github.com/Microsoft/extendvs/issues/57 -->
+    <ProjectReference Update="@(ProjectReference)" Name="%(Filename)" />
+  </ItemGroup>
+
+</Project>

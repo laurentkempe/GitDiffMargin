@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="GitDiffMargin..5ef9f816-d9ce-45cd-a8fa-cd67a807df0e" Version="3.9.0.0" Language="en-US" Publisher="Laurent Kempé" />
+        <Identity Id="GitDiffMargin..5ef9f816-d9ce-45cd-a8fa-cd67a807df0e" Version="|%CurrentProject%;GetVsixVersion|" Language="en-US" Publisher="Laurent Kempé" />
         <DisplayName>Git Diff Margin</DisplayName>
-        <Description xml:space="preserve">Git Diff Margin displays live Git changes of the currently edited file on Visual Studio margin and scroll bar. Supports Visual Studio 2012 through Visual Studio 2019 Preview.</Description>
+        <Description xml:space="preserve">Git Diff Margin displays live Git changes of the currently edited file on Visual Studio margin and scroll bar. Supports Visual Studio 2012 through Visual Studio 2022.</Description>
         <MoreInfo>https://github.com/laurentkempe/GitDiffMargin</MoreInfo>
-        <License>License.md</License>
+        <License>LICENSE.md</License>
         <GettingStartedGuide>http://visualstudiogallery.msdn.microsoft.com/cf49cf30-2ca6-4ea0-b7cc-6a8e0dadc1a8</GettingStartedGuide>
-        <ReleaseNotes>https://github.com/laurentkempe/GitDiffMargin/releases/tag/v3.10.4</ReleaseNotes>
+        <ReleaseNotes>https://github.com/laurentkempe/GitDiffMargin/releases/tag/v|%CurrentProject%;GetVsixVersion|</ReleaseNotes>
         <Icon>Resources/GitDiffMargin-Thumb.png</Icon>
         <PreviewImage>Resources/GitDiffMargin-Preview.png</PreviewImage>
         <!--<Tags></Tags>-->
@@ -15,15 +15,27 @@
     <Installation>
         <InstallationTarget Version="[11.0,17.0)" Id="Microsoft.VisualStudio.Community" />
         <InstallationTarget Version="[11.0,17.0)" Id="Microsoft.VisualStudio.Pro" />
+        <InstallationTarget Version="[17.0,18.0)" Id="Microsoft.VisualStudio.Community">
+            <ProductArchitecture>x86</ProductArchitecture>
+        </InstallationTarget>
+        <InstallationTarget Version="[17.0,18.0)" Id="Microsoft.VisualStudio.Community">
+            <ProductArchitecture>amd64</ProductArchitecture>
+        </InstallationTarget>
+        <InstallationTarget Version="[17.0,18.0)" Id="Microsoft.VisualStudio.Pro">
+            <ProductArchitecture>x86</ProductArchitecture>
+        </InstallationTarget>
+        <InstallationTarget Version="[17.0,18.0)" Id="Microsoft.VisualStudio.Pro">
+            <ProductArchitecture>amd64</ProductArchitecture>
+        </InstallationTarget>
     </Installation>
     <Prerequisites>
-        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,17.0)" DisplayName="Visual Studio core editor" />
+        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,18.0)" DisplayName="Visual Studio core editor" />
     </Prerequisites>
     <Assets>
-        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="GitDiffMargin" Path="|GitDiffMargin|" />
-        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="GitDiffMargin.LegacyCommands" TargetVersion="[15.0,15.0.27131)" Path="|GitDiffMargin.LegacyCommands|" />
-        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="GitDiffMargin.Commands" TargetVersion="[15.0.27428,17.0)" Path="|GitDiffMargin.Commands|" />
-        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="GitDiffMargin" Path="|GitDiffMargin;PkgdefProjectOutputGroup|" />
+        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="GitDiffMargin.15" TargetVersion="[15.0,15.0.27131)" Path="|GitDiffMargin.15|" />
+        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="GitDiffMargin.16" TargetVersion="[15.0.27428,17.0)" Path="|GitDiffMargin.16|" />
+        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="GitDiffMargin.17" TargetVersion="[17.0,18.0)" Path="|GitDiffMargin.17|" />
         <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="GitDiffMargin.pkgdef" />
     </Assets>
 </PackageManifest>
