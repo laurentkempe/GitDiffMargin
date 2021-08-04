@@ -3,7 +3,7 @@
 <!-- Version: 14.0.50929.2 -->
 <ImageManifest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/VisualStudio/ImageManifestSchema/2014">
   <Symbols>
-    <String Name="Resources" Value="/GitDiffMargin.Shim;v3.11.0.0;72dfb55bb9fc8a25;component/resources/icons" />
+    <String Name="Resources" Value="/GitDiffMargin.Shim;v3.12.0.0;72dfb55bb9fc8a25;component/resources/icons" />
     <Guid Name="guidGitDiffMarginIcons" Value="{3e6659f9-943a-4ba2-89d6-a7974e8b4e2f}" />
     <ID Name="GitDiffMarginShowDiff" Value="1" />
     <ID Name="GitDiffMarginRollbackChange" Value="2" />

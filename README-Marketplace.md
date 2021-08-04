@@ -43,6 +43,12 @@ You might also install it using the following [Chocolatey package](https://choco
 
 # Release Notes
 
+## Version 3.12
+
+### Fix
+
+* Fix invisible popup images
+
 ## Version 3.11
 
 ### New feature
