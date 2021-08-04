@@ -58,4 +58,19 @@
     <ProjectReference Update="@(ProjectReference)" Name="%(Filename)" />
   </ItemGroup>
 
+  <!--
+    Icons.imagemanifest contains a reference to the strong name of GitDiffMargin.Shim.dll. This target validates the
+    reference matches the values applied to the assembly by NerdBank.GitVersioning during the build.
+  -->
+  <Target Name="ValidateImageManifestVersion"
+          BeforeTargets="CopyFilesToOutputDirectory">
+
+    <PropertyGroup>
+      <_ImageManifestText>$([System.IO.File]::ReadAllText('$(MSBuildThisFileDirectory)Icons.imagemanifest'))</_ImageManifestText>
+      <_ExpectedImageManifestResources>/$(AssemblyName);v$(AssemblyVersion);72dfb55bb9fc8a25;</_ExpectedImageManifestResources>
+    </PropertyGroup>
+
+    <Error Condition="!$(_ImageManifestText.Contains('$(_ExpectedImageManifestResources)'))"
+           Text="Expected 'Icons.imagemanifest' to contain '$(_ExpectedImageManifestResources)'" />
+  </Target>
 </Project>
