@@ -26,7 +26,7 @@
 
   <ItemGroup>
     <PackageReference Include="VSSDK.Shell.11" Version="11.0.4" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.0.2155-preview2" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.0.5232" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
