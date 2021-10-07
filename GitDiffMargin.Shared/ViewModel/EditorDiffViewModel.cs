@@ -6,13 +6,11 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using GalaSoft.MvvmLight.Command;
 using GitDiffMargin.Core;
 using GitDiffMargin.Git;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using IOleCommandTarget = Microsoft.VisualStudio.OLE.Interop.IOleCommandTarget;
 
 #endregion
 
@@ -188,8 +186,8 @@ namespace GitDiffMargin.ViewModel
                         ErrorHandler.CallWithCOMConvention(() => toolbarTrayHost.Close());
                 }
 
-                RaisePropertyChanged(() => ShowPopup);
-                RaisePropertyChanged(() => ToolBarTray);
+                RaisePropertyChanged(nameof(ShowPopup));
+                RaisePropertyChanged(nameof(ToolBarTray));
             }
         }
 
@@ -202,7 +200,7 @@ namespace GitDiffMargin.ViewModel
             {
                 if (value == _isDiffTextVisible) return;
                 _isDiffTextVisible = value;
-                RaisePropertyChanged(() => IsDiffTextVisible);
+                RaisePropertyChanged(nameof(IsDiffTextVisible));
             }
         }
 

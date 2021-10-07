@@ -1,6 +1,5 @@
 ﻿namespace GitDiffMargin
 {
-    using System;
     using System.Runtime.InteropServices;
     using Microsoft.VisualStudio.Shell;
 

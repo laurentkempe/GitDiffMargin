@@ -34,7 +34,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MvvmLightLibs" Version="5.4.1.1" />
     <PackageReference Include="LibGit2Sharp" Version="0.26.2" />
 
     <PackageReference Include="Microsoft.VisualStudio.Editor" Version="15.6.27740" />

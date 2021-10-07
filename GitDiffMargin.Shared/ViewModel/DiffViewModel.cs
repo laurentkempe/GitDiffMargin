@@ -1,7 +1,6 @@
 using System;
 using System.Windows;
 using System.Windows.Media;
-using GalaSoft.MvvmLight;
 using GitDiffMargin.Core;
 using GitDiffMargin.Git;
 
@@ -31,7 +30,7 @@ namespace GitDiffMargin.ViewModel
             set
             {
                 _height = value;
-                RaisePropertyChanged(() => Height);
+                RaisePropertyChanged(nameof(Height));
             }
         }
 
@@ -41,7 +40,7 @@ namespace GitDiffMargin.ViewModel
             set
             {
                 _top = value;
-                RaisePropertyChanged(() => Top);
+                RaisePropertyChanged(nameof(Top));
             }
         }
 
@@ -83,7 +82,7 @@ namespace GitDiffMargin.ViewModel
         {
             get { return _isVisible; }
             set { _isVisible = value;
-                RaisePropertyChanged(() => IsVisible);}
+                RaisePropertyChanged(nameof(IsVisible));}
         }
 
         public double ScaleFactor => MarginCore.ScaleFactor;
@@ -115,7 +114,7 @@ namespace GitDiffMargin.ViewModel
 
         private void HandleBrushesChanged(object sender, EventArgs e)
         {
-            RaisePropertyChanged(() => DiffBrush);
+            RaisePropertyChanged(nameof(DiffBrush));
         }
 
         protected virtual void UpdateDimensions()
