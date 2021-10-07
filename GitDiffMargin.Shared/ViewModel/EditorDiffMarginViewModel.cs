@@ -2,7 +2,6 @@
 
 using System;
 using System.Linq;
-using GalaSoft.MvvmLight.Command;
 using GitDiffMargin.Core;
 using GitDiffMargin.Git;
 

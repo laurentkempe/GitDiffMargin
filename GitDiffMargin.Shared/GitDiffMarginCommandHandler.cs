@@ -3,8 +3,7 @@ namespace GitDiffMargin
     using System;
     using System.Linq;
     using System.Windows.Input;
-    using GalaSoft.MvvmLight.Command;
-    using GitDiffMargin.ViewModel;
+    using ViewModel;
     using Microsoft.VisualStudio.Editor;
     using Microsoft.VisualStudio.Text.Editor;
     using IVsTextView = Microsoft.VisualStudio.TextManager.Interop.IVsTextView;

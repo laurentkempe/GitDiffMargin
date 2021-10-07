@@ -63,6 +63,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\EditorDiffViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ScrollDiffMarginViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ScrollDiffViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ViewModelBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)View\OpaqueColorConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)View\PopupKeyboardBehavior.cs" />
   </ItemGroup>
