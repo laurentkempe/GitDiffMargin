@@ -9,9 +9,4 @@ using Microsoft.VisualStudio.Shell;
 // COM, set the ComVisible attribute to true on that type.
 [assembly: ComVisible(false)]
 
-[assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\GalaSoft.MvvmLight.dll")]
-[assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\GalaSoft.MvvmLight.Extras.dll")]
-[assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\GalaSoft.MvvmLight.Platform.dll")]
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\LibGit2Sharp.dll")]
-[assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\CommonServiceLocator.dll")]
-[assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\System.Windows.Interactivity.dll")]
