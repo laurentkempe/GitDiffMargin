@@ -59,7 +59,7 @@ namespace GitDiffMargin
                         EditorDiffViewModel diffViewModel = viewModel.DiffViewModels.OfType<EditorDiffViewModel>().FirstOrDefault(i => i.ShowPopup);
                         if (diffViewModel != null)
                         {
-                            RelayCommand<DiffViewModel> command = (GitDiffMarginCommand)commandId == GitDiffMarginCommand.NextChange ? viewModel.NextChangeCommand : viewModel.PreviousChangeCommand;
+                            ICommand command = (GitDiffMarginCommand)commandId == GitDiffMarginCommand.NextChange ? viewModel.NextChangeCommand : viewModel.PreviousChangeCommand;
                             if (command.CanExecute(diffViewModel))
                                 return OLECMDF.OLECMDF_SUPPORTED | OLECMDF.OLECMDF_ENABLED;
                             else
@@ -147,7 +147,7 @@ namespace GitDiffMargin
                         if (viewModel == null)
                             return false;
 
-                        RelayCommand<DiffViewModel> command = (GitDiffMarginCommand)commandId == GitDiffMarginCommand.NextChange ? viewModel.NextChangeCommand : viewModel.PreviousChangeCommand;
+                        ICommand command = (GitDiffMarginCommand)commandId == GitDiffMarginCommand.NextChange ? viewModel.NextChangeCommand : viewModel.PreviousChangeCommand;
 
                         // First look for a diff already showing a popup
                         if (diffViewModel != null)
