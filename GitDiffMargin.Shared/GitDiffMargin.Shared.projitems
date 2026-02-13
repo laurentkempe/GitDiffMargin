@@ -61,8 +61,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\DiffViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\EditorDiffMarginViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\EditorDiffViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\RelayCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\RelayCommandGeneric.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ScrollDiffMarginViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ScrollDiffViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ViewModelBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)View\OpaqueColorConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)View\PopupKeyboardBehavior.cs" />
   </ItemGroup>

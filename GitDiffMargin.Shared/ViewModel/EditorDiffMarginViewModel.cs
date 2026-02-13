@@ -2,7 +2,7 @@
 
 using System;
 using System.Linq;
-using GalaSoft.MvvmLight.Command;
+using System.Windows.Input;
 using GitDiffMargin.Core;
 using GitDiffMargin.Git;
 
@@ -13,8 +13,8 @@ namespace GitDiffMargin.ViewModel
     internal class EditorDiffMarginViewModel : DiffMarginViewModelBase
     {
         private readonly Action<DiffViewModel, HunkRangeInfo> _updateDiffDimensions;
-        private RelayCommand<DiffViewModel> _previousChangeCommand;
-        private RelayCommand<DiffViewModel> _nextChangeCommand;
+        private ICommand _previousChangeCommand;
+        private ICommand _nextChangeCommand;
 
         internal EditorDiffMarginViewModel(IMarginCore marginCore, Action<DiffViewModel, HunkRangeInfo> updateDiffDimensions) :
             base(marginCore)
@@ -25,12 +25,12 @@ namespace GitDiffMargin.ViewModel
             _updateDiffDimensions = updateDiffDimensions;
         }
 
-        public RelayCommand<DiffViewModel> PreviousChangeCommand
+        public ICommand PreviousChangeCommand
         {
             get { return _previousChangeCommand ?? (_previousChangeCommand = new RelayCommand<DiffViewModel>(PreviousChange, PreviousChangeCanExecute)); }
         }
 
-        public RelayCommand<DiffViewModel> NextChangeCommand
+        public ICommand NextChangeCommand
         {
             get { return _nextChangeCommand ?? (_nextChangeCommand = new RelayCommand<DiffViewModel>(NextChange, NextChangeCanExecute)); }
         }
