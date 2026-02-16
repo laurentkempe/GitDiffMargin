@@ -39,7 +39,7 @@
   <ItemGroup>
     <PackageReference Include="MvvmLightLibs" Version="5.4.1.1" />
     <!-- This is a development-only dependency. -->
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="16.8.3038" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="18.5.38460" PrivateAssets="all" />
     <PackageReference Include="Microsoft.VisualStudio.Imaging" Version="15.0.26201" PrivateAssets="all" />
     <!--
       These are not development-only dependencies, but PrivateAssets is still used to avoid transitive dependencies when
